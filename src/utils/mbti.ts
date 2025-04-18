@@ -23,24 +23,24 @@ export function calculateCognitiveFunctions(type: MBTIType): {
 
   const jPair = {
     T: [
-      { name: "Ti", description: "Introverted Thinking" },
-      { name: "Te", description: "Extraverted Thinking" },
-    ],
+      { code: "Ti", name: "Ti", position: "主导" },
+      { code: "Te", name: "Te", position: "主导" },
+    ] as const,
     F: [
-      { name: "Fi", description: "Introverted Feeling" },
-      { name: "Fe", description: "Extraverted Feeling" },
-    ],
+      { code: "Fi", name: "Fi", position: "主导" },
+      { code: "Fe", name: "Fe", position: "主导" },
+    ] as const,
   }[ju as "T" | "F"] as [CognitiveFunction, CognitiveFunction];
 
   const pPair = {
     S: [
-      { name: "Si", description: "Introverted Sensing" },
-      { name: "Se", description: "Extraverted Sensing" },
-    ],
+      { code: "Si", name: "Si", position: "主导" },
+      { code: "Se", name: "Se", position: "主导" },
+    ] as const,
     N: [
-      { name: "Ni", description: "Introverted Intuition" },
-      { name: "Ne", description: "Extraverted Intuition" },
-    ],
+      { code: "Ni", name: "Ni", position: "主导" },
+      { code: "Ne", name: "Ne", position: "主导" },
+    ] as const,
   }[pe as "S" | "N"] as [CognitiveFunction, CognitiveFunction];
 
   const dom = isJext

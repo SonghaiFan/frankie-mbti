@@ -8,7 +8,6 @@ import {
   mbtiCardHeader,
   mbtiCardTitle,
   mbtiCardContent,
-  mbtiCardDescription,
   getMbtiColor,
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";

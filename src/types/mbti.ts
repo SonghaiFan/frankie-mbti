@@ -36,9 +36,9 @@ export interface MBTIMatch {
 }
 
 export interface CognitiveFunction {
-  code: string;
-  name: string;
-  position: "主导" | "辅助" | "第三" | "劣势";
+  readonly code: string;
+  readonly name: string;
+  readonly position: "主导" | "辅助" | "第三" | "劣势";
 }
 
 export type MBTIDimensionInfo = {
