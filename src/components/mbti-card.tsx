@@ -13,7 +13,7 @@ import {
   mbtiCardDescription,
   getMbtiColor,
 } from "@/styles/mbti-styles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface MBTICardProps {
   type: MBTIType;
@@ -28,6 +28,7 @@ export function MBTICard({
   onExpand,
   onCollapse,
 }: MBTICardProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const mbtiInfo = mbtiTypes.find((t) => t.type === type.type);
   if (!mbtiInfo) return null;
 
@@ -79,7 +80,7 @@ export function MBTICard({
         className={cn(
           "relative overflow-hidden cursor-pointer",
           isExpanded
-            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-4xl max-h-[90vh] z-50"
+            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-50"
             : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300"
         )}
         onClick={!isExpanded ? onExpand : undefined}
@@ -96,7 +97,8 @@ export function MBTICard({
           className={cn(
             mbtiCard,
             colorStyle.border,
-            !isExpanded && "hover:border-opacity-80"
+            !isExpanded && "hover:border-opacity-80",
+            "h-full"
           )}
         >
           {/* Card/Modal Content */}
@@ -108,7 +110,10 @@ export function MBTICard({
               damping: 25,
               mass: 1,
             }}
-            className={cn("p-4 transition-colors duration-300", colorStyle.bg)}
+            className={cn(
+              "h-full transition-colors duration-300",
+              colorStyle.bg
+            )}
           >
             <motion.div
               layout
@@ -118,32 +123,38 @@ export function MBTICard({
                 damping: 25,
                 mass: 1,
               }}
-              className="flex flex-col md:flex-row items-start gap-6"
+              className="flex flex-col sm:flex-row items-stretch h-full"
             >
               <motion.div
                 layout
                 className={cn(
-                  "relative mx-auto md:mx-0",
-                  isExpanded ? "w-40 h-40" : "w-24 h-24"
+                  "relative",
+                  isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24"
                 )}
               >
-                <Image
-                  src={`/mbti_img/${mbtiInfo.image}`}
-                  alt={mbtiInfo.type}
-                  width={isExpanded ? 160 : 96}
-                  height={isExpanded ? 160 : 96}
-                  className="object-contain rounded-xl"
-                  priority
-                />
+                <div className="absolute inset-0">
+                  <Image
+                    src={`/mbti_img/${mbtiInfo.image}`}
+                    alt={mbtiInfo.type}
+                    fill
+                    className="object-cover rounded-l-xl"
+                    priority
+                  />
+                </div>
               </motion.div>
 
-              <motion.div layout className="flex-1 space-y-4">
+              <motion.div
+                layout
+                className="flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4"
+              >
                 <motion.div layout="position" className="space-y-1">
                   <motion.h2
                     layout="position"
                     className={cn(
                       "font-medium",
-                      isExpanded ? "text-2xl" : "text-lg text-center",
+                      isExpanded
+                        ? "text-xl sm:text-2xl"
+                        : "text-lg text-center",
                       colorStyle.text
                     )}
                   >
@@ -176,7 +187,10 @@ export function MBTICard({
                 {!isExpanded && (
                   <motion.p
                     layout="position"
-                    className={cn("text-center text-xs", colorStyle.text)}
+                    className={cn(
+                      "text-center text-xs sm:text-sm",
+                      colorStyle.text
+                    )}
                   >
                     {mbtiInfo.nickname}
                   </motion.p>
