@@ -26,106 +26,182 @@ interface Step {
   };
 }
 
-const steps: Step[] = [
-  {
-    title: "第一步：确定主导功能的内外向",
-    description: "看第一个字母 E/I",
-    getResult: (mbti) => {
-      const att = mbti[0];
-      const isI = att === "I";
+interface StepResult {
+  result: string;
+  explanation: string;
+  remaining: string[];
+  excluded: string[];
+}
+
+const allFunctions = ["Fi", "Ti", "Ni", "Si", "Ne", "Se", "Te", "Fe"] as const;
+
+const getStepResult = (
+  mbti: string,
+  step: number,
+  previousRemaining?: string[]
+): StepResult => {
+  const [att, pe, ju, li] = mbti;
+  const isI = att === "I";
+  const isP = li === "P";
+  const isJext = (li === "J") === !isI;
+
+  let remaining =
+    step === 0 ? [...allFunctions] : [...(previousRemaining || [])];
+  let excluded: string[] = [];
+
+  switch (step) {
+    case 0: {
+      // 第一步：根据 E/I 排除
+      excluded = isI ? ["Ne", "Se", "Te", "Fe"] : ["Fi", "Ti", "Ni", "Si"];
+      remaining = remaining.filter((f) => !excluded.includes(f));
       return {
         result: `${att}（${isI ? "内向" : "外向"}）`,
-        explanation: isI
-          ? `因为你是 I（Introvert），所以主导功能必须是内向功能（Fi、Ti、Ni、Si）。\n❌ 排除：Ne、Se、Te、Fe → 它们都是外向功能，不可能是主导。`
-          : `因为你是 E（Extravert），所以主导功能必须是外向功能（Ne、Se、Te、Fe）。\n❌ 排除：Fi、Ti、Ni、Si → 它们都是内向功能，不可能是主导。`,
+        explanation: `因为你是 ${att}（${
+          isI ? "内向" : "外向"
+        }），所以主导功能必须是${
+          isI ? "内向" : "外向"
+        }功能。\n❌ 排除：${excluded.join("、")} → 它们都是${
+          isI ? "外向" : "内向"
+        }功能，不可能是主导。\n✅ 剩余选项：${remaining.join("、")}`,
+        remaining,
+        excluded,
       };
-    },
-  },
-  {
-    title: "第二步：确定外向功能是判断还是感知",
-    description: "看第四个字母 J/P",
-    getResult: (mbti) => {
-      const [att, , , li] = mbti;
-      const isI = att === "I";
-      const isP = li === "P";
+    }
+    case 1: {
+      // 第二步：根据 J/P 排除，只排除当前步骤相关的功能
+      const theoreticalExclusions = isP ? ["Te", "Fe"] : ["Ne", "Se"];
+      // 实际能排除的（与剩余选项的交集）
+      excluded = theoreticalExclusions.filter((f) => remaining.includes(f));
+      remaining = remaining.filter((f) => !excluded.includes(f));
       return {
         result: `${li}（${isP ? "感知" : "判断"}）`,
-        explanation: isI
-          ? isP
-            ? `你是 P 型，而且是 I → 所以外向功能是感知功能，只能是 Ne 或 Se。\n❌ 排除：Fe、Te → 它们是判断功能，不可能是你的辅助功能。`
-            : `你是 J 型，而且是 I → 所以外向功能是判断功能，只能是 Fe 或 Te。\n❌ 排除：Ne、Se → 它们是感知功能，不可能是你的辅助功能。`
-          : isP
-          ? `你是 P 型，而且是 E → 所以主导功能是感知功能，只能是 Ne 或 Se。\n❌ 排除：Te、Fe → 它们是判断功能，不可能是你的主导功能。`
-          : `你是 J 型，而且是 E → 所以主导功能是判断功能，只能是 Fe 或 Te。\n❌ 排除：Ne、Se → 它们是感知功能，不可能是你的主导功能。`,
+        explanation: `你是 ${li}（${isP ? "感知" : "判断"}）型，而且是 ${
+          isI ? "I" : "E"
+        } → 所以${isI ? "外向" : "主导"}功能是${
+          isP ? "感知" : "判断"
+        }功能。\n❌ 理论上要排除：${theoreticalExclusions.join("、")} → 它们是${
+          isP ? "判断" : "感知"
+        }功能，不可能是你的${isI ? "辅助" : "主导"}功能。${
+          excluded.length === 0
+            ? "\n💡 但是这些功能在上一步已经被排除了"
+            : `\n实际排除：${excluded.join("、")}`
+        }\n✅ 剩余选项：${remaining.join("、")}`,
+        remaining,
+        excluded,
       };
-    },
-  },
-  {
-    title: "第三步：确定感知和判断的偏好",
-    description: "看第二字母 S/N 和第三字母 T/F",
-    getResult: (mbti) => {
-      const [att, pe, ju, li] = mbti;
-      const isI = att === "I";
-      const isP = li === "P";
-      const candidates = isI
-        ? isP
-          ? ["Ne", "Se"] // I + P: 外向感知
-          : ["Te", "Fe"] // I + J: 外向判断
-        : isP
-        ? ["Ne", "Se"] // E + P: 外向感知
-        : ["Te", "Fe"]; // E + J: 外向判断
-
+    }
+    case 2: {
+      // 第三步：根据 S/N 和 T/F 排除
+      const excludedByPreference = remaining.filter(
+        (c) =>
+          (pe === "S" && c.includes("N")) ||
+          (pe === "N" && c.includes("S")) ||
+          (ju === "T" && c.includes("F")) ||
+          (ju === "F" && c.includes("T"))
+      );
+      excluded = excludedByPreference;
+      remaining = remaining.filter((f) => !excluded.includes(f));
       return {
         result: `${pe}（${pe === "S" ? "实感" : "直觉"}），${ju}（${
           ju === "T" ? "思维" : "情感"
         }）`,
-        explanation: `感知偏好是 ${pe}，判断偏好是 ${ju}\n❌ 排除：${candidates.find(
-          (c) =>
-            (pe === "S" && c.includes("N")) ||
-            (pe === "N" && c.includes("S")) ||
-            (ju === "T" && c.includes("F")) ||
-            (ju === "F" && c.includes("T"))
-        )} → 不符合你的偏好`,
+        explanation: `感知偏好是 ${pe}（${
+          pe === "S" ? "实感" : "直觉"
+        }），判断偏好是 ${ju}（${
+          ju === "T" ? "思维" : "情感"
+        }）\n❌ 排除：${excluded.join(
+          "、"
+        )} → 不符合你的偏好\n✅ 剩余选项：${remaining.join("、")}`,
+        remaining,
+        excluded,
       };
-    },
-  },
-  {
-    title: "第四步：确定主导功能",
-    description: "综合前三步的结论",
-    getResult: (mbti) => {
-      const [att, pe, ju, li] = mbti;
-      const isI = att === "I";
-      const isJext = (li === "J") === !isI;
-      const domOri = isI ? "i" : "e";
-      const dom = isJext
-        ? ju === "T"
-          ? `T${domOri}`
-          : `F${domOri}`
-        : pe === "S"
-        ? `S${domOri}`
-        : `N${domOri}`;
+    }
+    case 3: {
+      // 第四步：确定主导功能
+      // 获取前几步的筛选结果
+      const step0Result: StepResult = getStepResult(mbti, 0);
+      const step1Result: StepResult = getStepResult(
+        mbti,
+        1,
+        step0Result.remaining
+      );
+      const step2Result: StepResult = getStepResult(
+        mbti,
+        2,
+        step1Result.remaining
+      );
+
+      // 根据 I/E 和 P/J 确定主导功能类型
+      const remaining = step2Result.remaining.filter((f) => {
+        if (isI) {
+          // 内向型
+          if (isP) {
+            // IP型：主导功能是判断功能
+            return f.includes("T") || f.includes("F");
+          } else {
+            // IJ型：主导功能是感知功能
+            return f.includes("N") || f.includes("S");
+          }
+        } else {
+          // 外向型
+          if (isP) {
+            // EP型：主导功能是感知功能
+            return f.includes("N") || f.includes("S");
+          } else {
+            // EJ型：主导功能是判断功能
+            return f.includes("T") || f.includes("F");
+          }
+        }
+      });
+
+      const dom: string = remaining[0];
+      const excluded = step2Result.remaining.filter(
+        (f) => !remaining.includes(f)
+      );
+
+      // 确保 dom 是有效的认知功能
+      if (
+        !cognitiveFunctions.types[dom as keyof typeof cognitiveFunctions.types]
+      ) {
+        return {
+          result: "错误",
+          explanation: "无法确定主导功能",
+          remaining: [],
+          excluded: [],
+        };
+      }
+
+      const funcType =
+        cognitiveFunctions.types[dom as keyof typeof cognitiveFunctions.types];
 
       return {
         result: dom,
-        explanation: `根据前三步，你的主导功能是 ${dom}（${
-          dom[0] === "T"
-            ? "内在逻辑分析"
-            : dom[0] === "F"
-            ? "价值观判断"
-            : dom[0] === "S"
-            ? "具体感知体验"
-            : "抽象概念联想"
-        }）`,
+        explanation: `根据前三步的筛选，剩余选项有：${step2Result.remaining.join(
+          "、"
+        )}\n\n主导功能的规则：
+- 内向型（I）：
+  · P型 → 判断功能（Ti、Fi）
+  · J型 → 感知功能（Ni、Si）
+- 外向型（E）：
+  · P型 → 感知功能（Ne、Se）
+  · J型 → 判断功能（Te、Fe）
+
+你是 ${isI ? "I" : "E"}${isP ? "P" : "J"} 型，所以主导功能必须是${
+          isI ? (isP ? "判断" : "感知") : isP ? "感知" : "判断"
+        }功能。
+
+❌ 排除：${excluded.join("、")} → 它们是${
+          isI ? (isP ? "感知" : "判断") : isP ? "判断" : "感知"
+        }功能
+✅ 选择：${dom}\n\n因此你的主导功能是 ${dom}（${funcType.name}）\n${
+          funcType.description
+        }`,
+        remaining: [dom],
+        excluded,
       };
-    },
-  },
-  {
-    title: "第五步：确定辅助功能",
-    description: "主导的反方向 + 另一种功能",
-    getResult: (mbti) => {
-      const [att, pe, ju, li] = mbti;
-      const isI = att === "I";
-      const isJext = (li === "J") === !isI;
+    }
+    case 4: {
+      // 第五步：确定辅助功能
       const auxOri = isI ? "e" : "i";
       const aux = isJext
         ? pe === "S"
@@ -134,30 +210,19 @@ const steps: Step[] = [
         : ju === "T"
         ? `T${auxOri}`
         : `F${auxOri}`;
-
+      const funcType =
+        cognitiveFunctions.types[aux as keyof typeof cognitiveFunctions.types];
       return {
         result: aux,
         explanation: `辅助功能必须是${auxOri === "e" ? "外" : "内"}向的${
           isJext ? "感知" : "判断"
-        }功能，所以是 ${aux}（${
-          aux[0] === "T"
-            ? "逻辑分析"
-            : aux[0] === "F"
-            ? "价值判断"
-            : aux[0] === "S"
-            ? "实际体验"
-            : "概念联想"
-        }）`,
+        }功能，所以是 ${aux}（${funcType.name}）\n${funcType.description}`,
+        remaining: [aux],
+        excluded: remaining.filter((f) => f !== aux),
       };
-    },
-  },
-  {
-    title: "第六步：确定第三功能",
-    description: "辅助功能的镜像",
-    getResult: (mbti) => {
-      const [att, pe, ju, li] = mbti;
-      const isI = att === "I";
-      const isJext = (li === "J") === !isI;
+    }
+    case 5: {
+      // 第六步：确定第三功能
       const auxOri = isI ? "e" : "i";
       const aux = isJext
         ? pe === "S"
@@ -167,30 +232,21 @@ const steps: Step[] = [
         ? `T${auxOri}`
         : `F${auxOri}`;
       const third = aux[0] + (aux[1] === "e" ? "i" : "e");
-
+      const funcType =
+        cognitiveFunctions.types[
+          third as keyof typeof cognitiveFunctions.types
+        ];
       return {
         result: third,
         explanation: `${third} 是 ${aux} 的${
           third[1] === "i" ? "内" : "外"
-        }向镜像，对应你的第三功能（${
-          third[0] === "T"
-            ? "不成熟的逻辑分析"
-            : third[0] === "F"
-            ? "不成熟的价值判断"
-            : third[0] === "S"
-            ? "不成熟的实际体验"
-            : "不成熟的概念联想"
-        }）`,
+        }向镜像，对应你的第三功能（${funcType.name}）\n${funcType.description}`,
+        remaining: [third],
+        excluded: remaining.filter((f) => f !== third),
       };
-    },
-  },
-  {
-    title: "第七步：确定劣势功能",
-    description: "主导功能的镜像",
-    getResult: (mbti) => {
-      const [att, pe, ju, li] = mbti;
-      const isI = att === "I";
-      const isJext = (li === "J") === !isI;
+    }
+    case 6: {
+      // 第七步：确定劣势功能
       const domOri = isI ? "i" : "e";
       const dom = isJext
         ? ju === "T"
@@ -200,20 +256,69 @@ const steps: Step[] = [
         ? `S${domOri}`
         : `N${domOri}`;
       const fourth = dom[0] + (dom[1] === "e" ? "i" : "e");
-
+      const funcType =
+        cognitiveFunctions.types[
+          fourth as keyof typeof cognitiveFunctions.types
+        ];
       return {
         result: fourth,
-        explanation: `${fourth} 是 ${dom} 的镜像，是你最不擅长的功能（${
-          fourth[0] === "T"
-            ? "逻辑分析"
-            : fourth[0] === "F"
-            ? "价值判断"
-            : fourth[0] === "S"
-            ? "实际体验"
-            : "概念联想"
-        }）`,
+        explanation: `${fourth} 是 ${dom} 的镜像，是你最不擅长的功能（${funcType.name}）\n${funcType.description}`,
+        remaining: [fourth],
+        excluded: remaining.filter((f) => f !== fourth),
       };
+    }
+    default:
+      return {
+        result: "",
+        explanation: "",
+        remaining: [],
+        excluded: [],
+      };
+  }
+};
+
+const steps: Step[] = [
+  {
+    title: "第一步：确定主导功能的内外向",
+    description: "看第一个字母 E/I",
+    getResult: (mbti) => getStepResult(mbti, 0),
+  },
+  {
+    title: "第二步：确定外向功能是判断还是感知",
+    description: "看第四个字母 J/P",
+    getResult: (mbti) => {
+      const step0Result = getStepResult(mbti, 0);
+      return getStepResult(mbti, 1, step0Result.remaining);
     },
+  },
+  {
+    title: "第三步：确定感知和判断的偏好",
+    description: "看第二字母 S/N 和第三字母 T/F",
+    getResult: (mbti) => {
+      const step0Result = getStepResult(mbti, 0);
+      const step1Result = getStepResult(mbti, 1, step0Result.remaining);
+      return getStepResult(mbti, 2, step1Result.remaining);
+    },
+  },
+  {
+    title: "第四步：确定主导功能",
+    description: "综合前三步的结论",
+    getResult: (mbti) => getStepResult(mbti, 3),
+  },
+  {
+    title: "第五步：确定辅助功能",
+    description: "主导的反方向 + 另一种功能",
+    getResult: (mbti) => getStepResult(mbti, 4),
+  },
+  {
+    title: "第六步：确定第三功能",
+    description: "辅助功能的镜像",
+    getResult: (mbti) => getStepResult(mbti, 5),
+  },
+  {
+    title: "第七步：确定劣势功能",
+    description: "主导功能的镜像",
+    getResult: (mbti) => getStepResult(mbti, 6),
   },
 ];
 

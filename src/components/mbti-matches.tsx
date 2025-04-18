@@ -32,6 +32,34 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
     return mbtiTypes.find((t) => t.type === partnerId);
   };
 
+  // 合并相似的匹配模式
+  const combinedMatches = relevantMatches.reduce(
+    (acc, match) => {
+      const partner = getMatchPartner(match);
+      if (!partner) return acc;
+
+      const key = `${type.cognitiveFunctions}-${partner.cognitiveFunctions}`;
+      if (!acc[key]) {
+        acc[key] = {
+          partner,
+          matches: [],
+          uniqueNames: new Set<string>(),
+        };
+      }
+      acc[key].matches.push(match);
+      acc[key].uniqueNames.add(match.name);
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        partner: (typeof mbtiTypes)[0];
+        matches: typeof mbtiMatches;
+        uniqueNames: Set<string>;
+      }
+    >
+  );
+
   return (
     <motion.div
       {...mbtiMotionStyles}
@@ -51,11 +79,8 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
 
       <motion.div {...mbtiMotionStyles} className={mbtiCardContent}>
         <div className="space-y-6">
-          {relevantMatches.map((match, index) => {
-            const partner = getMatchPartner(match);
-            if (!partner) return null;
-
-            return (
+          {Object.values(combinedMatches).map(
+            ({ partner, matches, uniqueNames }, index) => (
               <motion.div
                 key={index}
                 {...mbtiMotionStyles}
@@ -79,10 +104,10 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
 
                   <div className="flex flex-col items-center">
                     <span className="text-lg font-bold text-pink-500">
-                      {match.name}
+                      {Array.from(uniqueNames).join("；")}
                     </span>
                     <span className="text-sm text-gray-500">
-                      {match.matchType}
+                      {matches.map((m) => m.matchType).join("；")}
                     </span>
                   </div>
 
@@ -104,12 +129,12 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
 
                 <div className="flex-1">
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    {match.description}
+                    {matches.map((m) => m.description).join("；")}
                   </p>
                 </div>
               </motion.div>
-            );
-          })}
+            )
+          )}
         </div>
       </motion.div>
     </motion.div>
