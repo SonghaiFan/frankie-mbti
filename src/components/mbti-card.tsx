@@ -123,13 +123,15 @@ export function MBTICard({
                 damping: 25,
                 mass: 1,
               }}
-              className="flex flex-col sm:flex-row items-stretch h-full"
+              className="flex flex-row items-stretch h-full"
             >
               <motion.div
                 layout
                 className={cn(
                   "relative",
-                  isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24"
+                  isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24",
+                  isExpanded &&
+                    "border-b border-gray-200 dark:border-gray-700 shadow-sm"
                 )}
               >
                 <div className="absolute inset-0">
@@ -145,16 +147,18 @@ export function MBTICard({
 
               <motion.div
                 layout
-                className="flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4"
+                className={cn(
+                  "flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4",
+                  isExpanded &&
+                    "border-b border-gray-200 dark:border-gray-700 shadow-sm"
+                )}
               >
-                <motion.div layout="position" className="space-y-1">
+                <motion.div layout="position" className="space-y-1 text-center">
                   <motion.h2
                     layout="position"
                     className={cn(
                       "font-medium",
-                      isExpanded
-                        ? "text-xl sm:text-2xl"
-                        : "text-lg text-center",
+                      isExpanded ? "text-xl sm:text-2xl" : "text-lg",
                       colorStyle.text
                     )}
                   >
@@ -187,10 +191,7 @@ export function MBTICard({
                 {!isExpanded && (
                   <motion.p
                     layout="position"
-                    className={cn(
-                      "text-center text-xs sm:text-sm",
-                      colorStyle.text
-                    )}
+                    className={cn("text-sm text-center", colorStyle.text)}
                   >
                     {mbtiInfo.nickname}
                   </motion.p>
@@ -211,45 +212,12 @@ export function MBTICard({
                 damping: 25,
                 mass: 1,
               }}
-              className="p-6 md:p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-300px)]"
+              className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-300px)]"
             >
               <MBTIIntroduction type={type} />
               <MBTIDimensions type={type} />
               <MBTICognitiveFunctions type={type} />
             </motion.div>
-          )}
-
-          {/* Close Button */}
-          {isExpanded && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 25,
-                mass: 1,
-              }}
-              onClick={onCollapse}
-              className="absolute top-4 right-4 p-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-all duration-300"
-            >
-              <svg
-                className="w-5 h-5 text-gray-600 dark:text-gray-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </motion.button>
           )}
         </motion.div>
       </motion.div>
