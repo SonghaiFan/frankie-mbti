@@ -1,10 +1,10 @@
-export type MBTIType = {
+export interface MBTIType {
   type: string;
   title: string;
   nickname: string;
   slogan: string;
-  color: "purple" | "green" | "blue" | "yellow";
-  group: "分析师" | "外交官" | "守护者" | "探险家";
+  color: string;
+  group: string;
   traits: string;
   image: string;
   strengths: string[];
@@ -12,25 +12,34 @@ export type MBTIType = {
   surfaceTraits: string[];
   actualTraits: string[];
   bestPartners: string[];
-};
+  cognitiveFunctions: string;
+}
 
-export type MBTIDimension = {
+export interface MBTIDimension {
   name: string;
   description: string;
   traits: string[];
-};
+}
 
-export type MBTIGroup = {
+export interface MBTIGroup {
   name: string;
   color: string;
   trait: string;
   keywords: string;
-};
+}
 
-export type CognitiveFunction = {
+export interface MBTIMatch {
+  pair: [string, string];
   name: string;
+  matchType: "镜像对应" | "主导劣势" | "辅助第三";
   description: string;
-};
+}
+
+export interface CognitiveFunction {
+  code: string;
+  name: string;
+  position: "主导" | "辅助" | "第三" | "劣势";
+}
 
 export type MBTIDimensionInfo = {
   name: string;

@@ -254,7 +254,7 @@ export function MBTIDimensions({ type }: MBTIDimensionsProps) {
             {...mbtiMotionStyles}
             className={cn(mbtiCardTitle, colorStyle.text)}
           >
-            💝 最佳拍档
+            💝 最佳拍档（MBTI官配）
           </motion.h3>
         </motion.div>
 

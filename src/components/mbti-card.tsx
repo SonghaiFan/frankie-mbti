@@ -14,6 +14,7 @@ import {
   getMbtiColor,
 } from "@/styles/mbti-styles";
 import { useEffect } from "react";
+import { MBTIMatches } from "./mbti-matches";
 
 interface MBTICardProps {
   type: MBTIType;
@@ -214,6 +215,7 @@ export function MBTICard({
               <MBTIIntroduction type={type} />
               <MBTIDimensions type={type} />
               <MBTICognitiveFunctions type={type} />
+              <MBTIMatches type={type} />
             </motion.div>
           )}
         </motion.div>
