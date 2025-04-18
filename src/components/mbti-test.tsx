@@ -124,7 +124,7 @@ export function MBTITest() {
       >
         <Button
           variant="default"
-          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-2.5 rounded-full text-sm"
+          className="bg-gray-900 hover:bg-gray-800 dark:bg-gray-100 dark:hover:bg-gray-200 text-white dark:text-gray-900 shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-2.5 rounded-full text-sm"
           onClick={() => setIsOpen(true)}
         >
           <span className="text-lg mr-2">🎯</span>
@@ -150,7 +150,7 @@ export function MBTITest() {
               className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6 z-50"
             >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                   MBTI 快速测试
                 </h2>
                 <button
@@ -188,9 +188,9 @@ export function MBTITest() {
                           whileTap={{ scale: 0.98 }}
                           className={cn(
                             "p-4 rounded-lg border transition-all duration-300",
-                            "hover:bg-purple-50 dark:hover:bg-purple-900/20",
+                            "hover:bg-gray-50 dark:hover:bg-gray-800",
                             "flex items-center gap-3",
-                            "border-purple-200 dark:border-purple-800"
+                            "border-gray-200 dark:border-gray-700"
                           )}
                           onClick={() =>
                             handleAnswer(
@@ -212,11 +212,11 @@ export function MBTITest() {
                       variant="outline"
                       onClick={resetTest}
                       disabled={currentQuestion === 0}
-                      className="border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 px-4 py-2"
+                      className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-4 py-2"
                     >
                       重新开始
                     </Button>
-                    <span className="text-sm text-purple-600 dark:text-purple-400 font-medium">
+                    <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">
                       {currentQuestion + 1} / {questions.length}
                     </span>
                   </div>
@@ -228,7 +228,9 @@ export function MBTITest() {
                   className="space-y-6"
                 >
                   <div className="text-center space-y-2">
-                    <h3 className="text-2xl font-bold">测试结果</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      测试结果
+                    </h3>
                     <p className="text-gray-600 dark:text-gray-300">
                       你的 MBTI 类型是：
                     </p>
@@ -245,7 +247,7 @@ export function MBTITest() {
                     <Button
                       variant="outline"
                       onClick={resetTest}
-                      className="border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 px-4 py-2"
+                      className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-4 py-2"
                     >
                       再测一次
                     </Button>

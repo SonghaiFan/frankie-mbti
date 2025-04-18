@@ -13,7 +13,7 @@ export function Footer() {
       <div className="container mx-auto px-4 max-w-3xl">
         <div className="flex flex-col items-center justify-center space-y-1">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Created with 💜 by{" "}
+            Created with by{" "}
             <a
               href="https://github.com/songhaifan2025"
               target="_blank"

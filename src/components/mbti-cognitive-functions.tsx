@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 import { cognitiveFunctions } from "@/data/mbti-data";
 import { calculateCognitiveFunctions } from "@/utils/mbti";
 
+type CognitiveFunctionName = keyof typeof cognitiveFunctions.types;
+
 interface Step {
   title: string;
   description: string;
@@ -332,35 +334,98 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
         </motion.h3>
       </motion.div>
 
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCardContent, "grid grid-cols-1 md:grid-cols-2 gap-6")}
-      >
+      <motion.div {...mbtiMotionStyles} className="p-6 space-y-4">
         {[
           { func: dom, level: cognitiveFunctions.levels[0] },
           { func: aux, level: cognitiveFunctions.levels[1] },
           { func: third, level: cognitiveFunctions.levels[2] },
           { func: fourth, level: cognitiveFunctions.levels[3] },
-        ].map(({ func, level }) => (
-          <motion.div
-            key={func.name}
-            {...mbtiMotionStyles}
-            className={cn(
-              "p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow",
-              "bg-white dark:bg-gray-800"
-            )}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">{level.icon}</span>
-              <h4 className={cn("font-medium text-base", colorStyle.text)}>
-                {level.name}：{func.name}
-              </h4>
-            </div>
-            <p className={cn(mbtiCardDescription, "text-sm")}>
-              {func.description}
-            </p>
-          </motion.div>
-        ))}
+        ].map(({ func, level }, index) => {
+          const funcType =
+            cognitiveFunctions.types[func.name as CognitiveFunctionName];
+          return (
+            <motion.div
+              key={func.name}
+              {...mbtiMotionStyles}
+              className={cn(
+                "relative flex gap-4 items-start p-4 rounded-xl transition-all duration-200",
+                "hover:bg-gray-50 dark:hover:bg-gray-800/50",
+                "group"
+              )}
+            >
+              {/* Level Indicator */}
+              <div
+                className={cn(
+                  "absolute left-0 top-0 bottom-0 w-1 rounded-l-xl transition-all duration-200",
+                  colorStyle.bg,
+                  "opacity-20 group-hover:opacity-100"
+                )}
+              />
+
+              {/* Icon and Main Content */}
+              <div
+                className={cn(
+                  "flex-shrink-0 w-12 h-12 rounded-xl shadow-sm flex items-center justify-center text-2xl",
+                  "bg-white dark:bg-gray-800"
+                )}
+              >
+                {funcType.icon}
+              </div>
+
+              <div className="flex-1 space-y-2">
+                {/* Title Row */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{level.icon}</span>
+                  <h4 className={cn("font-semibold", colorStyle.text)}>
+                    {level.name}
+                  </h4>
+                </div>
+
+                {/* Function Type Info */}
+                <div className="flex items-center gap-2 text-sm">
+                  <span
+                    className={cn(
+                      "px-2 py-0.5 rounded-md font-mono font-medium",
+                      colorStyle.bg,
+                      colorStyle.text,
+                      "bg-opacity-10 dark:bg-opacity-20"
+                    )}
+                  >
+                    {func.name}
+                  </span>
+                  <span className="font-medium text-gray-800 dark:text-gray-200">
+                    {funcType.name}
+                  </span>
+                </div>
+
+                {/* Descriptions */}
+                <div className="grid grid-cols-1 gap-2 pt-1">
+                  <div className="space-y-1">
+                    <p className="text-sm text-gray-800 dark:text-gray-200">
+                      {funcType.description}
+                    </p>
+                    <div className="h-px bg-gray-100 dark:bg-gray-800" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {level.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stack Level Indicator */}
+              <div
+                className={cn(
+                  "flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium",
+                  colorStyle.bg,
+                  colorStyle.text,
+                  "bg-opacity-10 dark:bg-opacity-20"
+                )}
+              >
+                {`#${index + 1}`}
+              </div>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </motion.div>
   );

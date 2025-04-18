@@ -2,11 +2,16 @@ export type MBTIType = {
   type: string;
   title: string;
   nickname: string;
-  motto: string;
+  slogan: string;
   color: "purple" | "green" | "blue" | "yellow";
   group: "分析师" | "外交官" | "守护者" | "探险家";
   traits: string;
   image: string;
+  strengths: string[];
+  weaknesses: string[];
+  surfaceTraits: string[];
+  actualTraits: string[];
+  bestPartners: string[];
 };
 
 export type MBTIDimension = {

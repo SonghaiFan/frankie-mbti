@@ -179,7 +179,7 @@ export function MBTICard({
                         layout="position"
                         className={cn(mbtiCardDescription, "text-sm")}
                       >
-                        📝 一句话：{mbtiInfo.motto}
+                        📝 一句话：{mbtiInfo.slogan}
                       </motion.p>
                     </>
                   )}
