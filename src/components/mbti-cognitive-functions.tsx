@@ -48,9 +48,6 @@ const steps: Step[] = [
       const [att, , , li] = mbti;
       const isI = att === "I";
       const isP = li === "P";
-      const remainingFuncs = isI
-        ? ["Fi", "Ti", "Ni", "Si"]
-        : ["Ne", "Se", "Te", "Fe"];
       return {
         result: `${li}（${isP ? "感知" : "判断"}）`,
         explanation: isI
