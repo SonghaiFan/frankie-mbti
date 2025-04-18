@@ -25,7 +25,7 @@ export default function Home() {
           className="text-center space-y-4 mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
-            了解自己
+            了解MBTI vs 认知功能
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             探索你的mbti人设和荣格八维功能

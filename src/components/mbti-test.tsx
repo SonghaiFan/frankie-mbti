@@ -122,7 +122,6 @@ export function MBTITest() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="fixed bottom-4 right-4 z-50"
       >
         <Button
           variant="default"
