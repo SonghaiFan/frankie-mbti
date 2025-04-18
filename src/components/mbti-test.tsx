@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { MBTIType } from "@/types/mbti";
 import { mbtiTypes } from "@/data/mbti-data";
@@ -116,16 +110,21 @@ export function MBTITest() {
     }
   };
 
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
+        className="inline-block"
       >
         <Button
           variant="default"
-          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-3 rounded-full"
+          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-6 py-2.5 rounded-full text-sm"
           onClick={() => setIsOpen(true)}
         >
           <span className="text-lg mr-2">🎯</span>
@@ -133,95 +132,130 @@ export function MBTITest() {
         </Button>
       </motion.div>
 
-      <Dialog isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <DialogContent className="max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
-              MBTI 快速测试
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6 py-4">
-            {!testResult ? (
-              <>
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    {questions[currentQuestion].question}
-                  </h3>
-                  <div className="grid gap-4">
-                    {questions[currentQuestion].options.map((option) => (
-                      <motion.button
-                        key={option.type}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={cn(
-                          "p-4 rounded-lg border transition-all duration-300",
-                          "hover:bg-purple-50 dark:hover:bg-purple-900/20",
-                          "flex items-center gap-3",
-                          "border-purple-200 dark:border-purple-800"
-                        )}
-                        onClick={() =>
-                          handleAnswer(
-                            questions[currentQuestion].dimension,
-                            option.type
-                          )
-                        }
-                      >
-                        <span className="text-2xl">{option.icon}</span>
-                        <span className="text-left text-gray-900 dark:text-gray-100">
-                          {option.text}
-                        </span>
-                      </motion.button>
-                    ))}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeModal}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6 z-50"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
+                  MBTI 快速测试
+                </h2>
+                <button
+                  onClick={closeModal}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {!testResult ? (
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                      {questions[currentQuestion].question}
+                    </h3>
+                    <div className="grid gap-3">
+                      {questions[currentQuestion].options.map((option) => (
+                        <motion.button
+                          key={option.type}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className={cn(
+                            "p-4 rounded-lg border transition-all duration-300",
+                            "hover:bg-purple-50 dark:hover:bg-purple-900/20",
+                            "flex items-center gap-3",
+                            "border-purple-200 dark:border-purple-800"
+                          )}
+                          onClick={() =>
+                            handleAnswer(
+                              questions[currentQuestion].dimension,
+                              option.type
+                            )
+                          }
+                        >
+                          <span className="text-2xl">{option.icon}</span>
+                          <span className="text-left text-gray-900 dark:text-gray-100">
+                            {option.text}
+                          </span>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pt-2">
+                    <Button
+                      variant="outline"
+                      onClick={resetTest}
+                      disabled={currentQuestion === 0}
+                      className="border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 px-4 py-2"
+                    >
+                      重新开始
+                    </Button>
+                    <span className="text-sm text-purple-600 dark:text-purple-400 font-medium">
+                      {currentQuestion + 1} / {questions.length}
+                    </span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <Button
-                    variant="outline"
-                    onClick={resetTest}
-                    disabled={currentQuestion === 0}
-                    className="border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20"
-                  >
-                    重新开始
-                  </Button>
-                  <span className="text-sm text-purple-600 dark:text-purple-400">
-                    {currentQuestion + 1} / {questions.length}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-6"
-              >
-                <div className="text-center mb-4">
-                  <h3 className="text-2xl font-bold mb-2">测试结果</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    你的 MBTI 类型是：
-                  </p>
-                </div>
-                <div onClick={handleCardClick} className="cursor-pointer">
-                  <MBTICard
-                    type={testResult}
-                    isExpanded={false}
-                    onExpand={() => {}}
-                    onCollapse={() => {}}
-                  />
-                </div>
-                <div className="flex justify-center">
-                  <Button
-                    variant="outline"
-                    onClick={resetTest}
-                    className="border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20"
-                  >
-                    再测一次
-                  </Button>
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center space-y-2">
+                    <h3 className="text-2xl font-bold">测试结果</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      你的 MBTI 类型是：
+                    </p>
+                  </div>
+                  <div onClick={handleCardClick} className="cursor-pointer">
+                    <MBTICard
+                      type={testResult}
+                      isExpanded={false}
+                      onExpand={() => {}}
+                      onCollapse={() => {}}
+                    />
+                  </div>
+                  <div className="flex justify-center pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={resetTest}
+                      className="border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 px-4 py-2"
+                    >
+                      再测一次
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }

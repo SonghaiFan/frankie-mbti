@@ -155,7 +155,7 @@ export function MBTICard({
                     layout="position"
                     className={cn(
                       "font-medium",
-                      isExpanded ? "text-xl sm:text-2xl" : "text-lg",
+                      isExpanded ? "text-lg sm:text-xl" : "text-base",
                       colorStyle.text
                     )}
                   >
