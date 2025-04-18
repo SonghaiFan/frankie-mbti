@@ -2,14 +2,13 @@
 
 import { motion } from "framer-motion";
 import { MBTIType } from "@/types/mbti";
-import { calculateCognitiveFunctions } from "@/lib/utils";
 
 interface MBTICognitiveIntroProps {
   type: MBTIType;
 }
 
 export function MBTICognitiveIntro({ type }: MBTICognitiveIntroProps) {
-  const { dom } = calculateCognitiveFunctions(type.type);
+  const dom = type.cognitiveFunctions.split(" ")[0];
 
   return (
     <motion.div

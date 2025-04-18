@@ -13,7 +13,6 @@ import {
 } from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
 import { cognitiveFunctions } from "@/data/mbti-data";
-import { calculateCognitiveFunctions } from "@/utils/mbti";
 
 type CognitiveFunctionName = keyof typeof cognitiveFunctions.types;
 
@@ -328,7 +327,6 @@ interface MBTICognitiveFunctionsProps {
 
 export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
   const colorStyle = getMbtiColor(type.group);
-  const { dom, aux, third, fourth } = calculateCognitiveFunctions(type);
 
   return (
     <motion.div
@@ -418,17 +416,14 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
       </motion.div>
 
       <motion.div {...mbtiMotionStyles} className="p-6 space-y-4">
-        {[
-          { func: dom, level: cognitiveFunctions.levels[0] },
-          { func: aux, level: cognitiveFunctions.levels[1] },
-          { func: third, level: cognitiveFunctions.levels[2] },
-          { func: fourth, level: cognitiveFunctions.levels[3] },
-        ].map(({ func, level }, index) => {
+        {type.cognitiveFunctions.split(" ").map((funcName, index) => {
           const funcType =
-            cognitiveFunctions.types[func.name as CognitiveFunctionName];
+            cognitiveFunctions.types[funcName as CognitiveFunctionName];
+          const level = cognitiveFunctions.levels[index];
+
           return (
             <motion.div
-              key={func.name}
+              key={funcName}
               {...mbtiMotionStyles}
               className={cn(
                 "relative flex gap-4 items-start p-4 rounded-xl transition-all duration-200",
@@ -474,7 +469,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                       "bg-opacity-10 dark:bg-opacity-20"
                     )}
                   >
-                    {func.name}
+                    {funcName}
                   </span>
                   <span className="font-medium text-gray-800 dark:text-gray-200">
                     {funcType.name}
