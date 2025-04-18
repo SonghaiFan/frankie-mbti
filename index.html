@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MBTI 功能推导器 (逻辑解释版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                200: "#bae6fd",
+                300: "#7dd3fc",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+                800: "#075985",
+                900: "#0c4a6e",
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            spacing: {
+              18: "4.5rem",
+            },
+            boxShadow: {
+              "elevation-1":
+                "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.14)",
+              "elevation-2":
+                "0 3px 6px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.12)",
+              "elevation-3":
+                "0 10px 20px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.10)",
+              "elevation-4":
+                "0 15px 25px rgba(0,0,0,0.15), 0 5px 10px rgba(0,0,0,0.05)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f6f8fc 0%, #e9f1f9 100%);
+      }
+
+      .flip-card {
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        transition: transform 0.8s;
+      }
+
+      .flip-card.flipped {
+        transform: rotateY(180deg);
+      }
+
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+
+      .flip-card-front,
+      .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+      }
+
+      .flip-card-back {
+        transform: rotateY(180deg);
+      }
+
+      .fade-enter {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .fade-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-out;
+      }
+
+      .slide-up {
+        animation: slideUp 0.5s ease-out forwards;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .mbti-card {
+        transition: all 0.3s ease;
+        transform-origin: center;
+      }
+
+      .mbti-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        z-index: 10;
+      }
+
+      .modal {
+        transition: all 0.3s ease-in-out;
+      }
+
+      .modal-content {
+        transition: all 0.3s ease-in-out;
+        transform: scale(0.7);
+        opacity: 0;
+      }
+
+      .modal.active .modal-content {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      .group-hover-trigger:hover .group-hover-target {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <h1
+        class="text-4xl md:text-5xl font-light text-center text-gray-800 mb-12"
+      >
+        MBTI → 认知功能推导器
+      </h1>
+
+      <!-- MBTI Groups -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <!-- Analysts (NT) -->
+        <div class="space-y-4">
+          <h2 class="text-2xl font-medium text-purple-800 mb-4 text-center">
+            分析师 NT
+          </h2>
+          <div class="grid gap-4">
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('INTJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-purple-50 p-4">
+                  <img
+                    src="mbti_img/Architect.png"
+                    alt="INTJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-purple-900 text-center mt-2"
+                  >
+                    INTJ
+                  </h3>
+                  <p class="text-purple-700 text-center text-sm">建筑师</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">紫老头、高岭之花</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('INTP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-purple-50 p-4">
+                  <img
+                    src="mbti_img/Logician.png"
+                    alt="INTP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-purple-900 text-center mt-2"
+                  >
+                    INTP
+                  </h3>
+                  <p class="text-purple-700 text-center text-sm">逻辑学家</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">小瓶子、药水姐</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ENTJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-purple-50 p-4">
+                  <img
+                    src="mbti_img/Commander.png"
+                    alt="ENTJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-purple-900 text-center mt-2"
+                  >
+                    ENTJ
+                  </h3>
+                  <p class="text-purple-700 text-center text-sm">指挥官</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">小暴君、大姐头</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ENTP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-purple-50 p-4">
+                  <img
+                    src="mbti_img/Debater.png"
+                    alt="ENTP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-purple-900 text-center mt-2"
+                  >
+                    ENTP
+                  </h3>
+                  <p class="text-purple-700 text-center text-sm">辩论家</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">狐狸、段子王</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diplomats (NF) -->
+        <div class="space-y-4">
+          <h2 class="text-2xl font-medium text-green-800 mb-4 text-center">
+            外交家 NF
+          </h2>
+          <div class="grid gap-4">
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('INFJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-green-50 p-4">
+                  <img
+                    src="mbti_img/Advocate.png"
+                    alt="INFJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-green-900 text-center mt-2"
+                  >
+                    INFJ
+                  </h3>
+                  <p class="text-green-700 text-center text-sm">倡导者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">抹茶老头、老灵魂</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('INFP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-green-50 p-4">
+                  <img
+                    src="mbti_img/Mediator.png"
+                    alt="INFP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-green-900 text-center mt-2"
+                  >
+                    INFP
+                  </h3>
+                  <p class="text-green-700 text-center text-sm">调停者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">小蝴蝶、悲伤猫猫</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ENFJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-green-50 p-4">
+                  <img
+                    src="mbti_img/Protagonist.png"
+                    alt="ENFJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-green-900 text-center mt-2"
+                  >
+                    ENFJ
+                  </h3>
+                  <p class="text-green-700 text-center text-sm">保护者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">大宝剑、大狗</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ENFP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-green-50 p-4">
+                  <img
+                    src="mbti_img/Campaigner.png"
+                    alt="ENFP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-green-900 text-center mt-2"
+                  >
+                    ENFP
+                  </h3>
+                  <p class="text-green-700 text-center text-sm">竞选者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">快乐小狗🐶</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sentinels (SJ) -->
+        <div class="space-y-4">
+          <h2 class="text-2xl font-medium text-blue-800 mb-4 text-center">
+            守卫者 SJ
+          </h2>
+          <div class="grid gap-4">
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ISTJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-blue-50 p-4">
+                  <img
+                    src="mbti_img/Logistician.png"
+                    alt="ISTJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-blue-900 text-center mt-2"
+                  >
+                    ISTJ
+                  </h3>
+                  <p class="text-blue-700 text-center text-sm">物流师</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">蓝老头、老理工</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ISFJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-blue-50 p-4">
+                  <img
+                    src="mbti_img/Defender.png"
+                    alt="ISFJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-blue-900 text-center mt-2"
+                  >
+                    ISFJ
+                  </h3>
+                  <p class="text-blue-700 text-center text-sm">守护者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">小护士、老母亲</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ESTJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-blue-50 p-4">
+                  <img
+                    src="mbti_img/Executive.png"
+                    alt="ESTJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-blue-900 text-center mt-2"
+                  >
+                    ESTJ
+                  </h3>
+                  <p class="text-blue-700 text-center text-sm">执行者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">尺子姐、卷王</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ESFJ')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-blue-50 p-4">
+                  <img
+                    src="mbti_img/Consul.png"
+                    alt="ESFJ"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-blue-900 text-center mt-2"
+                  >
+                    ESFJ
+                  </h3>
+                  <p class="text-blue-700 text-center text-sm">顾问者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">奶妈、蛋糕哥</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explorers (SP) -->
+        <div class="space-y-4">
+          <h2 class="text-2xl font-medium text-yellow-800 mb-4 text-center">
+            探险家 SP
+          </h2>
+          <div class="grid gap-4">
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ISTP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-yellow-50 p-4">
+                  <img
+                    src="mbti_img/Virtuoso.png"
+                    alt="ISTP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-yellow-900 text-center mt-2"
+                  >
+                    ISTP
+                  </h3>
+                  <p class="text-yellow-700 text-center text-sm">鉴赏家</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">电钻哥、工具人</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ISFP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-yellow-50 p-4">
+                  <img
+                    src="mbti_img/Adventurer.png"
+                    alt="ISFP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-yellow-900 text-center mt-2"
+                  >
+                    ISFP
+                  </h3>
+                  <p class="text-yellow-700 text-center text-sm">探险家</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">小画家、小甜甜</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ESTP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-yellow-50 p-4">
+                  <img
+                    src="mbti_img/Entrepreneur.png"
+                    alt="ESTP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-yellow-900 text-center mt-2"
+                  >
+                    ESTP
+                  </h3>
+                  <p class="text-yellow-700 text-center text-sm">企业家</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">墨镜哥、街头王</p>
+                </div>
+              </div>
+            </div>
+            <div class="mbti-card cursor-pointer" onclick="showMBTI('ESFP')">
+              <div
+                class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl"
+              >
+                <div class="bg-yellow-50 p-4">
+                  <img
+                    src="mbti_img/Entertainer.png"
+                    alt="ESFP"
+                    class="w-24 h-24 mx-auto"
+                  />
+                  <h3
+                    class="text-xl font-medium text-yellow-900 text-center mt-2"
+                  >
+                    ESFP
+                  </h3>
+                  <p class="text-yellow-700 text-center text-sm">表演者</p>
+                </div>
+                <div class="p-4">
+                  <p class="text-gray-600 text-sm">哈士奇、锤子姐</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal -->
+      <div
+        id="mbtiModal"
+        class="modal fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto"
+      >
+        <div class="min-h-screen px-4 text-center">
+          <div class="fixed inset-0" onclick="closeModal()"></div>
+          <div
+            class="inline-block align-middle my-8 w-full max-w-4xl text-left modal-content"
+          >
+            <div
+              id="modalContent"
+              class="bg-white rounded-2xl shadow-2xl overflow-hidden"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const functionDescriptions = {
+        Ti: "内向思维：独立分析，追求逻辑自洽，构建个人思维体系",
+        Te: "外向思维：客观分析，追求效率和结果，实践可行性",
+        Fi: "内向情感：内在价值观，重视个人感受，追求真实自我",
+        Fe: "外向情感：群体和谐，关注他人感受，善于营造氛围",
+        Si: "内向感知：细节记忆，重视经验和传统，追求稳定",
+        Se: "外向感知：当下体验，关注现实变化，享受感官刺激",
+        Ni: "内向直觉：洞察本质，预见未来趋势，寻找深层含义",
+        Ne: "外向直觉：联想创意，发现可能性，探索新的想法",
+      };
+
+      const steps = [
+        {
+          title: "第一步：确定主导功能的内外向",
+          description: "看第一个字母 E/I",
+          getResult: (mbti) => {
+            const att = mbti[0];
+            const isI = att === "I";
+            return {
+              result: `${att}（${isI ? "内向" : "外向"}）`,
+              explanation: isI
+                ? `因为你是 I（Introvert），所以主导功能必须是内向功能（Fi、Ti、Ni、Si）。\n❌ 排除：Ne、Se、Te、Fe → 它们都是外向功能，不可能是主导。`
+                : `因为你是 E（Extravert），所以主导功能必须是外向功能（Ne、Se、Te、Fe）。\n❌ 排除：Fi、Ti、Ni、Si → 它们都是内向功能，不可能是主导。`,
+            };
+          },
+        },
+        {
+          title: "第二步：确定外向功能是判断还是感知",
+          description: "看第四个字母 J/P",
+          getResult: (mbti) => {
+            const [att, , , li] = mbti;
+            const isI = att === "I";
+            const isP = li === "P";
+            const isJext = (li === "J") === !isI;
+            return {
+              result: `${li}（${isP ? "感知" : "判断"}）`,
+              explanation: isI
+                ? isP
+                  ? `你是 P 型，而且是 I → 所以外向功能是感知功能，只能是 Ne 或 Se。\n❌ 排除：Fe、Te（判断功能）→ 不可能是你的辅助功能。`
+                  : `你是 J 型，而且是 I → 所以外向功能是判断功能，只能是 Fe 或 Te。\n❌ 排除：Ne、Se（感知功能）→ 不可能是你的辅助功能。`
+                : isP
+                ? `你是 P 型，而且是 E → 所以主导功能是感知功能，只能是 Ne 或 Se。\n❌ 排除：Fe、Te（判断功能）→ 不可能是你的主导功能。`
+                : `你是 J 型，而且是 E → 所以主导功能是判断功能，只能是 Fe 或 Te。\n❌ 排除：Ne、Se（感知功能）→ 不可能是你的主导功能。`,
+            };
+          },
+        },
+        {
+          title: "第三步：确定感知和判断的偏好",
+          description: "看第二字母 S/N 和第三字母 T/F",
+          getResult: (mbti) => {
+            const [, pe, ju] = mbti;
+            return {
+              result: `${pe}（${pe === "S" ? "实感" : "直觉"}），${ju}（${
+                ju === "T" ? "思维" : "情感"
+              }）`,
+              explanation: `感知偏好是 ${pe} → 所以你使用 ${pe}e 或 ${pe}i（${
+                pe === "S" ? "实感" : "直觉"
+              }功能）\n判断偏好是 ${ju} → 所以你使用 ${ju}i 或 ${ju}e（${
+                ju === "T" ? "思维" : "情感"
+              }判断）\n❌ 排除：${pe === "S" ? "N → Ni/Ne" : "S → Si/Se"}；${
+                ju === "T" ? "F → Fi/Fe" : "T → Ti/Te"
+              } → 都不是你的偏好`,
+            };
+          },
+        },
+        {
+          title: "第四步：确定主导功能",
+          description: "综合前三步的结论",
+          getResult: (mbti) => {
+            const [att, pe, ju, li] = mbti;
+            const isI = att === "I";
+            const isJext = (li === "J") === !isI;
+            const domOri = isI ? "i" : "e";
+            const dom = isJext
+              ? ju === "T"
+                ? `T${domOri}`
+                : `F${domOri}`
+              : pe === "S"
+              ? `S${domOri}`
+              : `N${domOri}`;
+
+            let explanation;
+            if (isI) {
+              if (isJext) {
+                explanation = `你主导必须是内向判断功能 → 只能是 ${ju}i\n❌ 排除：${pe}i → 虽然是内向，但它是感知功能；${
+                  ju === "T" ? "Fi" : "Ti"
+                } → 是${ju === "T" ? "情感" : "逻辑"}判断，不符合 ${ju} 倾向`;
+              } else {
+                explanation = `你主导必须是内向感知功能 → 只能是 ${pe}i\n❌ 排除：${ju}i → 虽然是内向，但它是判断功能；${
+                  pe === "S" ? "Ni" : "Si"
+                } → 是${pe === "S" ? "直觉" : "实感"}感知，不符合 ${pe} 倾向`;
+              }
+            } else {
+              if (isJext) {
+                explanation = `你主导必须是外向判断功能 → 只能是 ${ju}e\n❌ 排除：${pe}e → 虽然是外向，但它是感知功能；${
+                  ju === "T" ? "Fe" : "Te"
+                } → 是${ju === "T" ? "情感" : "逻辑"}判断，不符合 ${ju} 倾向`;
+              } else {
+                explanation = `你主导必须是外向感知功能 → 只能是 ${pe}e\n❌ 排除：${ju}e → 虽然是外向，但它是判断功能；${
+                  pe === "S" ? "Ne" : "Se"
+                } → 是${pe === "S" ? "直觉" : "实感"}感知，不符合 ${pe} 倾向`;
+              }
+            }
+
+            return {
+              result: dom,
+              explanation,
+            };
+          },
+        },
+        {
+          title: "第五步：确定辅助功能",
+          description: "主导的反方向 + 另一种功能",
+          getResult: (mbti) => {
+            const [att, pe, ju, li] = mbti;
+            const isI = att === "I";
+            const isJext = (li === "J") === !isI;
+            const auxOri = isI ? "e" : "i";
+            const aux = isJext
+              ? pe === "S"
+                ? `S${auxOri}`
+                : `N${auxOri}`
+              : ju === "T"
+              ? `T${auxOri}`
+              : `F${auxOri}`;
+
+            let explanation;
+            if (isI) {
+              if (isJext) {
+                explanation = `辅助功能必须是外向感知功能 → 候选是 ${pe}e\n❌ 排除：${
+                  pe === "S" ? "Ne" : "Se"
+                }（你不偏好${pe === "S" ? "直觉" : "实感"}）`;
+              } else {
+                explanation = `辅助功能必须是外向判断功能 → 候选是 ${ju}e\n❌ 排除：${
+                  ju === "T" ? "Fe" : "Te"
+                }（你不偏好${ju === "T" ? "情感" : "逻辑"}）`;
+              }
+            } else {
+              if (isJext) {
+                explanation = `辅助功能必须是内向感知功能 → 候选是 ${pe}i\n❌ 排除：${
+                  pe === "S" ? "Ni" : "Si"
+                }（你不偏好${pe === "S" ? "直觉" : "实感"}）`;
+              } else {
+                explanation = `辅助功能必须是内向判断功能 → 候选是 ${ju}i\n❌ 排除：${
+                  ju === "T" ? "Fi" : "Ti"
+                }（你不偏好${ju === "T" ? "情感" : "逻辑"}）`;
+              }
+            }
+
+            return {
+              result: aux,
+              explanation,
+            };
+          },
+        },
+        {
+          title: "第六步：确定第三功能",
+          description: "辅助功能的镜像",
+          getResult: (mbti) => {
+            const [att, pe, ju, li] = mbti;
+            const isI = att === "I";
+            const isJext = (li === "J") === !isI;
+            const auxOri = isI ? "e" : "i";
+            const aux = isJext
+              ? pe === "S"
+                ? `S${auxOri}`
+                : `N${auxOri}`
+              : ju === "T"
+              ? `T${auxOri}`
+              : `F${auxOri}`;
+            const third = aux[0] + (aux[1] === "e" ? "i" : "e");
+
+            return {
+              result: third,
+              explanation: `${third} 是 ${aux} 的${
+                third[1] === "i" ? "内" : "外"
+              }向镜像，对应你的第三功能\n❌ 排除：${aux[0]}${
+                aux[1]
+              }（你用的是 ${aux}），${third[0]}${aux[1]}（是${
+                aux[1] === "e" ? "外" : "内"
+              }向）`,
+            };
+          },
+        },
+        {
+          title: "第七步：确定劣势功能",
+          description: "主导功能的镜像",
+          getResult: (mbti) => {
+            const [att, pe, ju, li] = mbti;
+            const isI = att === "I";
+            const isJext = (li === "J") === !isI;
+            const domOri = isI ? "i" : "e";
+            const dom = isJext
+              ? ju === "T"
+                ? `T${domOri}`
+                : `F${domOri}`
+              : pe === "S"
+              ? `S${domOri}`
+              : `N${domOri}`;
+            const fourth = dom[0] + (dom[1] === "e" ? "i" : "e");
+
+            return {
+              result: fourth,
+              explanation: `${fourth} 是 ${dom} 的镜像，是你最不擅长的方向（${
+                fourth[0] === "T"
+                  ? "做计划、逻辑执行"
+                  : fourth[0] === "F"
+                  ? "处理人际关系、表达情感"
+                  : fourth[0] === "S"
+                  ? "关注细节、实际操作"
+                  : "抽象思维、远景规划"
+              }）\n❌ 排除：${
+                dom[0] === "T"
+                  ? "F"
+                  : dom[0] === "F"
+                  ? "T"
+                  : dom[0] === "S"
+                  ? "N"
+                  : "S"
+              }${fourth[1]} → 和你的 ${dom} 属于不同维度`,
+            };
+          },
+        },
+      ];
+
+      const mbtiDescriptions = {
+        // 分析师（NT 紫色脑力派）
+        INTJ: {
+          nickname: "紫老头、高岭之花",
+          motto: "NT 冷静规划王，拒绝废话和小情绪",
+          color: "紫色",
+          group: "分析师",
+          traits: "N直觉 + T理性 = 紫色脑力派",
+        },
+        INTP: {
+          nickname: "小瓶子、药水姐",
+          motto: "NT 怪咖逻辑脑，想法一堆动手零分",
+          color: "紫色",
+          group: "分析师",
+          traits: "N直觉 + T理性 = 紫色脑力派",
+        },
+        ENTJ: {
+          nickname: "小暴君、大姐头",
+          motto: "NT 霸总执行力，不服就干",
+          color: "紫色",
+          group: "分析师",
+          traits: "N直觉 + T理性 = 紫色脑力派",
+        },
+        ENTP: {
+          nickname: "狐狸、段子王",
+          motto: "NT 辩论狂人，歪理满天飞但有创意",
+          color: "紫色",
+          group: "分析师",
+          traits: "N直觉 + T理性 = 紫色脑力派",
+        },
+
+        // 外交官（NF 绿色理想派）
+        INFJ: {
+          nickname: "抹茶老头、老灵魂",
+          motto: "NF 心灵导师型，情感细腻爱隐忍",
+          color: "绿色",
+          group: "外交官",
+          traits: "N直觉 + F情感 = 绿色理想派",
+        },
+        INFP: {
+          nickname: "小蝴蝶、悲伤猫猫",
+          motto: "NF emo梦幻王，内耗艺术家",
+          color: "绿色",
+          group: "外交官",
+          traits: "N直觉 + F情感 = 绿色理想派",
+        },
+        ENFJ: {
+          nickname: "大宝剑、大狗",
+          motto: "NF 社交大哥大，做事热心肠",
+          color: "绿色",
+          group: "外交官",
+          traits: "N直觉 + F情感 = 绿色理想派",
+        },
+        ENFP: {
+          nickname: "快乐小狗🐶",
+          motto: "NF 热情小太阳，创意多、坐不住",
+          color: "绿色",
+          group: "外交官",
+          traits: "N直觉 + F情感 = 绿色理想派",
+        },
+
+        // 守卫者（SJ 蓝色传统派）
+        ISTJ: {
+          nickname: "蓝老头、老理工",
+          motto: "SJ 最强打工人，务实守规矩",
+          color: "蓝色",
+          group: "守卫者",
+          traits: "S实感 + J判断 = 蓝色传统派",
+        },
+        ISFJ: {
+          nickname: "小护士、老母亲",
+          motto: "SJ 安静照顾型，操心大师",
+          color: "蓝色",
+          group: "守卫者",
+          traits: "S实感 + J判断 = 蓝色传统派",
+        },
+        ESTJ: {
+          nickname: "尺子姐、卷王",
+          motto: "SJ 管理框架狂，做事必须有规有矩",
+          color: "蓝色",
+          group: "守卫者",
+          traits: "S实感 + J判断 = 蓝色传统派",
+        },
+        ESFJ: {
+          nickname: "奶妈、蛋糕哥",
+          motto: "SJ 社交维稳王，好人脸但容易内伤",
+          color: "蓝色",
+          group: "守卫者",
+          traits: "S实感 + J判断 = 蓝色传统派",
+        },
+
+        // 探险家（SP 黄色体验派）
+        ISTP: {
+          nickname: "电钻哥、工具人",
+          motto: "SP 修理达人，能动手绝不瞎叨叨",
+          color: "黄色",
+          group: "探险家",
+          traits: "S实感 + P感知 = 黄色体验派",
+        },
+        ISFP: {
+          nickname: "小画家、小甜甜",
+          motto: "SP 文艺敏感挂，躲在角落创世界",
+          color: "黄色",
+          group: "探险家",
+          traits: "S实感 + P感知 = 黄色体验派",
+        },
+        ESTP: {
+          nickname: "墨镜哥、街头王",
+          motto: "SP 社交打野，爱冒险爱搞事",
+          color: "黄色",
+          group: "探险家",
+          traits: "S实感 + P感知 = 黄色体验派",
+        },
+        ESFP: {
+          nickname: "哈士奇、锤子姐",
+          motto: "SP 快乐星球王，颜控+冲动合体",
+          color: "黄色",
+          group: "探险家",
+          traits: "S实感 + P感知 = 黄色体验派",
+        },
+      };
+
+      const colorStyles = {
+        紫色: { bg: "#F3E8FF", border: "#A855F7", text: "#6B21A8" },
+        绿色: { bg: "#DCFCE7", border: "#22C55E", text: "#15803D" },
+        蓝色: { bg: "#DBEAFE", border: "#3B82F6", text: "#1D4ED8" },
+        黄色: { bg: "#FEF9C3", border: "#EAB308", text: "#A16207" },
+      };
+
+      const mbtiImages = {
+        INTJ: "mbti_img/Architect.png",
+        INTP: "mbti_img/Logician.png",
+        ENTJ: "mbti_img/Commander.png",
+        ENTP: "mbti_img/Debater.png",
+        INFJ: "mbti_img/Advocate.png",
+        INFP: "mbti_img/Mediator.png",
+        ENFJ: "mbti_img/Protagonist.png",
+        ENFP: "mbti_img/Campaigner.png",
+        ISTJ: "mbti_img/Logistician.png",
+        ISFJ: "mbti_img/Defender.png",
+        ESTJ: "mbti_img/Executive.png",
+        ESFJ: "mbti_img/Consul.png",
+        ISTP: "mbti_img/Virtuoso.png",
+        ISFP: "mbti_img/Adventurer.png",
+        ESTP: "mbti_img/Entrepreneur.png",
+        ESFP: "mbti_img/Entertainer.png",
+      };
+
+      const mbtiDimensions = {
+        E: {
+          name: "外向 Extraversion",
+          description: "从外界吸能🔥 - 像太阳能板一样从外部世界获取能量",
+          traits: [
+            "喜欢社交互动",
+            "通过交谈思考",
+            "寻求外部刺激",
+            "精力充沛外放",
+          ],
+        },
+        I: {
+          name: "内向 Introversion",
+          description: "从独处回血🧘 - 像充电宝一样需要独处时间恢复能量",
+          traits: [
+            "享受独处时光",
+            "深度思考内省",
+            "内在世界丰富",
+            "能量需要内敛",
+          ],
+        },
+        S: {
+          name: "感知 Sensing",
+          description: "靠五官，脚踏实地🧠 - 实干家，关注现实具体的细节",
+          traits: ["重视实际经验", "注重具体细节", "相信眼见为实", "脚踏实地"],
+        },
+        N: {
+          name: "直觉 iNtuition",
+          description: "靠脑补，爱想未来💭 - 幻想王，关注可能性和未来",
+          traits: [
+            "重视创意灵感",
+            "关注未来发展",
+            "寻找深层联系",
+            "想象力丰富",
+          ],
+        },
+        T: {
+          name: "思维 Thinking",
+          description: "看逻辑📊 - 像机器人一样用逻辑和理性做决定",
+          traits: [
+            "追求逻辑自洽",
+            "重视客观事实",
+            "决策讲求效率",
+            "以真理为标准",
+          ],
+        },
+        F: {
+          name: "情感 Feeling",
+          description: "看感受❤️ - 像恋爱脑一样重视情感和价值观",
+          traits: [
+            "重视人际和谐",
+            "强调同理心",
+            "以价值观为准",
+            "关注他人感受",
+          ],
+        },
+        J: {
+          name: "判断 Judging",
+          description: "有计划爱掌控📅 - 计划狂，喜欢确定性和秩序",
+          traits: [
+            "规划未来行动",
+            "追求秩序条理",
+            "喜欢做决定",
+            "及时完成任务",
+          ],
+        },
+        P: {
+          name: "感知 Perceiving",
+          description: "随性自由派🎈 - 自由魂，保持开放和适应性",
+          traits: ["保持选项开放", "灵活应对变化", "享受探索过程", "随机应变"],
+        },
+      };
+
+      const mbtiGroups = {
+        NT: {
+          name: "分析师",
+          color: "紫色",
+          trait: "N直觉 + T理性 = 紫色脑力派",
+          keywords: "聪明、逻辑、战略",
+        },
+        NF: {
+          name: "外交官",
+          color: "绿色",
+          trait: "N直觉 + F情感 = 绿色理想派",
+          keywords: "情感、梦想、沟通",
+        },
+        SJ: {
+          name: "守卫者",
+          color: "蓝色",
+          trait: "S实感 + J判断 = 蓝色传统派",
+          keywords: "责任、稳定、传统",
+        },
+        SP: {
+          name: "探险家",
+          color: "黄色",
+          trait: "S实感 + P感知 = 黄色体验派",
+          keywords: "行动、自由、玩乐",
+        },
+      };
+
+      function getMbtiGroup(type) {
+        const pe = type[1];
+        const ju = type[2];
+        if (pe === "N" && ju === "T") return "NT";
+        if (pe === "N" && ju === "F") return "NF";
+        if (pe === "S" && type[3] === "J") return "SJ";
+        if (pe === "S" && type[3] === "P") return "SP";
+      }
+
+      function showMBTI(type) {
+        const modal = document.getElementById("mbtiModal");
+        const modalContent = document.getElementById("modalContent");
+
+        // Calculate cognitive functions first
+        const [att, pe, ju, li] = type.split("");
+        const isI = att === "I";
+        const isJext = (li === "J") === !isI;
+        const domOri = isI ? "i" : "e";
+        const jPair = { T: ["Ti", "Te"], F: ["Fi", "Fe"] }[ju];
+        const pPair = { S: ["Si", "Se"], N: ["Ni", "Ne"] }[pe];
+
+        const dom = isJext
+          ? jPair[domOri === "i" ? 0 : 1]
+          : pPair[domOri === "i" ? 0 : 1];
+
+        const auxOri = isI ? "e" : "i";
+        const aux = isJext
+          ? pPair[auxOri === "i" ? 0 : 1]
+          : jPair[auxOri === "i" ? 0 : 1];
+
+        const third =
+          auxOri === "i"
+            ? jPair.includes(aux)
+              ? jPair[1 - jPair.indexOf(aux)]
+              : pPair[1 - pPair.indexOf(aux)]
+            : pPair.includes(aux)
+            ? pPair[1 - pPair.indexOf(aux)]
+            : jPair[1 - jPair.indexOf(aux)];
+
+        const fourth =
+          domOri === "i"
+            ? jPair.includes(dom)
+              ? jPair[1 - jPair.indexOf(dom)]
+              : pPair[1 - pPair.indexOf(dom)]
+            : pPair.includes(dom)
+            ? pPair[1 - pPair.indexOf(dom)]
+            : jPair[1 - jPair.indexOf(dom)];
+
+        const mbtiInfo = mbtiDescriptions[type];
+        const colorStyle = colorStyles[mbtiInfo.color];
+        const group = getMbtiGroup(type);
+        const groupInfo = mbtiGroups[group];
+
+        modalContent.innerHTML = `
+          <div class="p-6 md:p-8" style="background: ${colorStyle.bg}">
+            <div class="flex flex-col md:flex-row items-start gap-6">
+              <img src="${
+                mbtiImages[type]
+              }" alt="${type}" class="w-40 h-40 object-contain rounded-xl mx-auto md:mx-0">
+              <div class="flex-1 space-y-4">
+                <h2 class="text-3xl font-medium" style="color: ${
+                  colorStyle.text
+                }">
+                  ${type} · ${mbtiInfo.group}
+                </h2>
+                <div class="space-y-2">
+                  <p class="text-xl">🎭 昵称：${mbtiInfo.nickname}</p>
+                  <p class="text-lg">💫 特征：${groupInfo.trait}</p>
+                  <p class="text-lg">📝 口诀：${mbtiInfo.motto}</p>
+                  <p class="text-lg">🎯 核心：${groupInfo.keywords}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 md:p-8 space-y-8">
+            <!-- MBTI Introduction -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div class="p-6 border-b border-gray-200">
+                <h3 class="text-2xl font-medium text-gray-800">MBTI vs 认知功能</h3>
+              </div>
+              <div class="p-6 space-y-4">
+                <p class="text-gray-700">MBTI 是你的人设，认知功能是你大脑的操作系统。</p>
+                <p class="text-gray-700">你可以是 ${type}，但你的大脑主导功能是 ${dom}；</p>
+                <p class="text-gray-700">—— 性格"是什么"，MBTI 告诉你；<br>—— 性格"怎么运作"，认知功能告诉你。</p>
+              </div>
+            </div>
+
+            <!-- MBTI Dimensions -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div class="p-6 border-b border-gray-200">
+                <h3 class="text-2xl font-medium text-gray-800">四维度解析</h3>
+                <p class="text-gray-600 mt-2">每个维度都代表性格的一个重要方面</p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+                <div class="space-y-6">
+                  <!-- Energy Source -->
+                  <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                      <div class="flex-1">
+                        <h4 class="text-lg font-medium">${
+                          mbtiDimensions[att].name
+                        }</h4>
+                        <p class="text-gray-600 mt-1">${
+                          mbtiDimensions[att].description
+                        }</p>
+                      </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        ${mbtiDimensions[att].traits
+                          .map((trait) => `<li>${trait}</li>`)
+                          .join("")}
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- Information -->
+                  <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                      <div class="flex-1">
+                        <h4 class="text-lg font-medium">${
+                          mbtiDimensions[pe].name
+                        }</h4>
+                        <p class="text-gray-600 mt-1">${
+                          mbtiDimensions[pe].description
+                        }</p>
+                      </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        ${mbtiDimensions[pe].traits
+                          .map((trait) => `<li>${trait}</li>`)
+                          .join("")}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="space-y-6">
+                  <!-- Decision Making -->
+                  <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                      <div class="flex-1">
+                        <h4 class="text-lg font-medium">${
+                          mbtiDimensions[ju].name
+                        }</h4>
+                        <p class="text-gray-600 mt-1">${
+                          mbtiDimensions[ju].description
+                        }</p>
+                      </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        ${mbtiDimensions[ju].traits
+                          .map((trait) => `<li>${trait}</li>`)
+                          .join("")}
+                      </ul>
+                    </div>
+                  </div>
+                  <!-- Lifestyle -->
+                  <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                      <div class="flex-1">
+                        <h4 class="text-lg font-medium">${
+                          mbtiDimensions[li].name
+                        }</h4>
+                        <p class="text-gray-600 mt-1">${
+                          mbtiDimensions[li].description
+                        }</p>
+                      </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        ${mbtiDimensions[li].traits
+                          .map((trait) => `<li>${trait}</li>`)
+                          .join("")}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cognitive Functions Stack -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div class="p-6 border-b border-gray-200">
+                <h3 class="text-2xl font-medium text-gray-800">认知功能推导过程</h3>
+                <p class="text-gray-600 mt-2">通过 MBTI 代码逐步推导出认知功能栈</p>
+              </div>
+              <div class="p-6 space-y-8">
+                ${steps
+                  .map((step, index) => {
+                    const stepResult = step.getResult(type);
+                    return `
+                    <div class="relative">
+                      <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0">
+                          ${index + 1}
+                        </div>
+                        <div class="flex-1 space-y-3">
+                          <h4 class="text-lg font-medium text-gray-800">${
+                            step.title
+                          }</h4>
+                          <p class="text-gray-600">${step.description}</p>
+                          <div class="bg-primary-50 rounded-lg p-4 font-medium text-primary-700">
+                            ${stepResult.result}
+                          </div>
+                          <div class="bg-gray-50 rounded-lg p-4 whitespace-pre-line text-gray-700">
+                            ${stepResult.explanation}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                  })
+                  .join("")}
+              </div>
+            </div>
+
+            <!-- Final Cognitive Functions -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div class="p-6 border-b border-gray-200">
+                <h3 class="text-2xl font-medium text-gray-800">最终认知功能栈</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50">
+                <div class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <h4 class="font-medium text-lg mb-2">主导功能：${dom}</h4>
+                  <p class="text-gray-600">${functionDescriptions[dom]}</p>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <h4 class="font-medium text-lg mb-2">辅助功能：${aux}</h4>
+                  <p class="text-gray-600">${functionDescriptions[aux]}</p>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <h4 class="font-medium text-lg mb-2">第三功能：${third}</h4>
+                  <p class="text-gray-600">${functionDescriptions[third]}</p>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <h4 class="font-medium text-lg mb-2">劣势功能：${fourth}</h4>
+                  <p class="text-gray-600">${functionDescriptions[fourth]}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 border-t border-gray-200 flex justify-between">
+            <button onclick="closeModal()" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              关闭
+            </button>
+          </div>
+        `;
+
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+          modal.classList.add("active");
+        }, 10);
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("mbtiModal");
+        modal.classList.remove("active");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+        }, 300);
+      }
+
+      // Close modal when clicking Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      });
+    </script>
+  </body>
+</html>
