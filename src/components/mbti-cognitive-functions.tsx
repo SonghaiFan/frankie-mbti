@@ -13,13 +13,7 @@ import {
 } from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
 import { cognitiveFunctions } from "@/data/mbti-data";
-
-const functionDescriptions = Object.fromEntries(
-  Object.entries(cognitiveFunctions.types).map(([key, value]) => [
-    key,
-    `${value.name}：${value.description}`,
-  ])
-);
+import { calculateCognitiveFunctions } from "@/utils/mbti";
 
 interface Step {
   title: string;
@@ -52,7 +46,6 @@ const steps: Step[] = [
       const [att, , , li] = mbti;
       const isI = att === "I";
       const isP = li === "P";
-      const isJext = (li === "J") === !isI;
       return {
         result: `${li}（${isP ? "感知" : "判断"}）`,
         explanation: isI
@@ -250,40 +243,7 @@ interface MBTICognitiveFunctionsProps {
 
 export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
   const colorStyle = getMbtiColor(type.group);
-  const mbtiType = type.type.split("");
-  const [att, pe, ju, li] = mbtiType;
-  const isI = att === "I";
-  const isJext = (li === "J") === !isI;
-  const domOri = isI ? "i" : "e";
-  const jPair = ju === "T" ? ["Ti", "Te"] : ["Fi", "Fe"];
-  const pPair = pe === "S" ? ["Si", "Se"] : ["Ni", "Ne"];
-
-  const dom = isJext
-    ? jPair[domOri === "i" ? 0 : 1]
-    : pPair[domOri === "i" ? 0 : 1];
-
-  const auxOri = isI ? "e" : "i";
-  const aux = isJext
-    ? pPair[auxOri === "i" ? 0 : 1]
-    : jPair[auxOri === "i" ? 0 : 1];
-
-  const third =
-    auxOri === "i"
-      ? jPair.includes(aux)
-        ? jPair[1 - jPair.indexOf(aux)]
-        : pPair[1 - pPair.indexOf(aux)]
-      : pPair.includes(aux)
-      ? pPair[1 - pPair.indexOf(aux)]
-      : jPair[1 - jPair.indexOf(aux)];
-
-  const fourth =
-    domOri === "i"
-      ? jPair.includes(dom)
-        ? jPair[1 - jPair.indexOf(dom)]
-        : pPair[1 - pPair.indexOf(dom)]
-      : pPair.includes(dom)
-      ? pPair[1 - pPair.indexOf(dom)]
-      : jPair[1 - jPair.indexOf(dom)];
+  const { dom, aux, third, fourth } = calculateCognitiveFunctions(type);
 
   return (
     <motion.div
@@ -383,7 +343,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
           { func: fourth, level: cognitiveFunctions.levels[3] },
         ].map(({ func, level }) => (
           <motion.div
-            key={func}
+            key={func.name}
             {...mbtiMotionStyles}
             className={cn(
               "p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow",
@@ -393,15 +353,11 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             <div className="flex items-center gap-2 mb-2">
               <span className="text-2xl">{level.icon}</span>
               <h4 className={cn("font-medium text-base", colorStyle.text)}>
-                {level.name}：{func}
+                {level.name}：{func.name}
               </h4>
             </div>
             <p className={cn(mbtiCardDescription, "text-sm")}>
-              {
-                cognitiveFunctions.types[
-                  func as keyof typeof cognitiveFunctions.types
-                ].description
-              }
+              {func.description}
             </p>
           </motion.div>
         ))}

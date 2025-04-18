@@ -15,7 +15,8 @@ interface CognitiveFunctionResult {
 export function calculateCognitiveFunctions(
   mbtiType: string
 ): CognitiveFunctionResult {
-  const [att, pe, ju, li] = mbtiType.split("");
+  const pe = mbtiType.split("")[1];
+  const ju = mbtiType.split("")[2];
 
   // Determine dominant and auxiliary functions
   let dom, aux;

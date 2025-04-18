@@ -33,7 +33,7 @@ export function MBTIGrid() {
               "text-2xl font-medium mb-4 text-center transition-colors duration-300",
               group === "分析师" && "text-purple-800 dark:text-purple-400",
               group === "外交官" && "text-green-800 dark:text-green-400",
-              group === "守卫者" && "text-blue-800 dark:text-blue-400",
+              group === "守护者" && "text-blue-800 dark:text-blue-400",
               group === "探险家" && "text-yellow-800 dark:text-yellow-400"
             )}
           >

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { MBTIType } from "@/types/mbti";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ import {
   mbtiCardDescription,
   getMbtiColor,
 } from "@/styles/mbti-styles";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface MBTICardProps {
   type: MBTIType;
@@ -28,10 +28,7 @@ export function MBTICard({
   onExpand,
   onCollapse,
 }: MBTICardProps) {
-  const [isHovered, setIsHovered] = useState(false);
   const mbtiInfo = mbtiTypes.find((t) => t.type === type.type);
-  if (!mbtiInfo) return null;
-
   const colorStyle = getMbtiColor(type.group);
 
   useEffect(() => {
@@ -41,11 +38,11 @@ export function MBTICard({
       }
     }
 
-    if (isExpanded) {
-      document.addEventListener("keydown", handleKeyDown);
-      return () => document.removeEventListener("keydown", handleKeyDown);
-    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isExpanded, onCollapse]);
+
+  if (!mbtiInfo) return null;
 
   return (
     <>

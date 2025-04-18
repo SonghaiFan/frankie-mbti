@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { MBTIType } from "@/types/mbti";
 import { mbtiTypes } from "@/data/mbti-data";
 import { cn } from "@/lib/utils";
-import { getMbtiColor } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
 import { MBTIState } from "@/store/mbti-store";
 import { MBTICard } from "@/components/mbti-card";
@@ -116,8 +115,6 @@ export function MBTITest() {
       setIsOpen(false);
     }
   };
-
-  const colorStyle = testResult ? getMbtiColor(testResult.group) : null;
 
   return (
     <>

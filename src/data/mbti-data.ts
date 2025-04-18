@@ -1,9 +1,4 @@
-import {
-  MBTIType,
-  MBTIDimension,
-  MBTIGroup,
-  CognitiveFunction,
-} from "@/types/mbti";
+import { MBTIType, MBTIDimension, MBTIGroup } from "@/types/mbti";
 
 export const mbtiTypes: MBTIType[] = [
   {
@@ -98,7 +93,7 @@ export const mbtiTypes: MBTIType[] = [
   },
   {
     type: "ISFJ",
-    title: "守护者",
+    title: "守卫者",
     nickname: "小护士、老母亲",
     motto: "SJ 安静照顾型，操心大师",
     color: "blue",

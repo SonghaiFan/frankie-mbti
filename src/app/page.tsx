@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { mbtiTypes } from "@/data/mbti-data";
 import { MBTIGrid } from "@/components/mbti-grid";
 import { Footer } from "@/components/footer";
 import { MBTITest } from "@/components/mbti-test";
@@ -16,15 +15,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
-  const groupedMBTIs = mbtiTypes.reduce((acc, mbti) => {
-    const group = mbti.group;
-    if (!acc[group]) {
-      acc[group] = [];
-    }
-    acc[group].push(mbti);
-    return acc;
-  }, {} as Record<string, typeof mbtiTypes>);
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-purple-50 dark:from-gray-900 dark:to-purple-900/20 py-12 pb-32">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -35,24 +25,13 @@ export default function Home() {
           className="text-center space-y-4 mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
-            MBTI 性格类型
+            了解自己
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            探索你的性格类型 🔍 了解自己和他人的独特之处 ✨
+            探索你的mbti人设和荣格八维功能
           </p>
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <span className="inline-flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-purple-500" /> 分析师
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500" /> 外交官
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500" /> 守卫者
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-yellow-500" /> 探险家
-            </span>
+            <MBTITest />
           </div>
         </motion.div>
 
@@ -71,7 +50,6 @@ export default function Home() {
         )}
       </div>
       <Footer />
-      <MBTITest />
     </main>
   );
 }
