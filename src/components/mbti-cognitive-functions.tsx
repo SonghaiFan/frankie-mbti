@@ -352,34 +352,34 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             <motion.div
               key={step.title}
               {...mbtiMotionStyles}
-              className="mb-8 last:mb-0"
+              className="mb-4 last:mb-0"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-2">
                 <div
                   className={cn(
-                    "w-6 h-6 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0 text-sm",
+                    "w-5 h-5 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0 text-xs",
                     colorStyle.bg
                   )}
                 >
                   {index + 1}
                 </div>
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-1.5">
                   <motion.h4
                     {...mbtiMotionStyles}
-                    className={cn(mbtiCardTitle, colorStyle.text, "text-base")}
+                    className={cn(mbtiCardTitle, colorStyle.text, "text-sm")}
                   >
                     {step.title}
                   </motion.h4>
                   <motion.p
                     {...mbtiMotionStyles}
-                    className={cn(mbtiCardDescription, "text-sm")}
+                    className={cn(mbtiCardDescription, "text-xs")}
                   >
                     {step.description}
                   </motion.p>
                   <motion.div
                     {...mbtiMotionStyles}
                     className={cn(
-                      "rounded-lg p-3 font-medium text-sm",
+                      "rounded-lg p-2 font-medium text-xs",
                       colorStyle.bg,
                       colorStyle.text
                     )}
@@ -389,7 +389,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                   <motion.div
                     {...mbtiMotionStyles}
                     className={cn(
-                      "rounded-lg p-3 whitespace-pre-line text-sm",
+                      "rounded-lg p-2 whitespace-pre-line text-xs",
                       "bg-gray-50 dark:bg-gray-700",
                       "text-gray-700 dark:text-gray-300"
                     )}
@@ -415,7 +415,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className="p-6 space-y-4">
+      <motion.div {...mbtiMotionStyles} className="p-4 space-y-3">
         {type.cognitiveFunctions.split(" ").map((funcName, index) => {
           const funcType =
             cognitiveFunctions.types[funcName as CognitiveFunctionName];
@@ -426,7 +426,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               key={funcName}
               {...mbtiMotionStyles}
               className={cn(
-                "relative flex flex-col gap-4 p-6 rounded-xl transition-all duration-200",
+                "relative flex flex-col gap-3 p-4 rounded-xl transition-all duration-200",
                 "hover:bg-gray-50 dark:hover:bg-gray-800/50",
                 "group"
               )}
@@ -441,11 +441,11 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               />
 
               {/* Header Section */}
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-3">
                 {/* Icon */}
                 <div
                   className={cn(
-                    "flex-shrink-0 w-12 h-12 rounded-xl shadow-sm flex items-center justify-center text-2xl",
+                    "flex-shrink-0 w-10 h-10 rounded-lg shadow-sm flex items-center justify-center text-xl",
                     "bg-white dark:bg-gray-800"
                   )}
                 >
@@ -453,20 +453,22 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 </div>
 
                 {/* Title Area */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   {/* Level Info */}
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xl">{level.icon}</span>
-                    <h4 className={cn("font-semibold", colorStyle.text)}>
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className="text-lg">{level.icon}</span>
+                    <h4
+                      className={cn("font-semibold text-sm", colorStyle.text)}
+                    >
                       {level.name}
                     </h4>
                   </div>
 
                   {/* Function Type */}
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2">
                     <span
                       className={cn(
-                        "px-2 py-0.5 rounded-md font-mono font-medium",
+                        "px-1.5 py-0.5 rounded font-mono text-xs font-medium",
                         colorStyle.bg,
                         colorStyle.text,
                         "bg-opacity-10 dark:bg-opacity-20"
@@ -474,7 +476,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                     >
                       {funcName}
                     </span>
-                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                    <span className="font-medium text-xs text-gray-800 dark:text-gray-200">
                       {funcType.name}
                     </span>
                   </div>
@@ -496,7 +498,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                         }
                       </span>
                     </div>
-                    <div className="h-2 bg-gray-50 dark:bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-gray-50 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-500",
@@ -518,7 +520,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 {/* Stack Level */}
                 <div
                   className={cn(
-                    "flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium",
+                    "flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium",
                     colorStyle.bg,
                     colorStyle.text,
                     "bg-opacity-10 dark:bg-opacity-20"
@@ -529,63 +531,63 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               </div>
 
               {/* Content Section */}
-              <div className="space-y-4 pl-16">
+              <div className="space-y-3 pl-[52px]">
                 {/* Quick Description */}
                 <div
                   className={cn(
-                    "p-3 rounded-lg",
+                    "p-2 rounded-lg text-xs",
                     colorStyle.bg,
                     "bg-opacity-5 dark:bg-opacity-10"
                   )}
                 >
-                  <p className="text-sm text-gray-800 dark:text-gray-200">
+                  <p className="text-gray-800 dark:text-gray-200">
                     {funcType.description}
                   </p>
                 </div>
 
                 {/* Detailed Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {/* Left Column */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {/* Definition */}
-                    <div className="space-y-1">
-                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <div className="space-y-0.5">
+                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                         定义
                       </h5>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         {funcType.definition}
                       </p>
                     </div>
 
                     {/* Characteristics */}
-                    <div className="space-y-1">
-                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <div className="space-y-0.5">
+                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                         特征
                       </h5>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         {funcType.characteristics}
                       </p>
                     </div>
                   </div>
 
                   {/* Right Column */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {/* Training */}
-                    <div className="space-y-1">
-                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <div className="space-y-0.5">
+                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                         加强训练方式
                       </h5>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         {funcType.training}
                       </p>
                     </div>
 
                     {/* Details */}
-                    <div className="space-y-1">
-                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <div className="space-y-0.5">
+                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                         详细说明
                       </h5>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
                         {funcType.details}
                       </p>
                     </div>
@@ -595,12 +597,12 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 {/* Level Description */}
                 <div
                   className={cn(
-                    "p-3 rounded-lg border",
+                    "p-2 rounded-lg border text-xs",
                     "border-gray-100 dark:border-gray-800",
                     "bg-gray-50 dark:bg-gray-800/50"
                   )}
                 >
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-gray-600 dark:text-gray-400">
                     {level.description}
                   </p>
                 </div>

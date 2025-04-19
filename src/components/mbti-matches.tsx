@@ -67,7 +67,7 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
     >
       <motion.div
         {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, colorStyle.bg)}
+        className={cn(mbtiCardHeader, "py-2", colorStyle.bg)}
       >
         <motion.h3
           {...mbtiMotionStyles}
@@ -77,66 +77,68 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className={mbtiCardContent}>
-        <div className="space-y-6">
+      <motion.div {...mbtiMotionStyles} className="p-3">
+        <div className="space-y-3">
           {Object.values(combinedMatches).map(
             ({ partner, matches, uniqueNames }, index) => (
               <motion.div
                 key={index}
                 {...mbtiMotionStyles}
-                className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
+                className="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700"
               >
-                <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-auto">
-                    <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px]">
+                    <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.title}
                         fill
-                        sizes="(max-width: 768px) 48px, 64px"
+                        sizes="(max-width: 768px) 40px, 48px"
                         className="object-cover"
                       />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">{type.type}</span>
-                      <span className="text-xs text-gray-500">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-medium truncate">
+                        {type.type}
+                      </span>
+                      <span className="text-xs text-gray-500 truncate">
                         {type.cognitiveFunctions}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center w-full md:w-auto">
-                    <span className="text-base md:text-lg font-bold text-pink-500 text-center">
+                  <div className="flex flex-col items-center w-full md:w-[160px] px-2">
+                    <span className="text-sm font-bold text-pink-500 text-center line-clamp-1">
                       {Array.from(uniqueNames).join("；")}
                     </span>
-                    <span className="text-xs md:text-sm text-gray-500 text-center">
+                    <span className="text-xs text-gray-500 text-center line-clamp-1">
                       {matches.map((m) => m.matchType).join("；")}
                     </span>
                   </div>
 
-                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-auto">
-                    <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px]">
+                    <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
                       <Image
                         src={`/mbti_img/${partner.image}`}
                         alt={partner.title}
                         fill
-                        sizes="(max-width: 768px) 48px, 64px"
+                        sizes="(max-width: 768px) 40px, 48px"
                         className="object-cover"
                       />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-medium truncate">
                         {partner.type}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 truncate">
                         {partner.cognitiveFunctions}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="w-full md:flex-1 mt-4 md:mt-0">
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                <div className="w-full md:flex-1 mt-3 md:mt-0 md:pl-4 md:border-l md:border-gray-200 dark:md:border-gray-700">
+                  <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
                     {matches.map((m) => m.description).join("；")}
                   </p>
                 </div>
