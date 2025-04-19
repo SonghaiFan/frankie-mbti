@@ -1080,3 +1080,81 @@ export const mbtiMatches = [
     description: "辅助功能与第三功能交叉对应，且I（内倾）、E（外倾）不同",
   },
 ];
+export const dimensions = [
+  {
+    name: "精力来源",
+    options: [
+      {
+        type: "E",
+        name: "外向",
+        description: "从外界吸能🔥",
+        mnemonic: "E像太阳能板",
+        icon: "🌞",
+      },
+      {
+        type: "I",
+        name: "内向",
+        description: "从独处回血🧘",
+        mnemonic: "I像充电宝",
+        icon: "🔋",
+      },
+    ],
+  },
+  {
+    name: "获取信息",
+    options: [
+      {
+        type: "S",
+        name: "实感",
+        description: "靠五官，脚踏实地🧠",
+        mnemonic: "S是实干家",
+        icon: "👣",
+      },
+      {
+        type: "N",
+        name: "直觉",
+        description: "靠脑补，爱想未来💭",
+        mnemonic: "N是幻想王",
+        icon: "✨",
+      },
+    ],
+  },
+  {
+    name: "做决定",
+    options: [
+      {
+        type: "T",
+        name: "理性",
+        description: "看逻辑📊",
+        mnemonic: "T是机器人",
+        icon: "🤖",
+      },
+      {
+        type: "F",
+        name: "情感",
+        description: "看感受❤️",
+        mnemonic: "F是恋爱脑",
+        icon: "💝",
+      },
+    ],
+  },
+  {
+    name: "生活方式",
+    options: [
+      {
+        type: "J",
+        name: "判断",
+        description: "有计划爱掌控📅",
+        mnemonic: "J是计划狂",
+        icon: "📋",
+      },
+      {
+        type: "P",
+        name: "感知",
+        description: "随性自由派🎈",
+        mnemonic: "P是自由魂",
+        icon: "🎯",
+      },
+    ],
+  },
+];

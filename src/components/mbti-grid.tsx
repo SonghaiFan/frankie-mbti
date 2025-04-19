@@ -36,7 +36,7 @@ export function MBTIGrid() {
             )}
             style={{ animationDelay: `${0.1 + index * 0.1}s` }}
           >
-            <div className="p-6 flex-1 flex flex-col min-h-[200px]">
+            <div className="p-6 flex flex-col h-[250px]">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <h2
@@ -60,7 +60,7 @@ export function MBTIGrid() {
                 </div>
               </div>
 
-              <div className="flex-1 flex flex-col">
+              <div className="flex flex-col flex-1">
                 <div className="space-y-1.5 mb-4">
                   <p className="text-sm font-medium line-clamp-1">
                     {explanation.title}

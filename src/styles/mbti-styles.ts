@@ -3,24 +3,28 @@ import { cn } from "@/lib/utils";
 export const mbtiColors = {
   purple: {
     bg: "bg-purple-50 dark:bg-purple-900/20",
+    bgDark: "bg-purple-100 dark:bg-purple-900/40",
     text: "text-purple-900 dark:text-purple-100",
     border: "border-purple-200 dark:border-purple-800",
     hover: "hover:bg-purple-100 dark:hover:bg-purple-900/40",
   },
   green: {
-    bg: "bg-green-200 dark:bg-green-900/20",
+    bg: "bg-green-50 dark:bg-green-900/20",
+    bgDark: "bg-green-100 dark:bg-green-900/40",
     text: "text-green-900 dark:text-green-100",
     border: "border-green-200 dark:border-green-800",
     hover: "hover:bg-green-100 dark:hover:bg-green-900/40",
   },
   blue: {
     bg: "bg-blue-50 dark:bg-blue-900/20",
+    bgDark: "bg-blue-100 dark:bg-blue-900/40",
     text: "text-blue-900 dark:text-blue-100",
     border: "border-blue-200 dark:border-blue-800",
     hover: "hover:bg-blue-100 dark:hover:bg-blue-900/40",
   },
   yellow: {
     bg: "bg-yellow-50 dark:bg-yellow-900/20",
+    bgDark: "bg-yellow-100 dark:bg-yellow-900/40",
     text: "text-yellow-900 dark:text-yellow-100",
     border: "border-yellow-200 dark:border-yellow-800",
     hover: "hover:bg-yellow-100 dark:hover:bg-yellow-900/40",

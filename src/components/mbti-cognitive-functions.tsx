@@ -466,27 +466,26 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                       <span className={cn("font-medium", colorStyle.text)}>
                         {
                           [
-                            "精通 (95%)",
-                            "熟练 (80%)",
-                            "进阶 (60%)",
-                            "入门 (40%)",
+                            "精通 (80%)",
+                            "熟练 (60%)",
+                            "进阶 (40%)",
+                            "入门 (20%)",
                           ][index]
                         }
                       </span>
                     </div>
-                    <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                    <div className="h-2 bg-gray-50 dark:bg-gray-800 rounded-full overflow-hidden">
                       <div
                         className={cn(
                           "h-full rounded-full transition-all duration-500",
-                          colorStyle.bg,
-                          "opacity-90"
+                          colorStyle.bgDark
                         )}
                         style={{
                           width: [
-                            "95%", // 主导功能
-                            "80%", // 辅助功能
-                            "60%", // 第三功能
-                            "40%", // 劣势功能
+                            "80%", // 主导功能
+                            "60%", // 辅助功能
+                            "40%", // 第三功能
+                            "20%", // 劣势功能
                           ][index],
                         }}
                       />

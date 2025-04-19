@@ -110,7 +110,7 @@ export function MBTICard({
             }}
             className={cn(
               "h-full transition-colors duration-300",
-              colorStyle.bg
+              colorStyle.bgDark
             )}
           >
             <motion.div
