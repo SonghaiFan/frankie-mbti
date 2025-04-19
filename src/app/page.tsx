@@ -19,10 +19,12 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900/90 relative">
       {/* Header Mountains Background */}
       <div
-        className="absolute top-0 left-0 right-0 h-[300px] bg-no-repeat bg-cover bg-bottom z-0 after:absolute after:inset-0 after:bg-gradient-to-t after:from-white/90 after:via-white/50 after:to-transparent dark:after:from-gray-900/90 dark:after:via-gray-900/50 dark:after:to-transparent"
+        className="absolute top-0 left-0 right-0 h-[250px] bg-no-repeat bg-cover bg-bottom z-0 opacity-60 dark:opacity-40"
         style={{
           backgroundImage:
             "url(https://www.16personalities.com/static/images/homepage/header-mountains-desktop.svg)",
+          maskImage: "linear-gradient(to bottom, black, transparent)",
+          WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
         }}
       />
 
