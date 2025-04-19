@@ -84,12 +84,19 @@ export function MBTICard({
           scale: isExpanded ? 1 : 1,
           y: isExpanded ? 0 : 0,
         }}
-        whileHover={!isExpanded ? { scale: 1.02, y: -4 } : {}}
+        whileHover={
+          !isExpanded
+            ? {
+                scale: 1.02,
+                y: -4,
+                transition: {
+                  type: "spring",
+                },
+              }
+            : {}
+        }
         transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 25,
-          mass: 1,
+          duration: 0.2,
         }}
         className={cn(
           "relative overflow-hidden cursor-pointer",
@@ -103,10 +110,7 @@ export function MBTICard({
         <motion.div
           layout
           transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 25,
-            mass: 1,
+            duration: 0.2,
           }}
           className={cn(
             mbtiCard,
@@ -119,24 +123,39 @@ export function MBTICard({
           <motion.div
             layout
             transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 25,
-              mass: 1,
+              duration: 0.1,
             }}
             className={cn(
               "h-full transition-colors duration-300",
               colorStyle.bgDark
             )}
           >
+            {isExpanded && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCollapse();
+                }}
+                className="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 dark:bg-gray-800/10 dark:hover:bg-gray-800/20 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-600 dark:text-gray-300"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </motion.button>
+            )}
             <motion.div
               layout
-              transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 25,
-                mass: 1,
-              }}
               className={cn(
                 "flex flex-row items-stretch",
                 !isExpanded && "h-[100px]"
@@ -225,18 +244,7 @@ export function MBTICard({
 
           {/* Expanded Content */}
           {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 25,
-                mass: 1,
-              }}
-              className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-300px)]"
-            >
+            <motion.div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-300px)]">
               <MBTIIntroduction type={type} />
               <MBTIDimensions type={type} />
               <MBTICognitiveFunctions type={type} />

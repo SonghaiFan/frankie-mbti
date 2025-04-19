@@ -12,14 +12,13 @@ import {
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
-import {
-  cognitiveFunctions,
-  cognitiveFunctionsOverview,
-} from "@/data/mbti-data";
+import { cognitiveFunctions } from "@/data/mbti-data";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-type CognitiveFunctionName = keyof typeof cognitiveFunctions.types;
+type CognitiveFunctionName =
+  | keyof typeof cognitiveFunctions.categories.judging.functions
+  | keyof typeof cognitiveFunctions.categories.perceiving.functions;
 
 interface Step {
   title: string;
@@ -162,7 +161,12 @@ const getStepResult = (
 
       // 确保 dom 是有效的认知功能
       if (
-        !cognitiveFunctions.types[dom as keyof typeof cognitiveFunctions.types]
+        !cognitiveFunctions.categories.judging.functions[
+          dom as keyof typeof cognitiveFunctions.categories.judging.functions
+        ] &&
+        !cognitiveFunctions.categories.perceiving.functions[
+          dom as keyof typeof cognitiveFunctions.categories.perceiving.functions
+        ]
       ) {
         return {
           result: "错误",
@@ -173,11 +177,16 @@ const getStepResult = (
       }
 
       const funcType =
-        cognitiveFunctions.types[dom as keyof typeof cognitiveFunctions.types];
+        cognitiveFunctions.categories.judging.functions[
+          dom as keyof typeof cognitiveFunctions.categories.judging.functions
+        ] ||
+        cognitiveFunctions.categories.perceiving.functions[
+          dom as keyof typeof cognitiveFunctions.categories.perceiving.functions
+        ];
 
       return {
         result: dom,
-        explanation: `经过前三步的筛选，得到主导功能：${dom}（${funcType.name}）\n${funcType.description}`,
+        explanation: `经过前三步的筛选，得到主导功能：${dom}（${funcType.name}）`,
         remaining: [dom],
         excluded: step2Result.remaining.filter((f) => f !== dom),
       };
@@ -193,12 +202,17 @@ const getStepResult = (
         ? `T${auxOri}`
         : `F${auxOri}`;
       const funcType =
-        cognitiveFunctions.types[aux as keyof typeof cognitiveFunctions.types];
+        cognitiveFunctions.categories.judging.functions[
+          aux as keyof typeof cognitiveFunctions.categories.judging.functions
+        ] ||
+        cognitiveFunctions.categories.perceiving.functions[
+          aux as keyof typeof cognitiveFunctions.categories.perceiving.functions
+        ];
       return {
         result: aux,
         explanation: `辅助功能必须是${auxOri === "e" ? "外" : "内"}向的${
           isJext ? "感知" : "判断"
-        }功能，所以是 ${aux}（${funcType.name}）\n${funcType.description}`,
+        }功能，所以是 ${aux}（${funcType.name}）`,
         remaining: [aux],
         excluded: remaining.filter((f) => f !== aux),
       };
@@ -217,8 +231,11 @@ const getStepResult = (
         ? "Ne"
         : "Se";
       const funcType =
-        cognitiveFunctions.types[
-          third as keyof typeof cognitiveFunctions.types
+        cognitiveFunctions.categories.judging.functions[
+          third as keyof typeof cognitiveFunctions.categories.judging.functions
+        ] ||
+        cognitiveFunctions.categories.perceiving.functions[
+          third as keyof typeof cognitiveFunctions.categories.perceiving.functions
         ];
       return {
         result: third,
@@ -232,7 +249,7 @@ const getStepResult = (
             : pe === "S"
             ? "实感→直觉"
             : "直觉→实感"
-        }，所以是 ${third}（${funcType.name}）\n${funcType.description}`,
+        }，所以是 ${third}（${funcType.name}）`,
         remaining: [third],
         excluded: remaining.filter((f) => f !== third),
       };
@@ -251,8 +268,11 @@ const getStepResult = (
         ? "Ni"
         : "Si";
       const funcType =
-        cognitiveFunctions.types[
-          fourth as keyof typeof cognitiveFunctions.types
+        cognitiveFunctions.categories.judging.functions[
+          fourth as keyof typeof cognitiveFunctions.categories.judging.functions
+        ] ||
+        cognitiveFunctions.categories.perceiving.functions[
+          fourth as keyof typeof cognitiveFunctions.categories.perceiving.functions
         ];
       return {
         result: fourth,
@@ -266,7 +286,7 @@ const getStepResult = (
             : pe === "S"
             ? "实感→直觉"
             : "直觉→实感"
-        }，所以是 ${fourth}（${funcType.name}）\n${funcType.description}`,
+        }，所以是 ${fourth}（${funcType.name}）`,
         remaining: [fourth],
         excluded: remaining.filter((f) => f !== fourth),
       };
@@ -358,19 +378,21 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             <div className="flex items-center gap-2">
               <div className={cn("w-1.5 h-1.5 rounded-full", colorStyle.bg)} />
               <h4 className={cn("text-sm font-medium", colorStyle.text)}>
-                {cognitiveFunctionsOverview.judging.title}
+                {cognitiveFunctions.categories.judging.title}
               </h4>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {cognitiveFunctionsOverview.judging.functions.map((func) => (
+              {Object.entries(
+                cognitiveFunctions.categories.judging.functions
+              ).map(([code, func]) => (
                 <div
-                  key={func.code}
+                  key={code}
                   className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 space-y-1"
                 >
                   <div className="flex items-center gap-2">
                     <span className={func.color}>{func.icon}</span>
                     <span className="text-xs font-medium">
-                      {func.code}（{func.name}）
+                      {code}（{func.name}）
                     </span>
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -386,19 +408,21 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             <div className="flex items-center gap-2">
               <div className={cn("w-1.5 h-1.5 rounded-full", colorStyle.bg)} />
               <h4 className={cn("text-sm font-medium", colorStyle.text)}>
-                {cognitiveFunctionsOverview.perceiving.title}
+                {cognitiveFunctions.categories.perceiving.title}
               </h4>
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {cognitiveFunctionsOverview.perceiving.functions.map((func) => (
+              {Object.entries(
+                cognitiveFunctions.categories.perceiving.functions
+              ).map(([code, func]) => (
                 <div
-                  key={func.code}
+                  key={code}
                   className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 space-y-1"
                 >
                   <div className="flex items-center gap-2">
                     <span className={func.color}>{func.icon}</span>
                     <span className="text-xs font-medium">
-                      {func.code}（{func.name}）
+                      {code}（{func.name}）
                     </span>
                   </div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">
@@ -413,9 +437,9 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
         <div className="mt-4 p-3 rounded-lg border border-gray-100 dark:border-gray-800 text-xs text-gray-600 dark:text-gray-400">
           <p>
             <span className="font-medium">
-              {cognitiveFunctionsOverview.description.title}：
+              {cognitiveFunctions.description.title}：
             </span>
-            {cognitiveFunctionsOverview.description.content}
+            {cognitiveFunctions.description.content}
           </p>
         </div>
       </motion.div>
@@ -532,7 +556,12 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
       <motion.div {...mbtiMotionStyles} className="p-4 space-y-3">
         {type.cognitiveFunctions.split(" ").map((funcName, index) => {
           const funcType =
-            cognitiveFunctions.types[funcName as CognitiveFunctionName];
+            cognitiveFunctions.categories.judging.functions[
+              funcName as keyof typeof cognitiveFunctions.categories.judging.functions
+            ] ||
+            cognitiveFunctions.categories.perceiving.functions[
+              funcName as keyof typeof cognitiveFunctions.categories.perceiving.functions
+            ];
           const level = cognitiveFunctions.levels[index];
 
           return (
@@ -654,8 +683,13 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                     "bg-opacity-5 dark:bg-opacity-10"
                   )}
                 >
-                  <p className="text-gray-800 dark:text-gray-200">
-                    {funcType.description}
+                  <p
+                    className={cn(
+                      "text-lg text-gray-800 dark:text-gray-200",
+                      colorStyle.text
+                    )}
+                  >
+                    "{funcType.description}"
                   </p>
                 </div>
 
