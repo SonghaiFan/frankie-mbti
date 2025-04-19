@@ -7,13 +7,12 @@ import {
   mbtiCard,
   mbtiCardHeader,
   mbtiCardTitle,
-  mbtiCardContent,
   mbtiCardDescription,
   getMbtiColor,
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";
 import { dimensions } from "@/data/mbti-data";
-import { mbtiOfficalMatches } from "./mbti-matches";
+import { MBTIOfficialMatches } from "./mbti-matches";
 
 interface MBTIDimensionsProps {
   type: MBTIType;
@@ -165,7 +164,7 @@ export function MBTIDimensions({ type }: MBTIDimensionsProps) {
         </motion.div>
       </motion.div>
 
-      {mbtiOfficalMatches(colorStyle, type)}
+      {MBTIOfficialMatches(colorStyle, type)}
     </div>
   );
 }

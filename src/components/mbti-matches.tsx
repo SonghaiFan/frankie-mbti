@@ -158,7 +158,7 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
   );
 }
 
-export function mbtiOfficalMatches(
+export function MBTIOfficialMatches(
   colorStyle: {
     bg: string;
     bgDark: string;
