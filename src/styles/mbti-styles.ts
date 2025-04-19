@@ -23,11 +23,11 @@ export const mbtiColors = {
     hover: "hover:bg-blue-100 dark:hover:bg-blue-900/40",
   },
   yellow: {
-    bg: "bg-yellow-50 dark:bg-yellow-900/20",
-    bgDark: "bg-yellow-100 dark:bg-yellow-900/40",
-    text: "text-yellow-900 dark:text-yellow-100",
-    border: "border-yellow-200 dark:border-yellow-800",
-    hover: "hover:bg-yellow-100 dark:hover:bg-yellow-900/40",
+    bg: "bg-orange-50 dark:bg-orange-900/20",
+    bgDark: "bg-orange-100 dark:bg-orange-900/40",
+    text: "text-orange-900 dark:text-orange-100",
+    border: "border-orange-200 dark:border-orange-800",
+    hover: "hover:bg-orange-100 dark:hover:bg-orange-900/40",
   },
 };
 

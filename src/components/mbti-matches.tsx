@@ -7,12 +7,12 @@ import {
   mbtiCard,
   mbtiCardHeader,
   mbtiCardTitle,
-  mbtiCardContent,
   getMbtiColor,
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";
 import { mbtiMatches, mbtiTypes } from "@/data/mbti-data";
 import Image from "next/image";
+import { useMBTIStore } from "@/store/mbti-store";
 
 interface MBTIMatchesProps {
   type: MBTIType;
@@ -20,6 +20,7 @@ interface MBTIMatchesProps {
 
 export function MBTIMatches({ type }: MBTIMatchesProps) {
   const colorStyle = getMbtiColor(type.group);
+  const { setSelectedType } = useMBTIStore();
 
   // 找到当前类型相关的所有配对
   const relevantMatches = mbtiMatches.filter((match) =>
@@ -87,7 +88,10 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
                 className="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700"
               >
                 <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
-                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px]">
+                  <div
+                    className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setSelectedType(type)}
+                  >
                     <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
                       <Image
                         src={`/mbti_img/${type.image}`}
@@ -116,7 +120,10 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
                     </span>
                   </div>
 
-                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px]">
+                  <div
+                    className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => setSelectedType(partner)}
+                  >
                     <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
                       <Image
                         src={`/mbti_img/${partner.image}`}
@@ -145,6 +152,76 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
               </motion.div>
             )
           )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export function mbtiOfficalMatches(
+  colorStyle: {
+    bg: string;
+    bgDark: string;
+    text: string;
+    border: string;
+    hover: string;
+  },
+  type: MBTIType
+) {
+  const { setSelectedType } = useMBTIStore();
+
+  return (
+    <motion.div
+      {...mbtiMotionStyles}
+      className={cn(mbtiCard, colorStyle.border)}
+    >
+      <motion.div
+        {...mbtiMotionStyles}
+        className={cn(mbtiCardHeader, "py-2", colorStyle.bg)}
+      >
+        <motion.h3
+          {...mbtiMotionStyles}
+          className={cn(mbtiCardTitle, colorStyle.text)}
+        >
+          💝 最佳拍档（MBTI官配）
+        </motion.h3>
+      </motion.div>
+
+      <motion.div {...mbtiMotionStyles} className="p-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {type.bestPartners.map((partnerType, index) => {
+            const partner = mbtiTypes.find((t) => t.type === partnerType);
+            if (!partner) return null;
+
+            return (
+              <motion.div
+                key={index}
+                {...mbtiMotionStyles}
+                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setSelectedType(partner)}
+              >
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform duration-200">
+                  <Image
+                    src={`/mbti_img/${partner.image}`}
+                    alt={partner.title}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  <span
+                    className={cn("text-sm font-medium block", colorStyle.text)}
+                  >
+                    {partner.type}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {partner.title}
+                  </span>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
     </motion.div>

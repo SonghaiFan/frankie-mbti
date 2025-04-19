@@ -914,6 +914,81 @@ export const cognitiveFunctions = {
     },
   },
 };
+
+export const cognitiveFunctionsOverview = {
+  judging: {
+    title: "判断功能（J）",
+    functions: [
+      {
+        code: "Ti",
+        name: "内向思维",
+        icon: "🤔",
+        color: "text-blue-500",
+        description: "分析、逻辑推理、系统化思考",
+      },
+      {
+        code: "Te",
+        name: "外向思维",
+        icon: "📊",
+        color: "text-blue-500",
+        description: "组织、规划、效率导向",
+      },
+      {
+        code: "Fi",
+        name: "内向情感",
+        icon: "💝",
+        color: "text-pink-500",
+        description: "价值观、道德准则、个人信念",
+      },
+      {
+        code: "Fe",
+        name: "外向情感",
+        icon: "🤝",
+        color: "text-pink-500",
+        description: "人际和谐、共情、群体价值",
+      },
+    ],
+  },
+  perceiving: {
+    title: "感知功能（P）",
+    functions: [
+      {
+        code: "Ni",
+        name: "内向直觉",
+        icon: "🔮",
+        color: "text-purple-500",
+        description: "洞察力、远见、模式识别",
+      },
+      {
+        code: "Ne",
+        name: "外向直觉",
+        icon: "💡",
+        color: "text-purple-500",
+        description: "创意、可能性、联想能力",
+      },
+      {
+        code: "Si",
+        name: "内向感觉",
+        icon: "📝",
+        color: "text-green-500",
+        description: "细节、经验、传统习惯",
+      },
+      {
+        code: "Se",
+        name: "外向感觉",
+        icon: "🎯",
+        color: "text-green-500",
+        description: "体验、行动、现实感知",
+      },
+    ],
+  },
+  description: {
+    title: "认知功能说明",
+    content:
+      "每个MBTI类型都由4个认知功能组成，包括2个判断功能（T/F）和2个感知功能（N/S）。其中一个是主导功能，一个是辅助功能，一个是第三功能，一个是劣势功能。内向型（I）的主导功能是内向的，外向型（E）的主导功能是外向的。",
+  },
+};
+
 export const groupExplanations = {
   分析师: {
     title: "理性者 = 战略能力",
@@ -1080,6 +1155,7 @@ export const mbtiMatches = [
     description: "辅助功能与第三功能交叉对应，且I（内倾）、E（外倾）不同",
   },
 ];
+
 export const dimensions = [
   {
     name: "精力来源",

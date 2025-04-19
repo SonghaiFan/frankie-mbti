@@ -12,8 +12,8 @@ import {
   getMbtiColor,
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";
-import { dimensions, mbtiTypes } from "@/data/mbti-data";
-import Image from "next/image";
+import { dimensions } from "@/data/mbti-data";
+import { mbtiOfficalMatches } from "./mbti-matches";
 
 interface MBTIDimensionsProps {
   type: MBTIType;
@@ -165,62 +165,7 @@ export function MBTIDimensions({ type }: MBTIDimensionsProps) {
         </motion.div>
       </motion.div>
 
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCard, colorStyle.border)}
-      >
-        <motion.div
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardHeader, "py-2", colorStyle.bg)}
-        >
-          <motion.h3
-            {...mbtiMotionStyles}
-            className={cn(mbtiCardTitle, colorStyle.text)}
-          >
-            💝 最佳拍档（MBTI官配）
-          </motion.h3>
-        </motion.div>
-
-        <motion.div {...mbtiMotionStyles} className="p-3">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {type.bestPartners.map((partnerType, index) => {
-              const partner = mbtiTypes.find((t) => t.type === partnerType);
-              if (!partner) return null;
-
-              return (
-                <motion.div
-                  key={index}
-                  {...mbtiMotionStyles}
-                  className="flex items-center gap-2"
-                >
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform duration-200">
-                    <Image
-                      src={`/mbti_img/${partner.image}`}
-                      alt={partner.title}
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <span
-                      className={cn(
-                        "text-sm font-medium block",
-                        colorStyle.text
-                      )}
-                    >
-                      {partner.type}
-                    </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {partner.title}
-                    </span>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-      </motion.div>
+      {mbtiOfficalMatches(colorStyle, type)}
     </div>
   );
 }

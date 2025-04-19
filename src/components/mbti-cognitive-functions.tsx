@@ -12,7 +12,12 @@ import {
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
-import { cognitiveFunctions } from "@/data/mbti-data";
+import {
+  cognitiveFunctions,
+  cognitiveFunctionsOverview,
+} from "@/data/mbti-data";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 type CognitiveFunctionName = keyof typeof cognitiveFunctions.types;
 
@@ -327,6 +332,7 @@ interface MBTICognitiveFunctionsProps {
 
 export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
   const colorStyle = getMbtiColor(type.group);
+  const [showProcess, setShowProcess] = useState(false);
 
   return (
     <motion.div
@@ -341,67 +347,175 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
           {...mbtiMotionStyles}
           className={cn(mbtiCardTitle, colorStyle.text)}
         >
+          认知功能总览
+        </motion.h3>
+      </motion.div>
+
+      <motion.div {...mbtiMotionStyles} className="p-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* 判断功能 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className={cn("w-1.5 h-1.5 rounded-full", colorStyle.bg)} />
+              <h4 className={cn("text-sm font-medium", colorStyle.text)}>
+                {cognitiveFunctionsOverview.judging.title}
+              </h4>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {cognitiveFunctionsOverview.judging.functions.map((func) => (
+                <div
+                  key={func.code}
+                  className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 space-y-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={func.color}>{func.icon}</span>
+                    <span className="text-xs font-medium">
+                      {func.code}（{func.name}）
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {func.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 感知功能 */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className={cn("w-1.5 h-1.5 rounded-full", colorStyle.bg)} />
+              <h4 className={cn("text-sm font-medium", colorStyle.text)}>
+                {cognitiveFunctionsOverview.perceiving.title}
+              </h4>
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {cognitiveFunctionsOverview.perceiving.functions.map((func) => (
+                <div
+                  key={func.code}
+                  className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 space-y-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={func.color}>{func.icon}</span>
+                    <span className="text-xs font-medium">
+                      {func.code}（{func.name}）
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {func.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 p-3 rounded-lg border border-gray-100 dark:border-gray-800 text-xs text-gray-600 dark:text-gray-400">
+          <p>
+            <span className="font-medium">
+              {cognitiveFunctionsOverview.description.title}：
+            </span>
+            {cognitiveFunctionsOverview.description.content}
+          </p>
+        </div>
+      </motion.div>
+
+      <motion.div
+        {...mbtiMotionStyles}
+        className={cn(mbtiCardHeader, colorStyle.bg)}
+      >
+        <motion.h3
+          {...mbtiMotionStyles}
+          className={cn(mbtiCardTitle, colorStyle.text)}
+        >
           认知功能推导过程
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className={mbtiCardContent}>
-        {steps.map((step, index) => {
-          const stepResult = step.getResult(type.type);
-          return (
-            <motion.div
-              key={step.title}
-              {...mbtiMotionStyles}
-              className="mb-4 last:mb-0"
-            >
-              <div className="flex items-start gap-2">
-                <div
-                  className={cn(
-                    "w-5 h-5 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0 text-xs",
-                    colorStyle.bg
-                  )}
-                >
-                  {index + 1}
-                </div>
-                <div className="flex-1 space-y-1.5">
-                  <motion.h4
-                    {...mbtiMotionStyles}
-                    className={cn(mbtiCardTitle, colorStyle.text, "text-sm")}
-                  >
-                    {step.title}
-                  </motion.h4>
-                  <motion.p
-                    {...mbtiMotionStyles}
-                    className={cn(mbtiCardDescription, "text-xs")}
-                  >
-                    {step.description}
-                  </motion.p>
-                  <motion.div
-                    {...mbtiMotionStyles}
-                    className={cn(
-                      "rounded-lg p-2 font-medium text-xs",
-                      colorStyle.bg,
-                      colorStyle.text
-                    )}
-                  >
-                    {stepResult.result}
-                  </motion.div>
-                  <motion.div
-                    {...mbtiMotionStyles}
-                    className={cn(
-                      "rounded-lg p-2 whitespace-pre-line text-xs",
-                      "bg-gray-50 dark:bg-gray-700",
-                      "text-gray-700 dark:text-gray-300"
-                    )}
-                  >
-                    {stepResult.explanation}
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+      <motion.div
+        {...mbtiMotionStyles}
+        className={cn(
+          "p-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50",
+          "border-b border-gray-100 dark:border-gray-800"
+        )}
+        onClick={() => setShowProcess(!showProcess)}
+      >
+        <span className="text-sm text-gray-600 dark:text-gray-400">
+          {showProcess ? "收起推导过程" : "展开推导过程"}
+        </span>
+        <ChevronDown
+          className={cn(
+            "w-4 h-4 text-gray-500 transition-transform duration-200",
+            showProcess && "transform rotate-180"
+          )}
+        />
       </motion.div>
+
+      {showProcess && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.2 }}
+          className={mbtiCardContent}
+        >
+          {steps.map((step, index) => {
+            const stepResult = step.getResult(type.type);
+            return (
+              <motion.div
+                key={step.title}
+                {...mbtiMotionStyles}
+                className="mb-4 last:mb-0"
+              >
+                <div className="flex items-start gap-2">
+                  <div
+                    className={cn(
+                      "w-5 h-5 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0 text-xs",
+                      colorStyle.bg
+                    )}
+                  >
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 space-y-1.5">
+                    <motion.h4
+                      {...mbtiMotionStyles}
+                      className={cn(mbtiCardTitle, colorStyle.text, "text-sm")}
+                    >
+                      {step.title}
+                    </motion.h4>
+                    <motion.p
+                      {...mbtiMotionStyles}
+                      className={cn(mbtiCardDescription, "text-xs")}
+                    >
+                      {step.description}
+                    </motion.p>
+                    <motion.div
+                      {...mbtiMotionStyles}
+                      className={cn(
+                        "rounded-lg p-2 font-medium text-xs",
+                        colorStyle.bg,
+                        colorStyle.text
+                      )}
+                    >
+                      {stepResult.result}
+                    </motion.div>
+                    <motion.div
+                      {...mbtiMotionStyles}
+                      className={cn(
+                        "rounded-lg p-2 whitespace-pre-line text-xs",
+                        "bg-gray-50 dark:bg-gray-700",
+                        "text-gray-700 dark:text-gray-300"
+                      )}
+                    >
+                      {stepResult.explanation}
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      )}
 
       <motion.div
         {...mbtiMotionStyles}
