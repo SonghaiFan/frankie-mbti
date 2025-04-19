@@ -128,8 +128,7 @@ export function MBTICard({
                 className={cn(
                   "relative",
                   isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24",
-                  isExpanded &&
-                    "border-b border-gray-200 dark:border-gray-700 shadow-sm"
+                  isExpanded && "border-b border-gray-200 dark:border-gray-700"
                 )}
               >
                 <div className="absolute inset-0">
@@ -147,8 +146,7 @@ export function MBTICard({
                 layout
                 className={cn(
                   "flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4",
-                  isExpanded &&
-                    "border-b border-gray-200 dark:border-gray-700 shadow-sm"
+                  isExpanded && "border-b border-gray-200 dark:border-gray-700 "
                 )}
               >
                 <motion.div layout="position" className="space-y-1 text-center">

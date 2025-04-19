@@ -8,7 +8,7 @@ export const mbtiColors = {
     hover: "hover:bg-purple-100 dark:hover:bg-purple-900/40",
   },
   green: {
-    bg: "bg-green-50 dark:bg-green-900/20",
+    bg: "bg-green-200 dark:bg-green-900/20",
     text: "text-green-900 dark:text-green-100",
     border: "border-green-200 dark:border-green-800",
     hover: "hover:bg-green-100 dark:hover:bg-green-900/40",

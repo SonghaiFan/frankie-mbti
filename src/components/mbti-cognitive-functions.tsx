@@ -67,20 +67,42 @@ const getStepResult = (
       };
     }
     case 1: {
-      // 第二步：根据 J/P 排除，只排除当前步骤相关的功能
-      const theoreticalExclusions = isP ? ["Te", "Fe"] : ["Ne", "Se"];
+      // 第二步：根据 I/E 和 J/P 确定功能类型
+      let theoreticalExclusions: string[] = [];
+
+      if (isI) {
+        // 内向型
+        if (isP) {
+          // IP型：主导功能是判断功能，排除感知功能
+          theoreticalExclusions = ["Ni", "Si"];
+        } else {
+          // IJ型：主导功能是感知功能，排除判断功能
+          theoreticalExclusions = ["Ti", "Fi"];
+        }
+      } else {
+        // 外向型
+        if (isP) {
+          // EP型：主导功能是感知功能，排除判断功能
+          theoreticalExclusions = ["Te", "Fe"];
+        } else {
+          // EJ型：主导功能是判断功能，排除感知功能
+          theoreticalExclusions = ["Ne", "Se"];
+        }
+      }
+
       // 实际能排除的（与剩余选项的交集）
       excluded = theoreticalExclusions.filter((f) => remaining.includes(f));
       remaining = remaining.filter((f) => !excluded.includes(f));
+
       return {
         result: `${li}（${isP ? "感知" : "判断"}）`,
-        explanation: `你是 ${li}（${isP ? "感知" : "判断"}）型，而且是 ${
-          isI ? "I" : "E"
-        } → 所以${isI ? "外向" : "主导"}功能是${
-          isP ? "感知" : "判断"
+        explanation: `你是 ${att}${li} 型 → ${isI ? "内" : "外"}向${
+          isP ? "P" : "J"
+        }型，所以主导功能必须是${
+          isI ? (isP ? "判断" : "感知") : isP ? "感知" : "判断"
         }功能。\n❌ 理论上要排除：${theoreticalExclusions.join("、")} → 它们是${
-          isP ? "判断" : "感知"
-        }功能，不可能是你的${isI ? "辅助" : "主导"}功能。${
+          isI ? (isP ? "感知" : "判断") : isP ? "判断" : "感知"
+        }功能，不可能是你的主导功能。${
           excluded.length === 0
             ? "\n💡 但是这些功能在上一步已经被排除了"
             : `\n实际排除：${excluded.join("、")}`
@@ -130,33 +152,8 @@ const getStepResult = (
         step1Result.remaining
       );
 
-      // 根据 I/E 和 P/J 确定主导功能类型
-      const remaining = step2Result.remaining.filter((f) => {
-        if (isI) {
-          // 内向型
-          if (isP) {
-            // IP型：主导功能是判断功能
-            return f.includes("T") || f.includes("F");
-          } else {
-            // IJ型：主导功能是感知功能
-            return f.includes("N") || f.includes("S");
-          }
-        } else {
-          // 外向型
-          if (isP) {
-            // EP型：主导功能是感知功能
-            return f.includes("N") || f.includes("S");
-          } else {
-            // EJ型：主导功能是判断功能
-            return f.includes("T") || f.includes("F");
-          }
-        }
-      });
-
-      const dom: string = remaining[0];
-      const excluded = step2Result.remaining.filter(
-        (f) => !remaining.includes(f)
-      );
+      // 经过前三步的筛选后，应该只剩下一个选项作为主导功能
+      const dom: string = step2Result.remaining[0];
 
       // 确保 dom 是有效的认知功能
       if (
@@ -175,28 +172,9 @@ const getStepResult = (
 
       return {
         result: dom,
-        explanation: `根据前三步的筛选，剩余选项有：${step2Result.remaining.join(
-          "、"
-        )}\n\n主导功能的规则：
-- 内向型（I）：
-  · P型 → 判断功能（Ti、Fi）
-  · J型 → 感知功能（Ni、Si）
-- 外向型（E）：
-  · P型 → 感知功能（Ne、Se）
-  · J型 → 判断功能（Te、Fe）
-
-你是 ${isI ? "I" : "E"}${isP ? "P" : "J"} 型，所以主导功能必须是${
-          isI ? (isP ? "判断" : "感知") : isP ? "感知" : "判断"
-        }功能。
-
-❌ 排除：${excluded.join("、")} → 它们是${
-          isI ? (isP ? "感知" : "判断") : isP ? "判断" : "感知"
-        }功能
-✅ 选择：${dom}\n\n因此你的主导功能是 ${dom}（${funcType.name}）\n${
-          funcType.description
-        }`,
+        explanation: `经过前三步的筛选，得到主导功能：${dom}（${funcType.name}）\n${funcType.description}`,
         remaining: [dom],
-        excluded,
+        excluded: step2Result.remaining.filter((f) => f !== dom),
       };
     }
     case 4: {
@@ -426,7 +404,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               key={funcName}
               {...mbtiMotionStyles}
               className={cn(
-                "relative flex gap-4 items-start p-4 rounded-xl transition-all duration-200",
+                "relative flex flex-col gap-4 p-6 rounded-xl transition-all duration-200",
                 "hover:bg-gray-50 dark:hover:bg-gray-800/50",
                 "group"
               )}
@@ -440,66 +418,171 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 )}
               />
 
-              {/* Icon and Main Content */}
-              <div
-                className={cn(
-                  "flex-shrink-0 w-12 h-12 rounded-xl shadow-sm flex items-center justify-center text-2xl",
-                  "bg-white dark:bg-gray-800"
-                )}
-              >
-                {funcType.icon}
-              </div>
-
-              <div className="flex-1 space-y-2">
-                {/* Title Row */}
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{level.icon}</span>
-                  <h4 className={cn("font-semibold", colorStyle.text)}>
-                    {level.name}
-                  </h4>
+              {/* Header Section */}
+              <div className="flex items-start gap-4">
+                {/* Icon */}
+                <div
+                  className={cn(
+                    "flex-shrink-0 w-12 h-12 rounded-xl shadow-sm flex items-center justify-center text-2xl",
+                    "bg-white dark:bg-gray-800"
+                  )}
+                >
+                  {funcType.icon}
                 </div>
 
-                {/* Function Type Info */}
-                <div className="flex items-center gap-2 text-sm">
-                  <span
-                    className={cn(
-                      "px-2 py-0.5 rounded-md font-mono font-medium",
-                      colorStyle.bg,
-                      colorStyle.text,
-                      "bg-opacity-10 dark:bg-opacity-20"
-                    )}
-                  >
-                    {funcName}
-                  </span>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    {funcType.name}
-                  </span>
-                </div>
+                {/* Title Area */}
+                <div className="flex-1">
+                  {/* Level Info */}
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xl">{level.icon}</span>
+                    <h4 className={cn("font-semibold", colorStyle.text)}>
+                      {level.name}
+                    </h4>
+                  </div>
 
-                {/* Descriptions */}
-                <div className="grid grid-cols-1 gap-2 pt-1">
-                  <div className="space-y-1">
-                    <p className="text-sm text-gray-800 dark:text-gray-200">
-                      {funcType.description}
-                    </p>
-                    <div className="h-px bg-gray-100 dark:bg-gray-800" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {level.description}
-                    </p>
+                  {/* Function Type */}
+                  <div className="flex items-center gap-2 text-sm">
+                    <span
+                      className={cn(
+                        "px-2 py-0.5 rounded-md font-mono font-medium",
+                        colorStyle.bg,
+                        colorStyle.text,
+                        "bg-opacity-10 dark:bg-opacity-20"
+                      )}
+                    >
+                      {funcName}
+                    </span>
+                    <span className="font-medium text-gray-800 dark:text-gray-200">
+                      {funcType.name}
+                    </span>
+                  </div>
+
+                  {/* Skill Bar */}
+                  <div className="mt-2 space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        熟练度
+                      </span>
+                      <span className={cn("font-medium", colorStyle.text)}>
+                        {
+                          [
+                            "精通 (95%)",
+                            "熟练 (80%)",
+                            "进阶 (60%)",
+                            "入门 (40%)",
+                          ][index]
+                        }
+                      </span>
+                    </div>
+                    <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                      <div
+                        className={cn(
+                          "h-full rounded-full transition-all duration-500",
+                          colorStyle.bg,
+                          "opacity-90"
+                        )}
+                        style={{
+                          width: [
+                            "95%", // 主导功能
+                            "80%", // 辅助功能
+                            "60%", // 第三功能
+                            "40%", // 劣势功能
+                          ][index],
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
+
+                {/* Stack Level */}
+                <div
+                  className={cn(
+                    "flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium",
+                    colorStyle.bg,
+                    colorStyle.text,
+                    "bg-opacity-10 dark:bg-opacity-20"
+                  )}
+                >
+                  {`#${index + 1}`}
+                </div>
               </div>
 
-              {/* Stack Level Indicator */}
-              <div
-                className={cn(
-                  "flex-shrink-0 px-3 py-1 rounded-full text-sm font-medium",
-                  colorStyle.bg,
-                  colorStyle.text,
-                  "bg-opacity-10 dark:bg-opacity-20"
-                )}
-              >
-                {`#${index + 1}`}
+              {/* Content Section */}
+              <div className="space-y-4 pl-16">
+                {/* Quick Description */}
+                <div
+                  className={cn(
+                    "p-3 rounded-lg",
+                    colorStyle.bg,
+                    "bg-opacity-5 dark:bg-opacity-10"
+                  )}
+                >
+                  <p className="text-sm text-gray-800 dark:text-gray-200">
+                    {funcType.description}
+                  </p>
+                </div>
+
+                {/* Detailed Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Left Column */}
+                  <div className="space-y-3">
+                    {/* Definition */}
+                    <div className="space-y-1">
+                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        定义
+                      </h5>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {funcType.definition}
+                      </p>
+                    </div>
+
+                    {/* Characteristics */}
+                    <div className="space-y-1">
+                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        特征
+                      </h5>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {funcType.characteristics}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-3">
+                    {/* Training */}
+                    <div className="space-y-1">
+                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        加强训练方式
+                      </h5>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {funcType.training}
+                      </p>
+                    </div>
+
+                    {/* Details */}
+                    <div className="space-y-1">
+                      <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        详细说明
+                      </h5>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {funcType.details}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level Description */}
+                <div
+                  className={cn(
+                    "p-3 rounded-lg border",
+                    "border-gray-100 dark:border-gray-800",
+                    "bg-gray-50 dark:bg-gray-800/50"
+                  )}
+                >
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {level.description}
+                  </p>
+                </div>
               </div>
             </motion.div>
           );
