@@ -37,7 +37,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="font-medium hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
               >
-                @范松海2025
+                @范松海Frank
               </a>
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-500">
