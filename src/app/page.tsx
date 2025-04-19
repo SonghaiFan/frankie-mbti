@@ -19,7 +19,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900/90 relative">
       {/* Header Mountains Background */}
       <div
-        className="absolute top-0 left-0 right-0 h-[400px] bg-no-repeat bg-cover bg-bottom z-0 opacity-60 dark:opacity-40 bg-gradient-to-b from-black to-transparent"
+        className="absolute top-0 left-0 right-0 h-[200px] bg-no-repeat bg-cover bg-bottom z-0 opacity-60 dark:opacity-40 bg-gradient-to-b from-black to-transparent"
         style={{
           backgroundImage:
             "url(https://www.16personalities.com/static/images/homepage/header-mountains-desktop.svg)",
@@ -38,7 +38,7 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
               🔮从MBTI到荣格八维
             </h1>
-            <p className="text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+            <p className="text-base text-gray-800 dark:text-gray-300 max-w-2xl mx-auto mb-8">
               在有限颗粒度下，这似乎是最好的谈论性格的方法
             </p>
             <div className="flex items-center justify-center gap-2">
