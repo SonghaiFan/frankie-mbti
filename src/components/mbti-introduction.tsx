@@ -14,9 +14,6 @@ export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
     .find((t) => t.type === mbtiType)
     ?.cognitiveFunctions.split(" ")[0];
 
-  console.log("MBTI Type:", mbtiType);
-  console.log("Cognitive Functions:", cogFuncs);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

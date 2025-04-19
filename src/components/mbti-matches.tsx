@@ -84,50 +84,58 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
               <motion.div
                 key={index}
                 {...mbtiMotionStyles}
-                className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
+                className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700"
               >
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-auto">
+                    <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.title}
                         fill
+                        sizes="(max-width: 768px) 48px, 64px"
                         className="object-cover"
                       />
                     </div>
-                    <span className="text-sm font-medium">{type.type}</span>
-                    <span className="text-xs text-gray-500">
-                      {type.cognitiveFunctions}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">{type.type}</span>
+                      <span className="text-xs text-gray-500">
+                        {type.cognitiveFunctions}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col items-center">
-                    <span className="text-lg font-bold text-pink-500">
+                  <div className="flex flex-col items-center w-full md:w-auto">
+                    <span className="text-base md:text-lg font-bold text-pink-500 text-center">
                       {Array.from(uniqueNames).join("；")}
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-xs md:text-sm text-gray-500 text-center">
                       {matches.map((m) => m.matchType).join("；")}
                     </span>
                   </div>
 
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                  <div className="flex flex-row md:flex-col items-center gap-2 w-full md:w-auto">
+                    <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
                       <Image
                         src={`/mbti_img/${partner.image}`}
                         alt={partner.title}
                         fill
+                        sizes="(max-width: 768px) 48px, 64px"
                         className="object-cover"
                       />
                     </div>
-                    <span className="text-sm font-medium">{partner.type}</span>
-                    <span className="text-xs text-gray-500">
-                      {partner.cognitiveFunctions}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">
+                        {partner.type}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {partner.cognitiveFunctions}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex-1">
+                <div className="w-full md:flex-1 mt-4 md:mt-0">
                   <p className="text-sm text-gray-600 dark:text-gray-300">
                     {matches.map((m) => m.description).join("；")}
                   </p>
