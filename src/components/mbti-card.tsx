@@ -16,6 +16,13 @@ import {
 import { useEffect } from "react";
 import { MBTIMatches } from "./mbti-matches";
 
+// Add utility function at the top level
+const setBodyScroll = (enabled: boolean) => {
+  if (typeof document !== "undefined") {
+    document.body.style.overflow = enabled ? "auto" : "hidden";
+  }
+};
+
 interface MBTICardProps {
   type: MBTIType;
   isExpanded: boolean;
@@ -39,8 +46,17 @@ export function MBTICard({
       }
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    if (isExpanded) {
+      setBodyScroll(false);
+      document.addEventListener("keydown", handleKeyDown);
+    } else {
+      setBodyScroll(true);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      setBodyScroll(true);
+    };
   }, [isExpanded, onCollapse]);
 
   if (!mbtiInfo) return null;
@@ -104,7 +120,7 @@ export function MBTICard({
             layout
             transition={{
               type: "spring",
-              stiffness: 400,
+              stiffness: 200,
               damping: 25,
               mass: 1,
             }}
@@ -117,11 +133,14 @@ export function MBTICard({
               layout
               transition={{
                 type: "spring",
-                stiffness: 400,
+                stiffness: 200,
                 damping: 25,
                 mass: 1,
               }}
-              className="flex flex-row items-stretch h-full"
+              className={cn(
+                "flex flex-row items-stretch",
+                !isExpanded && "h-[100px]"
+              )}
             >
               <motion.div
                 layout
@@ -136,7 +155,10 @@ export function MBTICard({
                     src={`/mbti_img/${mbtiInfo.image}`}
                     alt={mbtiInfo.type}
                     fill
-                    className="object-cover rounded-l-xl"
+                    className={cn(
+                      "object-cover",
+                      isExpanded ? "rounded-tl-xl" : "rounded-l-xl"
+                    )}
                     priority
                   />
                 </div>
@@ -187,7 +209,7 @@ export function MBTICard({
                 {!isExpanded && (
                   <motion.p
                     layout="position"
-                    className={cn("text-sm text-center", colorStyle.text)}
+                    className={cn("text-xs text-center", colorStyle.text)}
                   >
                     {mbtiInfo.nickname}
                   </motion.p>

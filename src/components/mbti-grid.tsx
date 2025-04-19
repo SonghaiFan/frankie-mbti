@@ -104,7 +104,7 @@ export function MBTIGrid() {
               {mbtis.map((mbti, mbtiIndex) => (
                 <div
                   key={mbti.type}
-                  className="animate-slide-up"
+                  className="animate-slide-up h-[100px]"
                   style={{
                     animationDelay: `${0.2 + index * 0.1 + mbtiIndex * 0.05}s`,
                   }}
