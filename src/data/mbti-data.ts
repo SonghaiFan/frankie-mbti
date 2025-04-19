@@ -48,7 +48,7 @@ export const mbtiTypes: MBTIType[] = [
       "语言痴呆症",
       "擅长学习观察",
     ],
-    bestPartners: ["ENTP", "ENFP"],
+    bestPartners: ["ENFP"],
     cognitiveFunctions: "Ni Te Fi Se",
   },
   {
@@ -92,7 +92,7 @@ export const mbtiTypes: MBTIType[] = [
       "非常自我",
       "信任的关友",
     ],
-    bestPartners: ["ENTJ", "ESTJ"],
+    bestPartners: ["ENTJ"],
     cognitiveFunctions: "Ti Ne Si Fe",
   },
   {
@@ -142,7 +142,7 @@ export const mbtiTypes: MBTIType[] = [
       "强大的意志力",
       "面对和处理失败",
     ],
-    bestPartners: ["INFP", "INTP"],
+    bestPartners: ["INTP"],
     cognitiveFunctions: "Te Ni Se Fi",
   },
   {
@@ -192,7 +192,7 @@ export const mbtiTypes: MBTIType[] = [
       "讨厌认错",
       "粗心大意",
     ],
-    bestPartners: ["INFJ", "INTJ"],
+    bestPartners: ["INFJ"],
     cognitiveFunctions: "Ne Ti Fe Si",
   },
   {
@@ -232,7 +232,7 @@ export const mbtiTypes: MBTIType[] = [
       "偏执倔强",
       "很希望每个人都能做好自己的事情",
     ],
-    bestPartners: ["ENTP", "ENFP"],
+    bestPartners: ["ENTP"],
     cognitiveFunctions: "Ni Fe Ti Se",
   },
   {
@@ -279,7 +279,7 @@ export const mbtiTypes: MBTIType[] = [
       "别离开我",
       "暴怒",
     ],
-    bestPartners: ["ENTJ", "ENFJ"],
+    bestPartners: ["ENFJ"],
     cognitiveFunctions: "Fi Ne Si Te",
   },
   {
@@ -321,7 +321,7 @@ export const mbtiTypes: MBTIType[] = [
       "享受安排事情的过程",
       "想让更多人开心",
     ],
-    bestPartners: ["INFP", "INTP"],
+    bestPartners: ["INFP"],
     cognitiveFunctions: "Fe Ni Se Ti",
   },
   {
@@ -362,7 +362,7 @@ export const mbtiTypes: MBTIType[] = [
       "专注力不强",
       "外貌协会",
     ],
-    bestPartners: ["INFJ", "INTJ"],
+    bestPartners: ["INTJ"],
     cognitiveFunctions: "Ne Fi Te Si",
   },
   {
@@ -415,7 +415,7 @@ export const mbtiTypes: MBTIType[] = [
       "领地意识",
       "难理解别人情绪",
     ],
-    bestPartners: ["ESFP", "ESFJ"],
+    bestPartners: ["ESFP"],
     cognitiveFunctions: "Si Te Fi Ne",
   },
   {
@@ -465,7 +465,7 @@ export const mbtiTypes: MBTIType[] = [
       "对别人的期待过高",
       "内心世界丰富",
     ],
-    bestPartners: ["ESFP", "ESTP"],
+    bestPartners: ["ESTP"],
     cognitiveFunctions: "Si Fe Ti Ne",
   },
   {
@@ -513,7 +513,7 @@ export const mbtiTypes: MBTIType[] = [
       "只是想让事情可控",
       "隐藏学霸",
     ],
-    bestPartners: ["INFP", "ISTJ"],
+    bestPartners: ["ISFP"],
     cognitiveFunctions: "Te Si Ne Fi",
   },
   {
@@ -560,7 +560,7 @@ export const mbtiTypes: MBTIType[] = [
       "责任心爆棚",
       "封建迷信",
     ],
-    bestPartners: ["INFP", "ISTP"],
+    bestPartners: ["ISTP"],
     cognitiveFunctions: "Fe Si Ne Ti",
   },
   {
@@ -608,7 +608,7 @@ export const mbtiTypes: MBTIType[] = [
       "能动手就不动嘴",
       "洞察力强",
     ],
-    bestPartners: ["ESFJ", "ENTJ"],
+    bestPartners: ["ESFJ"],
     cognitiveFunctions: "Ti Se Ni Fe",
   },
   {
@@ -652,7 +652,7 @@ export const mbtiTypes: MBTIType[] = [
       "工作能力很强",
       "过好当下",
     ],
-    bestPartners: ["ESTJ", "ESFP"],
+    bestPartners: ["ESTJ"],
     cognitiveFunctions: "Fi Se Ni Te",
   },
   {
@@ -699,7 +699,7 @@ export const mbtiTypes: MBTIType[] = [
       "鬼点子多",
       "太容易向别人敞开心扉而受伤",
     ],
-    bestPartners: ["ISFJ", "ESFP"],
+    bestPartners: ["ISFJ"],
     cognitiveFunctions: "Se Ti Fe Ni",
   },
   {
@@ -741,7 +741,7 @@ export const mbtiTypes: MBTIType[] = [
       "做事容易冲动",
       "拖延症患者",
     ],
-    bestPartners: ["ISTJ", "ESFP"],
+    bestPartners: ["ISTJ"],
     cognitiveFunctions: "Se Fi Te Ni",
   },
 ];
@@ -1027,7 +1027,6 @@ export const groupExplanations = {
     bgColor: "bg-yellow-50 dark:bg-yellow-950/20",
   },
 };
-
 export const mbtiMatches = [
   // 镜像对应
   {
@@ -1079,80 +1078,106 @@ export const mbtiMatches = [
     description: "主导功能、辅助功能、第三功能和劣势功能镜像对应",
   },
 
-  // 主导劣势相同
+  // 主导=劣势，且感知一致
   {
     pair: ["INFP", "ENTJ"],
     name: "沉淀",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
+    matchType: "主导=劣势",
+    description: "主导功能与对方劣势功能一致，且共享N或S感知偏好",
   },
   {
     pair: ["ISTP", "ESFJ"],
     name: "融化",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
+    matchType: "主导=劣势",
+    description: "主导功能与对方劣势功能一致，且共享N或S感知偏好",
   },
   {
     pair: ["INTP", "ENFJ"],
     name: "量子纠缠",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
+    matchType: "主导=劣势",
+    description: "主导功能与对方劣势功能一致，且共享N或S感知偏好",
   },
   {
     pair: ["ISFP", "ESTJ"],
     name: "石膏刻像",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
-  },
-  {
-    pair: ["INFJ", "ENTP"],
-    name: "光海",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
-  },
-  {
-    pair: ["INTJ", "ENFP"],
-    name: "彩虹",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
-  },
-  {
-    pair: ["ISTJ", "ESFP"],
-    name: "夜鹰",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
-  },
-  {
-    pair: ["ISFJ", "ESTP"],
-    name: "单桅帆船",
-    matchType: "主导劣势",
-    description: "主导功能与劣势相同，且共享N（直觉）或S（感觉）",
+    matchType: "主导=劣势",
+    description: "主导功能与对方劣势功能一致，且共享N或S感知偏好",
   },
 
-  // 辅助第三交叉
+  // 辅助=第三，I/E互补
   {
     pair: ["INFJ", "ENTP"],
     name: "光海",
-    matchType: "辅助第三",
-    description: "辅助功能与第三功能交叉对应，且I（内倾）、E（外倾）不同",
+    matchType: "辅助=第三",
+    description: "辅助功能与对方第三功能一致，且内倾外倾互补",
   },
   {
     pair: ["INTJ", "ENFP"],
     name: "彩虹",
-    matchType: "辅助第三",
-    description: "辅助功能与第三功能交叉对应，且I（内倾）、E（外倾）不同",
+    matchType: "辅助=第三",
+    description: "辅助功能与对方第三功能一致，且内倾外倾互补",
   },
   {
     pair: ["ISTJ", "ESFP"],
     name: "夜鹰",
-    matchType: "辅助第三",
-    description: "辅助功能与第三功能交叉对应，且I（内倾）、E（外倾）不同",
+    matchType: "辅助=第三",
+    description: "辅助功能与对方第三功能一致，且内倾外倾互补",
   },
   {
     pair: ["ISFJ", "ESTP"],
     name: "单桅帆船",
-    matchType: "辅助第三",
-    description: "辅助功能与第三功能交叉对应，且I（内倾）、E（外倾）不同",
+    matchType: "辅助=第三",
+    description: "辅助功能与对方第三功能一致，且内倾外倾互补",
+  },
+
+  // 字母完全相反
+  {
+    pair: ["INTP", "ESFJ"],
+    name: "憧憬",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["INFP", "ESTJ"],
+    name: "旧报纸",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["INTJ", "ESFP"],
+    name: "虚实",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["INFJ", "ESTP"],
+    name: "废墟",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["ISTP", "ENFJ"],
+    name: "晚钟",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["ISFP", "ENTJ"],
+    name: "颂歌",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["ISFJ", "ENTP"],
+    name: "倒吊人",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
+  },
+  {
+    pair: ["ISTJ", "ENFP"],
+    name: "极光",
+    matchType: "字母完全相反",
+    description: "E/I、N/S、T/F、J/P四个维度全部相反，极端互补关系",
   },
 ];
 

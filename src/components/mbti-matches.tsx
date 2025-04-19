@@ -74,7 +74,7 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
           {...mbtiMotionStyles}
           className={cn(mbtiCardTitle, colorStyle.text)}
         >
-          💕 最佳拍档（认知功能）
+          🤗 认知拍档
         </motion.h3>
       </motion.div>
 
@@ -183,7 +183,7 @@ export function MBTIOfficialMatches(
           {...mbtiMotionStyles}
           className={cn(mbtiCardTitle, colorStyle.text)}
         >
-          💝 最佳拍档（MBTI官配）
+          🥰 最佳拍档（MBTI官配）
         </motion.h3>
       </motion.div>
 
