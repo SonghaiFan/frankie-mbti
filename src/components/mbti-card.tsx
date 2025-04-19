@@ -176,7 +176,7 @@ export function MBTICard({
                   isExpanded && "border-b border-gray-200 dark:border-gray-700 "
                 )}
               >
-                <motion.div layout="position" className="space-y-1 text-center">
+                <motion.div layout="position" className="space-y-1 text-left">
                   <motion.h2
                     layout="position"
                     className={cn(
@@ -214,7 +214,7 @@ export function MBTICard({
                 {!isExpanded && (
                   <motion.p
                     layout="position"
-                    className={cn("text-xs text-center", colorStyle.text)}
+                    className={cn("text-xs text-left", colorStyle.text)}
                   >
                     {mbtiInfo.nickname}
                   </motion.p>

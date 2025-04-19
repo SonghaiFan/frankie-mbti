@@ -35,7 +35,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-center space-y-3 mb-16"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            <h1 className="text-4xl md:text-8xl font-bold text-gray-900 dark:text-gray-100 mb-6">
               了解MBTI vs 认知功能
             </h1>
             <p className="text-lg text-gray-800 dark:text-gray-300 max-w-2xl mx-auto mb-8">
