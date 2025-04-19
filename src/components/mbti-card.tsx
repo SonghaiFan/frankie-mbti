@@ -155,6 +155,11 @@ export function MBTICard({
                     src={`/mbti_img/${mbtiInfo.image}`}
                     alt={mbtiInfo.type}
                     fill
+                    sizes={
+                      isExpanded
+                        ? "(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                        : "(max-width: 640px) 25vw, (max-width: 1024px) 20vw, 15vw"
+                    }
                     className={cn(
                       "object-cover",
                       isExpanded ? "rounded-tl-xl" : "rounded-l-xl"

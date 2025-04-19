@@ -200,46 +200,68 @@ const getStepResult = (
     }
     case 5: {
       // 第六步：确定第三功能
-      const auxOri = isI ? "e" : "i";
-      const aux = isJext
-        ? pe === "S"
-          ? `S${auxOri}`
-          : `N${auxOri}`
-        : ju === "T"
-        ? `T${auxOri}`
-        : `F${auxOri}`;
-      const third = aux[0] + (aux[1] === "e" ? "i" : "e");
+      const third = isJext
+        ? ju === "T"
+          ? ju === "T"
+            ? "Fe"
+            : "Te"
+          : pe === "S"
+          ? "Ni"
+          : "Si"
+        : pe === "S"
+        ? "Ne"
+        : "Se";
       const funcType =
         cognitiveFunctions.types[
           third as keyof typeof cognitiveFunctions.types
         ];
       return {
         result: third,
-        explanation: `${third} 是 ${aux} 的${
-          third[1] === "i" ? "内" : "外"
-        }向镜像，对应你的第三功能（${funcType.name}）\n${funcType.description}`,
+        explanation: `第三功能是与辅助功能相对的功能：${
+          isJext
+            ? ju === "T"
+              ? "思维→情感"
+              : pe === "S"
+              ? "实感→直觉"
+              : "直觉→实感"
+            : pe === "S"
+            ? "实感→直觉"
+            : "直觉→实感"
+        }，所以是 ${third}（${funcType.name}）\n${funcType.description}`,
         remaining: [third],
         excluded: remaining.filter((f) => f !== third),
       };
     }
     case 6: {
       // 第七步：确定劣势功能
-      const domOri = isI ? "i" : "e";
-      const dom = isJext
+      const fourth = isJext
         ? ju === "T"
-          ? `T${domOri}`
-          : `F${domOri}`
+          ? ju === "T"
+            ? "Fi"
+            : "Ti"
+          : pe === "S"
+          ? "Ne"
+          : "Se"
         : pe === "S"
-        ? `S${domOri}`
-        : `N${domOri}`;
-      const fourth = dom[0] + (dom[1] === "e" ? "i" : "e");
+        ? "Ni"
+        : "Si";
       const funcType =
         cognitiveFunctions.types[
           fourth as keyof typeof cognitiveFunctions.types
         ];
       return {
         result: fourth,
-        explanation: `${fourth} 是 ${dom} 的镜像，是你最不擅长的功能（${funcType.name}）\n${funcType.description}`,
+        explanation: `劣势功能是与主导功能相对的功能：${
+          isJext
+            ? ju === "T"
+              ? "思维→情感"
+              : pe === "S"
+              ? "实感→直觉"
+              : "直觉→实感"
+            : pe === "S"
+            ? "实感→直觉"
+            : "直觉→实感"
+        }，所以是 ${fourth}（${funcType.name}）\n${funcType.description}`,
         remaining: [fourth],
         excluded: remaining.filter((f) => f !== fourth),
       };

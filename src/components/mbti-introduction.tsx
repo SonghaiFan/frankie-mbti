@@ -2,14 +2,20 @@
 
 import { motion } from "framer-motion";
 import { MBTIType } from "@/types/mbti";
-import { calculateCognitiveFunctions } from "@/lib/utils";
+import { mbtiTypes } from "@/data/mbti-data";
 
 interface MBTIIntroductionProps {
   type: MBTIType;
 }
 
 export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
-  const { dom } = calculateCognitiveFunctions(type.type);
+  const mbtiType = type.type;
+  const cogFuncs = mbtiTypes
+    .find((t) => t.type === mbtiType)
+    ?.cognitiveFunctions.split(" ")[0];
+
+  console.log("MBTI Type:", mbtiType);
+  console.log("Cognitive Functions:", cogFuncs);
 
   return (
     <motion.div
@@ -34,15 +40,24 @@ export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
           layout="position"
           className="text-sm text-gray-700 dark:text-gray-300"
         >
-          你可以是 {type.type}，但你的大脑主导功能是 {dom};
+          你可以是{" "}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">
+            {mbtiType}
+          </span>
+          ，但你的大脑主导功能是{" "}
+          <span className="font-semibold text-gray-900 dark:text-gray-100">
+            {cogFuncs}
+          </span>
+          ；
         </motion.p>
         <motion.p
           layout="position"
           className="text-sm text-gray-700 dark:text-gray-300"
         >
-          &mdash; 性格&ldquo;是什么&rdquo;，MBTI 告诉你；
-          <br />
-          &mdash; 性格&ldquo;怎么运作&rdquo;，认知功能告诉你。
+          <span className="block">MBTI 揭示你性格的表现形式和特征；</span>
+          <span className="block mt-1">
+            认知功能解释你思维和行为的内在机制。
+          </span>
         </motion.p>
       </div>
     </motion.div>
