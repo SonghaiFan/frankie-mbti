@@ -85,17 +85,17 @@ export function EnhancedGroupsView() {
         </p>
       </motion.div>
 
-      {/* 态度倾向标题行 - 仅桌面端显示 */}
+      {/* 态度倾向标题行 - 仅桌面端显示（吸顶增强层级） */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="hidden sm:grid sm:grid-cols-4 gap-3 mb-4 px-2"
+        className="hidden sm:grid sm:grid-cols-4 gap-3 mb-4 px-2 sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-white/50 dark:supports-[backdrop-filter]:bg-gray-900/40"
       >
         {colLabels.map((col) => (
           <div
             key={col.label}
-            className="text-center p-2 sm:p-3 bg-gray-100 dark:bg-gray-800 rounded-lg"
+            className="text-center p-2 sm:p-3 bg-gray-100/80 dark:bg-gray-800/70 rounded-lg border border-gray-200 dark:border-gray-700"
           >
             <div
               className={cn(
@@ -124,10 +124,11 @@ export function EnhancedGroupsView() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: rowIndex * 0.1 }}
-              className="space-y-3"
+              className="space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-2 sm:p-3"
             >
-              {/* 组别标题 - 移动端优化 */}
-              <div className={cn("p-3 sm:p-4 rounded-lg", explanation.bgColor)}>
+              {/* 组别标题 - 带左侧色条增强层级 */}
+              <div className={cn("p-3 sm:p-4 rounded-lg relative overflow-hidden", explanation.bgColor)}>
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div className="flex items-center gap-3">
@@ -193,6 +194,10 @@ export function EnhancedGroupsView() {
                         selectedType?.type === typeCode ? "z-[100]" : "z-[1]"
                       )}
                     >
+                      {/* 移动端角标：显示列态度（IJ/IP/EJ/EP） */}
+                      <div className="sm:hidden absolute top-1 left-1 text-[10px] px-1 py-0.5 rounded bg-gray-900/70 text-white">
+                        {colLabels[colIndex]?.label}
+                      </div>
                       <MBTICard
                         type={type}
                         isExpanded={selectedType?.type === typeCode}

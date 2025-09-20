@@ -88,8 +88,10 @@ export const mbtiMotionStyles = {
   transition: { duration: 0.3 },
 };
 
-export const getMbtiColor = () => {
-  // 主界面统一使用黑白灰中性配色，不再按 group 着色
+export const getMbtiColor = (groupOrColor?: string) => {
+  // 为向后兼容保留参数签名，但当前统一使用黑白灰中性配色
+  // 触发一次读取以满足 no-unused-vars 规则
+  void groupOrColor;
   return {
     bg: "bg-gray-50 dark:bg-gray-900/20",
     bgDark: "bg-gray-100 dark:bg-gray-900/40",
