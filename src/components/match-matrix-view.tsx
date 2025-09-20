@@ -228,7 +228,7 @@ export function MatchMatrixView() {
       >
         <div className="inline-block shrink-0">
           {/* 表格容器 */}
-          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden relative ">
+          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-visible relative ">
             {/* 顶部类型标签行 */}
             <div className="flex bg-gray-100 dark:bg-gray-800">
               {/* 左上角空白 */}
@@ -333,7 +333,8 @@ export function MatchMatrixView() {
                           !isLastRow && "border-b",
                           !isLastColumn && "border-r",
                           "flex items-center justify-center cursor-pointer transition-all duration-200",
-                          "hover:z-10 hover:shadow-lg relative will-change-transform transform-gpu",
+                          // base stacking context
+                          "relative will-change-transform transform-gpu z-[1] hover:shadow-lg",
                           matchInfo
                             ? cn(
                                 "hover:scale-[1.06]",
@@ -342,12 +343,15 @@ export function MatchMatrixView() {
                                 ]?.color || "bg-gray-50 dark:bg-gray-800"
                               )
                             : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700",
-                          isHovered && "z-20 shadow-xl transform scale-[1.06]",
+                          // selected row/col under hovered
                           isCellHighlighted &&
-                            "ring-1 ring-gray-800/70 dark:ring-white/30 z-10",
+                            "ring-1 ring-gray-800/70 dark:ring-white/30 z-[60]",
+                          // hovered cell above selected
+                          isHovered &&
+                            "z-[70] shadow-xl transform scale-[1.06]",
                           // 避免改变尺寸导致纵向滚动：仅使用外发光，不加粗边框
                           isIntersectionCell &&
-                            "ring-4 ring-gray-800 dark:ring-white/90 z-30"
+                            "ring-4 ring-gray-800 dark:ring-white/90 z-[80]"
                         )}
                       >
                         {matchInfo && (
@@ -369,7 +373,7 @@ export function MatchMatrixView() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className={cn(
-                              "absolute z-50 pointer-events-none",
+                              "absolute z-[100] pointer-events-none",
                               "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
                               "rounded-lg shadow-xl p-3 w-64",
                               // 智能定位：根据位置调整方向
