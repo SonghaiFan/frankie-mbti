@@ -3,7 +3,7 @@
 import { GridViewSwitcher } from "@/components/grid-view-switcher";
 import { DominantFunctionsView } from "@/components/dominant-functions-view";
 import { MatchMatrixView } from "@/components/match-matrix-view";
-import { EnhancedGroupsView } from "@/components/groups-view";
+import { GroupsView } from "@/components/groups-view";
 import { useMBTIStore } from "@/store/mbti-store";
 
 export function MBTIGrid() {
@@ -15,7 +15,7 @@ export function MBTIGrid() {
       <GridViewSwitcher />
 
       {/* 根据视图模式渲染不同的内容 */}
-      {viewMode === "groups" && <EnhancedGroupsView />}
+      {viewMode === "groups" && <GroupsView />}
       {viewMode === "dominantFunctions" && <DominantFunctionsView />}
       {viewMode === "matchPairs" && <MatchMatrixView />}
     </div>

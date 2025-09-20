@@ -64,7 +64,7 @@ const colLabels = [
   },
 ];
 
-export function EnhancedGroupsView() {
+export function GroupsView() {
   const selectedType = useMBTIStore((state) => state.selectedType);
   const expandCard = useMBTIStore((state) => state.expandCard);
   const collapseCard = useMBTIStore((state) => state.collapseCard);

@@ -106,15 +106,16 @@ export function DominantFunctionsView() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className={cn(
-                "rounded-2xl flex flex-col relative",
-                group.bgColor,
-                "hover:shadow-lg transition-shadow duration-200",
+                "space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-2 sm:p-3",
+                "flex flex-col relative hover:shadow-lg transition-shadow duration-200",
                 groupTypes.some((type) => selectedType?.type === type.type)
                   ? "z-[90]"
                   : "z-[1]"
               )}
             >
-              <div className="p-6 flex flex-col h-[200px]">
+              {/* 组别标题 - 带左侧色条增强层级，轻度使用组别背景作为点缀 */}
+              <div className={cn("p-6 flex flex-col h-[200px] rounded-lg relative overflow-hidden", group.bgColor)}>
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{group.icon}</span>
@@ -160,7 +161,7 @@ export function DominantFunctionsView() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1 + typeIndex * 0.05 }}
                     className={cn(
-                      "h-[100px]",
+                      "h-[100px] sm:h-[120px]",
                       selectedType?.type === type.type ? "z-[100]" : "z-[1]"
                     )}
                   >
