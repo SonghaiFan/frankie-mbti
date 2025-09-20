@@ -114,7 +114,12 @@ export function DominantFunctionsView() {
               )}
             >
               {/* 组别标题 - 带左侧色条增强层级，轻度使用组别背景作为点缀 */}
-              <div className={cn("p-6 flex flex-col h-[200px] rounded-lg relative overflow-hidden", group.bgColor)}>
+              <div
+                className={cn(
+                  "p-6 flex flex-col h-[200px] rounded-lg relative overflow-hidden",
+                  group.bgColor
+                )}
+              >
                 <div className="absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
