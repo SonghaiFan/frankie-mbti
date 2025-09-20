@@ -39,23 +39,18 @@ export const mbtiGroupColors = {
 // 配对度颜色系统 - 红色渐变表示配对强度
 export const matchingColors = {
   highest: {
-    // 官配类型 (100分)
     bg: "bg-red-400 text-red-900 dark:bg-red-600/50 dark:text-red-200",
   },
   high: {
-    // 天作之合 (80分)
     bg: "bg-red-200 text-red-800 dark:bg-red-800/50 dark:text-red-300",
   },
   medium: {
-    // 有可能成 (60分)
     bg: "bg-gray-300 text-gray-800 dark:bg-gray-500/50 dark:text-gray-300",
   },
   low: {
-    // 还行吧不算完美 (40分)
     bg: "bg-gray-200 text-gray-800 dark:bg-gray-600/50 dark:text-gray-300",
   },
   lowest: {
-    // 不合适 (20分)
     bg: "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300",
   },
 };

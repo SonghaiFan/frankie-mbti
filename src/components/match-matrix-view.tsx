@@ -29,7 +29,7 @@ const orderedTypes = [
 
 // 配对类型的颜色和优先级（基于配对度）- 红色到灰色渐变（越红越高）
 const matchTypePriority = {
-  官配类型: {
+  灵魂伴侣: {
     priority: 1,
     color: "bg-red-400 text-red-900 dark:bg-red-600/50 dark:text-red-200",
   },
@@ -37,15 +37,15 @@ const matchTypePriority = {
     priority: 2,
     color: "bg-red-200 text-red-800 dark:bg-red-800/50 dark:text-red-300",
   },
-  有可能成: {
+  有趣搭配: {
     priority: 3,
     color: "bg-gray-300 text-gray-800 dark:bg-gray-500/50 dark:text-gray-300",
   },
-  还行吧不算完美: {
+  互补成长: {
     priority: 4,
     color: "bg-gray-200 text-gray-800 dark:bg-gray-600/50 dark:text-gray-300",
   },
-  不合适: {
+  欢喜冤家: {
     priority: 5,
     color: "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300",
   },
@@ -120,11 +120,11 @@ export function MatchMatrixView() {
 
   // 根据配对度确定配对类型
   const getMatchTypeFromCompatibility = (compatibility: number) => {
-    if (compatibility === 100) return "官配类型";
+    if (compatibility === 100) return "灵魂伴侣";
     if (compatibility === 80) return "天作之合";
-    if (compatibility === 60) return "有可能成";
-    if (compatibility === 40) return "还行吧不算完美";
-    return "不合适";
+    if (compatibility === 60) return "有趣搭配";
+    if (compatibility === 40) return "互补成长";
+    return "欢喜冤家";
   };
 
   // 获取类型的颜色
@@ -223,12 +223,12 @@ export function MatchMatrixView() {
 
       {/* 配对矩阵 */}
       <div
-        className="overflow-x-auto flex justify-center"
+        className="overflow-x-auto flex justify-center relative"
         style={{ scrollSnapType: "x mandatory" }}
       >
         <div className="inline-block shrink-0">
           {/* 表格容器 */}
-          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
+          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-visible relative">
             {/* 顶部类型标签行 */}
             <div className="flex bg-gray-100 dark:bg-gray-800">
               {/* 左上角空白 */}
@@ -368,9 +368,16 @@ export function MatchMatrixView() {
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             className={cn(
-                              "absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-30",
+                              "absolute z-50 pointer-events-none",
                               "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
-                              "rounded-lg shadow-xl p-3 min-w-56 max-w-72"
+                              "rounded-lg shadow-xl p-3 w-64",
+                              // 智能定位：根据位置调整方向
+                              colIndex > displayedColTypes.length / 2
+                                ? "right-0 translate-x-0" // 右半部分向左显示
+                                : "left-0 translate-x-0", // 左半部分向右显示
+                              rowIndex < displayedRowTypes.length / 2
+                                ? "top-full mt-2" // 上半部分向下显示
+                                : "bottom-full mb-2" // 下半部分向上显示
                             )}
                           >
                             <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
@@ -435,14 +442,16 @@ export function MatchMatrixView() {
             <div key={matchType} className="flex items-center gap-2">
               <div className={cn("w-4 h-4 rounded", config.color)}></div>
               <span className="text-xs text-gray-700 dark:text-gray-300">
-                {matchType === "官配类型" &&
-                  "官配类型 (100分) - 官方设定最合适的灵魂伴侣"}
+                {matchType === "灵魂伴侣" &&
+                  "灵魂伴侣 (100分) - 完美契合的理想配对"}
                 {matchType === "天作之合" &&
-                  "天作之合 (80分) - 可以很好的相处在一起"}
-                {matchType === "有可能成" && "有可能成 (60分) - 但不是最佳配对"}
-                {matchType === "还行吧不算完美" &&
-                  "还行吧不算完美 (40分) - 但是不够理想"}
-                {matchType === "不合适" && "不合适 (20分) - 建议你再考虑一下"}
+                  "天作之合 (80分) - 和谐美好的默契搭档"}
+                {matchType === "有趣搭配" &&
+                  "有趣搭配 (60分) - 充满惊喜的奇妙组合"}
+                {matchType === "互补成长" &&
+                  "互补成长 (40分) - 在差异中共同进步"}
+                {matchType === "欢喜冤家" &&
+                  "欢喜冤家 (20分) - 充满挑战的有趣关系"}
               </span>
             </div>
           ))}
