@@ -2,6 +2,10 @@
 
 import { groupExplanations, mbtiTypes } from "@/data/mbti-data";
 import { MBTICard } from "@/components/mbti-card";
+import { GridViewSwitcher } from "@/components/grid-view-switcher";
+import { DominantFunctionsView } from "@/components/dominant-functions-view";
+import { MatchMatrixView } from "@/components/match-matrix-view";
+import { Grid4x4View } from "@/components/grid-4x4-view";
 import { cn } from "@/lib/utils";
 import { useMBTIStore } from "@/store/mbti-store";
 
@@ -9,6 +13,7 @@ export function MBTIGrid() {
   const selectedType = useMBTIStore((state) => state.selectedType);
   const expandCard = useMBTIStore((state) => state.expandCard);
   const collapseCard = useMBTIStore((state) => state.collapseCard);
+  const viewMode = useMBTIStore((state) => state.viewMode);
 
   // Group MBTI types by their group
   const groupedMBTIs = mbtiTypes.reduce((acc, mbti) => {
@@ -20,7 +25,8 @@ export function MBTIGrid() {
     return acc;
   }, {} as Record<string, typeof mbtiTypes>);
 
-  return (
+  // 分组视图的渲染函数
+  const renderGroupsView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-8 relative">
       {Object.entries(groupedMBTIs).map(([group, mbtis], index) => {
         const explanation =
@@ -33,7 +39,9 @@ export function MBTIGrid() {
               "animate-slide-up rounded-2xl flex flex-col relative",
               explanation.bgColor,
               "hover:shadow-lg transition-shadow duration-200",
-              mbtis.some(m => selectedType?.type === m.type) ? "z-[90]" : "z-[1]"
+              mbtis.some((m) => selectedType?.type === m.type)
+                ? "z-[90]"
+                : "z-[1]"
             )}
             style={{ animationDelay: `${0.1 + index * 0.1}s` }}
           >
@@ -125,6 +133,19 @@ export function MBTIGrid() {
           </div>
         );
       })}
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* 视图切换器 */}
+      <GridViewSwitcher />
+
+      {/* 根据视图模式渲染不同的内容 */}
+      {viewMode === "groups" && renderGroupsView()}
+      {viewMode === "dominantFunctions" && <DominantFunctionsView />}
+      {viewMode === "matchPairs" && <MatchMatrixView />}
+      {viewMode === "grid4x4" && <Grid4x4View />}
     </div>
   );
 }

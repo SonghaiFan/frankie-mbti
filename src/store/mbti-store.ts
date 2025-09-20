@@ -1,15 +1,24 @@
 import { create } from "zustand";
 import { MBTIType } from "@/types/mbti";
 
+export type GridViewMode =
+  | "groups"
+  | "dominantFunctions"
+  | "matchPairs"
+  | "grid4x4";
+
 export interface MBTIState {
   selectedType: MBTIType | null;
+  viewMode: GridViewMode;
   setSelectedType: (type: MBTIType | null) => void;
   expandCard: (type: MBTIType) => void;
   collapseCard: () => void;
+  setViewMode: (mode: GridViewMode) => void;
 }
 
 export const useMBTIStore = create<MBTIState>((set) => ({
   selectedType: null,
+  viewMode: "groups",
   setSelectedType: (type) => set({ selectedType: type }),
   expandCard: (type) => {
     set({ selectedType: type });
@@ -22,4 +31,5 @@ export const useMBTIStore = create<MBTIState>((set) => ({
     }, 100);
   },
   collapseCard: () => set({ selectedType: null }),
+  setViewMode: (mode) => set({ viewMode: mode, selectedType: null }),
 }));
