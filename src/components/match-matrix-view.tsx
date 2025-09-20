@@ -223,7 +223,7 @@ export function MatchMatrixView() {
 
       {/* 配对矩阵 */}
       <div
-        className="overflow-x-auto flex justify-center relative"
+        className="overflow-x-auto overflow-y-hidden flex justify-center relative"
         style={{ scrollSnapType: "x mandatory" }}
       >
         <div className="inline-block shrink-0">
@@ -333,20 +333,21 @@ export function MatchMatrixView() {
                           !isLastRow && "border-b",
                           !isLastColumn && "border-r",
                           "flex items-center justify-center cursor-pointer transition-all duration-200",
-                          "hover:z-10 hover:shadow-lg relative",
+                          "hover:z-10 hover:shadow-lg relative will-change-transform transform-gpu",
                           matchInfo
                             ? cn(
-                                "hover:scale-110",
+                                "hover:scale-[1.06]",
                                 matchTypePriority[
                                   matchInfo.matchType as keyof typeof matchTypePriority
                                 ]?.color || "bg-gray-50 dark:bg-gray-800"
                               )
                             : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700",
-                          isHovered && "z-20 shadow-xl transform scale-110",
+                          isHovered && "z-20 shadow-xl transform scale-[1.06]",
                           isCellHighlighted &&
                             "ring-1 ring-white/70 dark:ring-white/30",
+                          // 避免改变尺寸导致纵向滚动：仅使用外发光，不加粗边框
                           isIntersectionCell &&
-                            "ring-4 ring-white border-4 border-white dark:border-white/80 z-30"
+                            "ring-4 ring-white dark:ring-white/90 z-30"
                         )}
                       >
                         {matchInfo && (
@@ -446,12 +447,10 @@ export function MatchMatrixView() {
                   "灵魂伴侣 (100分) - 完美契合的理想配对"}
                 {matchType === "天作之合" &&
                   "天作之合 (80分) - 和谐美好的默契搭档"}
-                {matchType === "有趣搭配" &&
-                  "有趣搭配 (60分) - 充满惊喜的奇妙组合"}
+                {matchType === "有趣搭配" && "有趣搭配 (60分) - 充满惊喜的奇妙组合"}
                 {matchType === "互补成长" &&
                   "互补成长 (40分) - 在差异中共同进步"}
-                {matchType === "欢喜冤家" &&
-                  "欢喜冤家 (20分) - 充满挑战的有趣关系"}
+                {matchType === "欢喜冤家" && "欢喜冤家 (20分) - 充满挑战的有趣关系"}
               </span>
             </div>
           ))}
