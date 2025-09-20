@@ -116,7 +116,7 @@ export function DominantFunctionsView() {
               {/* 组别标题 - 带左侧色条增强层级，轻度使用组别背景作为点缀 */}
               <div
                 className={cn(
-                  "p-6 flex flex-col h-[200px] rounded-lg relative overflow-hidden",
+                  "p-6 flex flex-col rounded-lg relative overflow-hidden",
                   group.bgColor
                 )}
               >
@@ -135,7 +135,7 @@ export function DominantFunctionsView() {
                   </div>
                 </div>
 
-                <div className="flex-1">
+                <div className="mt-1">
                   <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                     {group.description}
                   </p>

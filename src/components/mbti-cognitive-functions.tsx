@@ -122,7 +122,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               className={cn(
                 "absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold z-20 shadow-lg",
                 colorStyle.bgDark,
-                "text-white"
+                "text-black dark:text-white"
               )}
             >
               <span className="text-sm">{level?.icon}</span>
