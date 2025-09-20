@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import { MBTIType } from "@/types/mbti";
 
-export type GridViewMode = "groups" | "dominantFunctions" | "matchPairs";
+export type GridViewMode =
+  | "groups"
+  | "dominantFunctions"
+  | "matchPairs"
+  | "compact";
 
 export interface MBTIState {
   selectedType: MBTIType | null;

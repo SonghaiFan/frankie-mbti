@@ -272,8 +272,8 @@ export function MatchMatrixView() {
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.title}
-                        width={20}
-                        height={20}
+                        width={40}
+                        height={40}
                         className="mb-1 rounded-full"
                       />
                     )}

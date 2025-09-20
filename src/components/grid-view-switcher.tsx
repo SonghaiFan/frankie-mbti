@@ -23,6 +23,12 @@ const viewModes = [
     description: "16×16配对关系矩阵",
     icon: "💕",
   },
+  {
+    id: "compact" as GridViewMode,
+    name: "一览表",
+    description: "表格快速浏览与检索",
+    icon: "🗂️",
+  },
 ];
 
 export function GridViewSwitcher() {
@@ -31,7 +37,7 @@ export function GridViewSwitcher() {
 
   return (
     <div className="mb-4 sm:mb-6 px-2 sm:px-0">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-2">
         {viewModes.map((mode) => {
           const isActive = viewMode === mode.id;
 
