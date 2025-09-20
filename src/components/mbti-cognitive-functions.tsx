@@ -16,10 +16,6 @@ import { cognitiveFunctions } from "@/data/mbti-data";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
-type CognitiveFunctionName =
-  | keyof typeof cognitiveFunctions.categories.judging.functions
-  | keyof typeof cognitiveFunctions.categories.perceiving.functions;
-
 interface Step {
   title: string;
   description: string;
@@ -219,17 +215,21 @@ const getStepResult = (
     }
     case 5: {
       // 第六步：确定第三功能
-      const third = isJext
-        ? ju === "T"
-          ? ju === "T"
-            ? "Fe"
-            : "Te"
-          : pe === "S"
-          ? "Ni"
-          : "Si"
-        : pe === "S"
-        ? "Ne"
-        : "Se";
+      // 第三功能与辅助功能相对（思维↔情感，直觉↔实感），但方向相同
+      let third: string;
+      const auxResult = getStepResult(mbti, 4);
+      const aux = auxResult.result;
+      
+      if (aux.startsWith("T")) {
+        third = aux.endsWith("e") ? "Fe" : "Fi";
+      } else if (aux.startsWith("F")) {
+        third = aux.endsWith("e") ? "Te" : "Ti";
+      } else if (aux.startsWith("N")) {
+        third = aux.endsWith("e") ? "Se" : "Si";
+      } else { // S
+        third = aux.endsWith("e") ? "Ne" : "Ni";
+      }
+
       const funcType =
         cognitiveFunctions.categories.judging.functions[
           third as keyof typeof cognitiveFunctions.categories.judging.functions
@@ -239,34 +239,28 @@ const getStepResult = (
         ];
       return {
         result: third,
-        explanation: `第三功能是与辅助功能相对的功能：${
-          isJext
-            ? ju === "T"
-              ? "思维→情感"
-              : pe === "S"
-              ? "实感→直觉"
-              : "直觉→实感"
-            : pe === "S"
-            ? "实感→直觉"
-            : "直觉→实感"
-        }，所以是 ${third}（${funcType.name}）`,
+        explanation: `第三功能与辅助功能相对（${aux}→${third}），方向相同。如果辅助是思维则第三是情感，如果辅助是直觉则第三是实感，反之亦然。所以是 ${third}（${funcType.name}）`,
         remaining: [third],
         excluded: remaining.filter((f) => f !== third),
       };
     }
     case 6: {
       // 第七步：确定劣势功能
-      const fourth = isJext
-        ? ju === "T"
-          ? ju === "T"
-            ? "Fi"
-            : "Ti"
-          : pe === "S"
-          ? "Ne"
-          : "Se"
-        : pe === "S"
-        ? "Ni"
-        : "Si";
+      // 劣势功能与主导功能相对（思维↔情感，直觉↔实感），且方向相反
+      let fourth: string;
+      const domResult = getStepResult(mbti, 3);
+      const dom = domResult.result;
+      
+      if (dom.startsWith("T")) {
+        fourth = dom.endsWith("e") ? "Fi" : "Fe";
+      } else if (dom.startsWith("F")) {
+        fourth = dom.endsWith("e") ? "Ti" : "Te";
+      } else if (dom.startsWith("N")) {
+        fourth = dom.endsWith("e") ? "Si" : "Se";
+      } else { // S
+        fourth = dom.endsWith("e") ? "Ni" : "Ne";
+      }
+
       const funcType =
         cognitiveFunctions.categories.judging.functions[
           fourth as keyof typeof cognitiveFunctions.categories.judging.functions
@@ -276,17 +270,7 @@ const getStepResult = (
         ];
       return {
         result: fourth,
-        explanation: `劣势功能是与主导功能相对的功能：${
-          isJext
-            ? ju === "T"
-              ? "思维→情感"
-              : pe === "S"
-              ? "实感→直觉"
-              : "直觉→实感"
-            : pe === "S"
-            ? "实感→直觉"
-            : "直觉→实感"
-        }，所以是 ${fourth}（${funcType.name}）`,
+        explanation: `劣势功能与主导功能相对（${dom}→${fourth}），且方向相反。如果主导是内向思维则劣势是外向情感，如果主导是外向直觉则劣势是内向实感，以此类推。所以是 ${fourth}（${funcType.name}）`,
         remaining: [fourth],
         excluded: remaining.filter((f) => f !== fourth),
       };
@@ -689,7 +673,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                       colorStyle.text
                     )}
                   >
-                    "{funcType.description}"
+                    &ldquo;{funcType.description}&rdquo;
                   </p>
                 </div>
 
