@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Image from "next/image";
 import { MBTIType } from "@/types/mbti";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,53 @@ interface MBTICardProps {
   onExpand: () => void;
   onCollapse: () => void;
 }
+
+// 定义动画变体 - 使用现代 variants 语法
+const cardVariants = {
+  collapsed: {
+    borderRadius: 12,
+    scale: 1,
+    transformOrigin: "center center" as const,
+    zIndex: 1,
+  },
+  expanded: {
+    borderRadius: 24,
+    scale: 1,
+    y: 0,
+    zIndex: 100,
+  },
+};
+
+const contentVariants = {
+  collapsed: { opacity: 1 },
+  expanded: {
+    opacity: 1,
+  },
+};
+
+const itemVariants = {
+  collapsed: { opacity: 0, x: -10 },
+  expanded: {
+    opacity: 1,
+    x: 0,
+  },
+};
+
+const expandedContentVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
+const expandedItemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
 
 export function MBTICard({
   type,
@@ -70,7 +117,7 @@ export function MBTICard({
           animate={{ opacity: 1, backdropFilter: "blur(8px)" }}
           exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-black/30 z-40"
+          className="fixed inset-0 bg-black/30 z-[90] pointer-events-auto"
           onClick={onCollapse}
         />
       )}
@@ -78,11 +125,16 @@ export function MBTICard({
       {/* Card/Modal */}
       <motion.div
         layout
-        initial={{ borderRadius: 12, scale: 1 }}
-        animate={{
-          borderRadius: isExpanded ? 24 : 12,
-          scale: isExpanded ? 1 : 1,
-          y: isExpanded ? 0 : 0,
+        layoutId={`mbti-card-${type.type}`}
+        variants={cardVariants}
+        initial="collapsed"
+        animate={isExpanded ? "expanded" : "collapsed"}
+        transition={{
+          type: "spring",
+          stiffness: 280,
+          damping: 25,
+          mass: 0.8,
+          when: "beforeChildren",
         }}
         whileHover={
           !isExpanded
@@ -91,18 +143,17 @@ export function MBTICard({
                 y: -4,
                 transition: {
                   type: "spring",
+                  stiffness: 300,
+                  damping: 20,
                 },
               }
             : {}
         }
-        transition={{
-          duration: 0.2,
-        }}
         className={cn(
           "relative overflow-hidden cursor-pointer",
           isExpanded
-            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-50"
-            : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300"
+            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-[100]"
+            : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300 z-[1]"
         )}
         onClick={!isExpanded ? onExpand : undefined}
         id={`mbti-card-${type.type}`}
@@ -156,6 +207,11 @@ export function MBTICard({
             )}
             <motion.div
               layout
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
               className={cn(
                 "flex flex-row items-stretch",
                 !isExpanded && "h-[100px]"
@@ -163,13 +219,27 @@ export function MBTICard({
             >
               <motion.div
                 layout
+                layoutId={`mbti-image-${type.type}`} // 图片区域的共享元素ID
+                transition={{
+                  type: "spring",
+                  stiffness: 320,
+                  damping: 28,
+                }}
                 className={cn(
-                  "relative",
+                  "relative overflow-hidden",
                   isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24",
                   isExpanded && "border-b border-gray-200 dark:border-gray-700"
                 )}
               >
-                <div className="absolute inset-0">
+                <motion.div
+                  className="absolute inset-0"
+                  layout
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30,
+                  }}
+                >
                   <Image
                     src={`/mbti_img/${mbtiInfo.image}`}
                     alt={mbtiInfo.type}
@@ -180,16 +250,22 @@ export function MBTICard({
                         : "(max-width: 640px) 25vw, (max-width: 1024px) 20vw, 15vw"
                     }
                     className={cn(
-                      "object-cover",
+                      "object-cover transition-all duration-300 ease-out",
                       isExpanded ? "rounded-tl-xl" : "rounded-l-xl"
                     )}
                     priority
                   />
-                </div>
+                </motion.div>
               </motion.div>
 
               <motion.div
                 layout
+                layoutId={`mbti-content-${type.type}`}
+                variants={contentVariants}
+                transition={{
+                  staggerChildren: 0.05,
+                  delayChildren: 0.1,
+                }}
                 className={cn(
                   "flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4",
                   isExpanded && "border-b border-gray-200 dark:border-gray-700 "
@@ -198,8 +274,14 @@ export function MBTICard({
                 <motion.div layout="position" className="space-y-1 text-left">
                   <motion.h2
                     layout="position"
+                    layoutId={`mbti-title-${type.type}`} // 标题的共享元素ID
+                    transition={{
+                      type: "spring",
+                      stiffness: 350,
+                      damping: 25,
+                    }}
                     className={cn(
-                      "font-medium",
+                      "font-medium transition-all duration-300",
                       isExpanded ? "text-lg sm:text-xl" : "text-base",
                       colorStyle.text
                     )}
@@ -207,33 +289,71 @@ export function MBTICard({
                     {mbtiInfo.type} · {mbtiInfo.title}
                   </motion.h2>
                   {isExpanded && (
-                    <>
+                    <motion.div
+                      variants={contentVariants}
+                      initial="collapsed"
+                      animate="expanded"
+                      transition={{
+                        staggerChildren: 0.05,
+                        delayChildren: 0.1,
+                      }}
+                    >
                       <motion.p
                         layout="position"
+                        variants={itemVariants}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 25,
+                          delay: 0.15,
+                        }}
                         className={cn(mbtiCardDescription, "text-sm")}
                       >
                         👤 昵称：{mbtiInfo.nickname}
                       </motion.p>
                       <motion.p
                         layout="position"
+                        variants={itemVariants}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 25,
+                          delay: 0.2,
+                        }}
                         className={cn(mbtiCardDescription, "text-sm")}
                       >
                         💫 特征：{mbtiInfo.traits}
                       </motion.p>
                       <motion.p
                         layout="position"
+                        variants={itemVariants}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 25,
+                          delay: 0.25,
+                        }}
                         className={cn(mbtiCardDescription, "text-sm")}
                       >
                         📝 一句话：{mbtiInfo.slogan}
                       </motion.p>
-                    </>
+                    </motion.div>
                   )}
                 </motion.div>
 
                 {!isExpanded && (
                   <motion.p
                     layout="position"
-                    className={cn("text-xs text-left", colorStyle.text)}
+                    layoutId={`mbti-nickname-${type.type}`} // 昵称的共享元素ID
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25,
+                    }}
+                    className={cn(
+                      "text-xs text-left transition-all duration-200",
+                      colorStyle.text
+                    )}
                   >
                     {mbtiInfo.nickname}
                   </motion.p>
@@ -244,11 +364,63 @@ export function MBTICard({
 
           {/* Expanded Content */}
           {isExpanded && (
-            <motion.div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-300px)]">
-              <MBTIIntroduction type={type} />
-              <MBTIDimensions type={type} />
-              <MBTICognitiveFunctions type={type} />
-              <MBTIMatches type={type} />
+            <motion.div
+              variants={expandedContentVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              transition={{
+                duration: 0.4,
+                delay: 0.2,
+                staggerChildren: 0.1,
+                when: "afterChildren",
+              }}
+              className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[calc(90vh-300px)]"
+            >
+              <motion.div
+                variants={expandedItemVariants}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  delay: 0.3,
+                }}
+              >
+                <MBTIIntroduction type={type} />
+              </motion.div>
+              <motion.div
+                variants={expandedItemVariants}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  delay: 0.35,
+                }}
+              >
+                <MBTIDimensions type={type} />
+              </motion.div>
+              <motion.div
+                variants={expandedItemVariants}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  delay: 0.4,
+                }}
+              >
+                <MBTICognitiveFunctions type={type} />
+              </motion.div>
+              <motion.div
+                variants={expandedItemVariants}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  delay: 0.45,
+                }}
+              >
+                <MBTIMatches type={type} />
+              </motion.div>
             </motion.div>
           )}
         </motion.div>

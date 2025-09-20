@@ -1,336 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MBTIType } from "@/types/mbti";
 import {
   mbtiCard,
   mbtiCardHeader,
   mbtiCardTitle,
-  mbtiCardContent,
-  mbtiCardDescription,
   getMbtiColor,
   mbtiMotionStyles,
 } from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
 import { cognitiveFunctions } from "@/data/mbti-data";
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-
-interface Step {
-  title: string;
-  description: string;
-  getResult: (mbti: string) => {
-    result: string;
-    explanation: string;
-  };
-}
-
-interface StepResult {
-  result: string;
-  explanation: string;
-  remaining: string[];
-  excluded: string[];
-}
-
-const allFunctions = ["Fi", "Ti", "Ni", "Si", "Ne", "Se", "Te", "Fe"] as const;
-
-const getStepResult = (
-  mbti: string,
-  step: number,
-  previousRemaining?: string[]
-): StepResult => {
-  const [att, pe, ju, li] = mbti;
-  const isI = att === "I";
-  const isP = li === "P";
-  const isJext = (li === "J") === !isI;
-
-  let remaining =
-    step === 0 ? [...allFunctions] : [...(previousRemaining || [])];
-  let excluded: string[] = [];
-
-  switch (step) {
-    case 0: {
-      // 第一步：根据 E/I 排除
-      excluded = isI ? ["Ne", "Se", "Te", "Fe"] : ["Fi", "Ti", "Ni", "Si"];
-      remaining = remaining.filter((f) => !excluded.includes(f));
-      return {
-        result: `${att}（${isI ? "内向" : "外向"}）`,
-        explanation: `因为你是 ${att}（${
-          isI ? "内向" : "外向"
-        }），所以主导功能必须是${
-          isI ? "内向" : "外向"
-        }功能。\n❌ 排除：${excluded.join("、")} → 它们都是${
-          isI ? "外向" : "内向"
-        }功能，不可能是主导。\n✅ 剩余选项：${remaining.join("、")}`,
-        remaining,
-        excluded,
-      };
-    }
-    case 1: {
-      // 第二步：根据 I/E 和 J/P 确定功能类型
-      let theoreticalExclusions: string[] = [];
-
-      if (isI) {
-        // 内向型
-        if (isP) {
-          // IP型：主导功能是判断功能，排除感知功能
-          theoreticalExclusions = ["Ni", "Si"];
-        } else {
-          // IJ型：主导功能是感知功能，排除判断功能
-          theoreticalExclusions = ["Ti", "Fi"];
-        }
-      } else {
-        // 外向型
-        if (isP) {
-          // EP型：主导功能是感知功能，排除判断功能
-          theoreticalExclusions = ["Te", "Fe"];
-        } else {
-          // EJ型：主导功能是判断功能，排除感知功能
-          theoreticalExclusions = ["Ne", "Se"];
-        }
-      }
-
-      // 实际能排除的（与剩余选项的交集）
-      excluded = theoreticalExclusions.filter((f) => remaining.includes(f));
-      remaining = remaining.filter((f) => !excluded.includes(f));
-
-      return {
-        result: `${li}（${isP ? "感知" : "判断"}）`,
-        explanation: `你是 ${att}${li} 型 → ${isI ? "内" : "外"}向${
-          isP ? "P" : "J"
-        }型，所以主导功能必须是${
-          isI ? (isP ? "判断" : "感知") : isP ? "感知" : "判断"
-        }功能。\n❌ 理论上要排除：${theoreticalExclusions.join("、")} → 它们是${
-          isI ? (isP ? "感知" : "判断") : isP ? "判断" : "感知"
-        }功能，不可能是你的主导功能。${
-          excluded.length === 0
-            ? "\n💡 但是这些功能在上一步已经被排除了"
-            : `\n实际排除：${excluded.join("、")}`
-        }\n✅ 剩余选项：${remaining.join("、")}`,
-        remaining,
-        excluded,
-      };
-    }
-    case 2: {
-      // 第三步：根据 S/N 和 T/F 排除
-      const excludedByPreference = remaining.filter(
-        (c) =>
-          (pe === "S" && c.includes("N")) ||
-          (pe === "N" && c.includes("S")) ||
-          (ju === "T" && c.includes("F")) ||
-          (ju === "F" && c.includes("T"))
-      );
-      excluded = excludedByPreference;
-      remaining = remaining.filter((f) => !excluded.includes(f));
-      return {
-        result: `${pe}（${pe === "S" ? "实感" : "直觉"}），${ju}（${
-          ju === "T" ? "思维" : "情感"
-        }）`,
-        explanation: `感知偏好是 ${pe}（${
-          pe === "S" ? "实感" : "直觉"
-        }），判断偏好是 ${ju}（${
-          ju === "T" ? "思维" : "情感"
-        }）\n❌ 排除：${excluded.join(
-          "、"
-        )} → 不符合你的偏好\n✅ 剩余选项：${remaining.join("、")}`,
-        remaining,
-        excluded,
-      };
-    }
-    case 3: {
-      // 第四步：确定主导功能
-      // 获取前几步的筛选结果
-      const step0Result: StepResult = getStepResult(mbti, 0);
-      const step1Result: StepResult = getStepResult(
-        mbti,
-        1,
-        step0Result.remaining
-      );
-      const step2Result: StepResult = getStepResult(
-        mbti,
-        2,
-        step1Result.remaining
-      );
-
-      // 经过前三步的筛选后，应该只剩下一个选项作为主导功能
-      const dom: string = step2Result.remaining[0];
-
-      // 确保 dom 是有效的认知功能
-      if (
-        !cognitiveFunctions.categories.judging.functions[
-          dom as keyof typeof cognitiveFunctions.categories.judging.functions
-        ] &&
-        !cognitiveFunctions.categories.perceiving.functions[
-          dom as keyof typeof cognitiveFunctions.categories.perceiving.functions
-        ]
-      ) {
-        return {
-          result: "错误",
-          explanation: "无法确定主导功能",
-          remaining: [],
-          excluded: [],
-        };
-      }
-
-      const funcType =
-        cognitiveFunctions.categories.judging.functions[
-          dom as keyof typeof cognitiveFunctions.categories.judging.functions
-        ] ||
-        cognitiveFunctions.categories.perceiving.functions[
-          dom as keyof typeof cognitiveFunctions.categories.perceiving.functions
-        ];
-
-      return {
-        result: dom,
-        explanation: `经过前三步的筛选，得到主导功能：${dom}（${funcType.name}）`,
-        remaining: [dom],
-        excluded: step2Result.remaining.filter((f) => f !== dom),
-      };
-    }
-    case 4: {
-      // 第五步：确定辅助功能
-      const auxOri = isI ? "e" : "i";
-      const aux = isJext
-        ? pe === "S"
-          ? `S${auxOri}`
-          : `N${auxOri}`
-        : ju === "T"
-        ? `T${auxOri}`
-        : `F${auxOri}`;
-      const funcType =
-        cognitiveFunctions.categories.judging.functions[
-          aux as keyof typeof cognitiveFunctions.categories.judging.functions
-        ] ||
-        cognitiveFunctions.categories.perceiving.functions[
-          aux as keyof typeof cognitiveFunctions.categories.perceiving.functions
-        ];
-      return {
-        result: aux,
-        explanation: `辅助功能必须是${auxOri === "e" ? "外" : "内"}向的${
-          isJext ? "感知" : "判断"
-        }功能，所以是 ${aux}（${funcType.name}）`,
-        remaining: [aux],
-        excluded: remaining.filter((f) => f !== aux),
-      };
-    }
-    case 5: {
-      // 第六步：确定第三功能
-      // 第三功能与辅助功能相对（思维↔情感，直觉↔实感），但方向相同
-      let third: string;
-      const auxResult = getStepResult(mbti, 4);
-      const aux = auxResult.result;
-
-      if (aux.startsWith("T")) {
-        third = aux.endsWith("e") ? "Fe" : "Fi";
-      } else if (aux.startsWith("F")) {
-        third = aux.endsWith("e") ? "Te" : "Ti";
-      } else if (aux.startsWith("N")) {
-        third = aux.endsWith("e") ? "Se" : "Si";
-      } else {
-        // S
-        third = aux.endsWith("e") ? "Ne" : "Ni";
-      }
-
-      const funcType =
-        cognitiveFunctions.categories.judging.functions[
-          third as keyof typeof cognitiveFunctions.categories.judging.functions
-        ] ||
-        cognitiveFunctions.categories.perceiving.functions[
-          third as keyof typeof cognitiveFunctions.categories.perceiving.functions
-        ];
-      return {
-        result: third,
-        explanation: `第三功能与辅助功能相对（${aux}→${third}），方向相同。如果辅助是思维则第三是情感，如果辅助是直觉则第三是实感，反之亦然。所以是 ${third}（${funcType.name}）`,
-        remaining: [third],
-        excluded: remaining.filter((f) => f !== third),
-      };
-    }
-    case 6: {
-      // 第七步：确定劣势功能
-      // 劣势功能与主导功能相对（思维↔情感，直觉↔实感），且方向相反
-      let fourth: string;
-      const domResult = getStepResult(mbti, 3);
-      const dom = domResult.result;
-
-      if (dom.startsWith("T")) {
-        fourth = dom.endsWith("e") ? "Fi" : "Fe";
-      } else if (dom.startsWith("F")) {
-        fourth = dom.endsWith("e") ? "Ti" : "Te";
-      } else if (dom.startsWith("N")) {
-        fourth = dom.endsWith("e") ? "Si" : "Se";
-      } else {
-        // S
-        fourth = dom.endsWith("e") ? "Ni" : "Ne";
-      }
-
-      const funcType =
-        cognitiveFunctions.categories.judging.functions[
-          fourth as keyof typeof cognitiveFunctions.categories.judging.functions
-        ] ||
-        cognitiveFunctions.categories.perceiving.functions[
-          fourth as keyof typeof cognitiveFunctions.categories.perceiving.functions
-        ];
-      return {
-        result: fourth,
-        explanation: `劣势功能与主导功能相对（${dom}→${fourth}），且方向相反。如果主导是内向思维则劣势是外向情感，如果主导是外向直觉则劣势是内向实感，以此类推。所以是 ${fourth}（${funcType.name}）`,
-        remaining: [fourth],
-        excluded: remaining.filter((f) => f !== fourth),
-      };
-    }
-    default:
-      return {
-        result: "",
-        explanation: "",
-        remaining: [],
-        excluded: [],
-      };
-  }
-};
-
-const steps: Step[] = [
-  {
-    title: "第一步：确定主导功能的内外向",
-    description: "看第一个字母 E/I",
-    getResult: (mbti) => getStepResult(mbti, 0),
-  },
-  {
-    title: "第二步：确定外向功能是判断还是感知",
-    description: "看第四个字母 J/P",
-    getResult: (mbti) => {
-      const step0Result = getStepResult(mbti, 0);
-      return getStepResult(mbti, 1, step0Result.remaining);
-    },
-  },
-  {
-    title: "第三步：确定感知和判断的偏好",
-    description: "看第二字母 S/N 和第三字母 T/F",
-    getResult: (mbti) => {
-      const step0Result = getStepResult(mbti, 0);
-      const step1Result = getStepResult(mbti, 1, step0Result.remaining);
-      return getStepResult(mbti, 2, step1Result.remaining);
-    },
-  },
-  {
-    title: "第四步：确定主导功能",
-    description: "综合前三步的结论",
-    getResult: (mbti) => getStepResult(mbti, 3),
-  },
-  {
-    title: "第五步：确定辅助功能",
-    description: "主导的反方向 + 另一种功能",
-    getResult: (mbti) => getStepResult(mbti, 4),
-  },
-  {
-    title: "第六步：确定第三功能",
-    description: "辅助功能的镜像",
-    getResult: (mbti) => getStepResult(mbti, 5),
-  },
-  {
-    title: "第七步：确定劣势功能",
-    description: "主导功能的镜像",
-    getResult: (mbti) => getStepResult(mbti, 6),
-  },
-];
 
 interface MBTICognitiveFunctionsProps {
   type: MBTIType;
@@ -338,7 +18,7 @@ interface MBTICognitiveFunctionsProps {
 
 export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
   const colorStyle = getMbtiColor(type.group);
-  const [showProcess, setShowProcess] = useState(false);
+  const userFunctions = type.cognitiveFunctions.split(" ");
 
   return (
     <motion.div
@@ -353,397 +33,377 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
           {...mbtiMotionStyles}
           className={cn(mbtiCardTitle, colorStyle.text)}
         >
-          认知功能总览
+          🧠 认知功能栈
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className="p-4">
+      <motion.div {...mbtiMotionStyles} className="p-4 space-y-4">
+        {/* 所有8个认知功能，按分类显示 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* 判断功能 */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className={cn("w-1.5 h-1.5 rounded-full", colorStyle.bg)} />
-              <h4 className={cn("text-sm font-medium", colorStyle.text)}>
-                {cognitiveFunctions.categories.judging.title}
-              </h4>
-            </div>
-            <div className="grid grid-cols-1 gap-2">
+            <h4 className={cn("text-sm font-medium", colorStyle.text)}>
+              {cognitiveFunctions.categories.judging.title}
+            </h4>
+            <div className="space-y-2">
               {Object.entries(
                 cognitiveFunctions.categories.judging.functions
-              ).map(([code, func]) => (
-                <div
-                  key={code}
-                  className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 space-y-1"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className={func.color}>{func.icon}</span>
-                    <span className="text-xs font-medium">
-                      {code}（{func.name}）
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    {func.description}
-                  </p>
-                </div>
-              ))}
+              ).map(([code, func]) => {
+                const userIndex = userFunctions.indexOf(code);
+                const isUserFunction = userIndex !== -1;
+                const level = isUserFunction
+                  ? cognitiveFunctions.levels[userIndex]
+                  : null;
+
+                return (
+                  <motion.div
+                    key={code}
+                    {...mbtiMotionStyles}
+                    className="space-y-2"
+                  >
+                    {/* 功能卡片 */}
+                    <div
+                      className={cn(
+                        "p-3 rounded-lg border transition-all duration-200 relative",
+                        isUserFunction
+                          ? cn(
+                              // 根据层级调整边框和背景强度
+                              userIndex === 0 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-20 dark:bg-opacity-30 border-2 shadow-md"
+                                ), // 主导功能 - 最显眼
+                              userIndex === 1 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-15 dark:bg-opacity-25 border-2"
+                                ), // 辅助功能
+                              userIndex === 2 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-10 dark:bg-opacity-20"
+                                ), // 第三功能
+                              userIndex === 3 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-5 dark:bg-opacity-15 border-dashed"
+                                ) // 劣势功能 - 虚线边框
+                            )
+                          : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30"
+                      )}
+                    >
+                      {/* 用户功能栈层级指示器 - 右上角徽章 */}
+                      {isUserFunction && (
+                        <div
+                          className={cn(
+                            "absolute -top-2 -right-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold z-20 shadow-lg",
+                            colorStyle.bgDark,
+                            "text-white"
+                          )}
+                        >
+                          <span className="text-sm">{level?.icon}</span>
+                          <span className="font-mono text-xs font-black">
+                            #{userIndex + 1}
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex items-start gap-2">
+                        <span className={cn("text-lg", func.color)}>
+                          {func.icon}
+                        </span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span
+                              className={cn(
+                                "font-mono font-bold px-2 py-0.5 rounded shadow-sm",
+                                isUserFunction
+                                  ? cn(
+                                      colorStyle.bg,
+                                      colorStyle.text,
+                                      // 根据层级调整代码标签的大小
+                                      userIndex === 0 && "text-sm", // 主导功能 - 最大
+                                      userIndex === 1 && "text-xs", // 辅助功能
+                                      userIndex === 2 && "text-xs", // 第三功能
+                                      userIndex === 3 && "text-xs" // 劣势功能
+                                    )
+                                  : "bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs"
+                              )}
+                            >
+                              {code}
+                            </span>
+                            <span
+                              className={cn(
+                                "font-medium",
+                                isUserFunction
+                                  ? cn(
+                                      colorStyle.text,
+                                      // 根据层级调整文字大小
+                                      userIndex === 0 &&
+                                        "text-base font-semibold", // 主导功能 - 最大最粗
+                                      userIndex === 1 && "text-sm font-medium", // 辅助功能
+                                      userIndex === 2 && "text-sm", // 第三功能
+                                      userIndex === 3 && "text-sm" // 劣势功能
+                                    )
+                                  : "text-gray-600 dark:text-gray-400 text-sm"
+                              )}
+                            >
+                              {func.name}
+                            </span>
+                          </div>
+                          <p
+                            className={cn(
+                              "text-xs leading-relaxed",
+                              isUserFunction
+                                ? "text-gray-700 dark:text-gray-300"
+                                : "text-gray-500 dark:text-gray-500"
+                            )}
+                          >
+                            {func.description}
+                          </p>
+
+                          {/* 用户功能的熟练度 */}
+                          {isUserFunction && (
+                            <div className="mt-2">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs text-gray-600 dark:text-gray-400">
+                                  {level?.name}
+                                </span>
+                                <span
+                                  className={cn(
+                                    "text-xs font-medium",
+                                    colorStyle.text
+                                  )}
+                                >
+                                  {["精通", "熟练", "进阶", "入门"][userIndex]}
+                                </span>
+                              </div>
+                              <div
+                                className={cn(
+                                  "bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden",
+                                  // 根据层级调整进度条高度
+                                  userIndex === 0 && "h-2", // 主导功能 - 最粗
+                                  userIndex === 1 && "h-1.5", // 辅助功能
+                                  userIndex === 2 && "h-1.5", // 第三功能
+                                  userIndex === 3 && "h-1" // 劣势功能 - 最细
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "h-full rounded-full transition-all duration-500",
+                                    colorStyle.bgDark
+                                  )}
+                                  style={{
+                                    width: ["80%", "60%", "40%", "20%"][
+                                      userIndex
+                                    ],
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
           {/* 感知功能 */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className={cn("w-1.5 h-1.5 rounded-full", colorStyle.bg)} />
-              <h4 className={cn("text-sm font-medium", colorStyle.text)}>
-                {cognitiveFunctions.categories.perceiving.title}
-              </h4>
-            </div>
-            <div className="grid grid-cols-1 gap-2">
+            <h4 className={cn("text-sm font-medium", colorStyle.text)}>
+              {cognitiveFunctions.categories.perceiving.title}
+            </h4>
+            <div className="space-y-2">
               {Object.entries(
                 cognitiveFunctions.categories.perceiving.functions
-              ).map(([code, func]) => (
-                <div
-                  key={code}
-                  className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 space-y-1"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className={func.color}>{func.icon}</span>
-                    <span className="text-xs font-medium">
-                      {code}（{func.name}）
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    {func.description}
-                  </p>
-                </div>
-              ))}
+              ).map(([code, func]) => {
+                const userIndex = userFunctions.indexOf(code);
+                const isUserFunction = userIndex !== -1;
+                const level = isUserFunction
+                  ? cognitiveFunctions.levels[userIndex]
+                  : null;
+
+                return (
+                  <motion.div
+                    key={code}
+                    {...mbtiMotionStyles}
+                    className="space-y-2"
+                  >
+                    {/* 功能卡片 */}
+                    <div
+                      className={cn(
+                        "p-3 rounded-lg border transition-all duration-200 relative",
+                        isUserFunction
+                          ? cn(
+                              // 根据层级调整边框和背景强度
+                              userIndex === 0 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-20 dark:bg-opacity-30 border-2 shadow-md"
+                                ), // 主导功能 - 最显眼
+                              userIndex === 1 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-15 dark:bg-opacity-25 border-2"
+                                ), // 辅助功能
+                              userIndex === 2 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-10 dark:bg-opacity-20"
+                                ), // 第三功能
+                              userIndex === 3 &&
+                                cn(
+                                  colorStyle.border,
+                                  colorStyle.bg,
+                                  "bg-opacity-5 dark:bg-opacity-15 border-dashed"
+                                ) // 劣势功能 - 虚线边框
+                            )
+                          : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30"
+                      )}
+                    >
+                      {/* 用户功能栈层级指示器 - 右上角徽章 */}
+                      {isUserFunction && (
+                        <div
+                          className={cn(
+                            "absolute -top-2 -right-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold z-20 shadow-lg",
+                            colorStyle.bgDark,
+                            "text-white"
+                          )}
+                        >
+                          <span className="text-sm">{level?.icon}</span>
+                          <span className="font-mono text-xs font-black">
+                            #{userIndex + 1}
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="flex items-start gap-2">
+                        <span className={cn("text-lg", func.color)}>
+                          {func.icon}
+                        </span>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span
+                              className={cn(
+                                "font-mono font-bold px-2 py-0.5 rounded shadow-sm",
+                                isUserFunction
+                                  ? cn(
+                                      colorStyle.bg,
+                                      colorStyle.text,
+                                      // 根据层级调整代码标签的大小
+                                      userIndex === 0 && "text-sm", // 主导功能 - 最大
+                                      userIndex === 1 && "text-xs", // 辅助功能
+                                      userIndex === 2 && "text-xs", // 第三功能
+                                      userIndex === 3 && "text-xs" // 劣势功能
+                                    )
+                                  : "bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs"
+                              )}
+                            >
+                              {code}
+                            </span>
+                            <span
+                              className={cn(
+                                "font-medium",
+                                isUserFunction
+                                  ? cn(
+                                      colorStyle.text,
+                                      // 根据层级调整文字大小
+                                      userIndex === 0 &&
+                                        "text-base font-semibold", // 主导功能 - 最大最粗
+                                      userIndex === 1 && "text-sm font-medium", // 辅助功能
+                                      userIndex === 2 && "text-sm", // 第三功能
+                                      userIndex === 3 && "text-sm" // 劣势功能
+                                    )
+                                  : "text-gray-600 dark:text-gray-400 text-sm"
+                              )}
+                            >
+                              {func.name}
+                            </span>
+                          </div>
+                          <p
+                            className={cn(
+                              "text-xs leading-relaxed",
+                              isUserFunction
+                                ? "text-gray-700 dark:text-gray-300"
+                                : "text-gray-500 dark:text-gray-500"
+                            )}
+                          >
+                            {func.description}
+                          </p>
+
+                          {/* 用户功能的熟练度 */}
+                          {isUserFunction && (
+                            <div className="mt-2">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs text-gray-600 dark:text-gray-400">
+                                  {level?.name}
+                                </span>
+                                <span
+                                  className={cn(
+                                    "text-xs font-medium",
+                                    colorStyle.text
+                                  )}
+                                >
+                                  {["精通", "熟练", "进阶", "入门"][userIndex]}
+                                </span>
+                              </div>
+                              <div
+                                className={cn(
+                                  "bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden",
+                                  // 根据层级调整进度条高度
+                                  userIndex === 0 && "h-2", // 主导功能 - 最粗
+                                  userIndex === 1 && "h-1.5", // 辅助功能
+                                  userIndex === 2 && "h-1.5", // 第三功能
+                                  userIndex === 3 && "h-1" // 劣势功能 - 最细
+                                )}
+                              >
+                                <div
+                                  className={cn(
+                                    "h-full rounded-full transition-all duration-500",
+                                    colorStyle.bgDark
+                                  )}
+                                  style={{
+                                    width: ["80%", "60%", "40%", "20%"][
+                                      userIndex
+                                    ],
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>
 
-        <div className="mt-4 p-3 rounded-lg border border-gray-100 dark:border-gray-800 text-xs text-gray-600 dark:text-gray-400">
-          <p>
-            <span className="font-medium">
-              {cognitiveFunctions.description.title}：
-            </span>
-            {cognitiveFunctions.description.content}
-          </p>
+        {/* 功能栈说明 */}
+        <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
+          <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-2">
+              <span className={cn("font-medium text-sm", colorStyle.text)}>
+                你的认知功能栈：{userFunctions.join(" → ")}
+              </span>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              高亮显示的是你的四个主要认知功能，按优先级排序。其他功能为你较少使用的功能。
+            </p>
+          </div>
         </div>
-      </motion.div>
-
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, colorStyle.bg)}
-      >
-        <motion.h3
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, colorStyle.text)}
-        >
-          认知功能推导过程
-        </motion.h3>
-      </motion.div>
-
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(
-          "p-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50",
-          "border-b border-gray-100 dark:border-gray-800"
-        )}
-        onClick={() => setShowProcess(!showProcess)}
-      >
-        <span className="text-sm text-gray-600 dark:text-gray-400">
-          {showProcess ? "收起推导过程" : "展开推导过程"}
-        </span>
-        <ChevronDown
-          className={cn(
-            "w-4 h-4 text-gray-500 transition-transform duration-200",
-            showProcess && "transform rotate-180"
-          )}
-        />
-      </motion.div>
-
-      {showProcess && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.2 }}
-          className={mbtiCardContent}
-        >
-          {steps.map((step, index) => {
-            const stepResult = step.getResult(type.type);
-            return (
-              <motion.div
-                key={step.title}
-                {...mbtiMotionStyles}
-                className="mb-4 last:mb-0"
-              >
-                <div className="flex items-start gap-2">
-                  <div
-                    className={cn(
-                      "w-5 h-5 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0 text-xs",
-                      colorStyle.bg
-                    )}
-                  >
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 space-y-1.5">
-                    <motion.h4
-                      {...mbtiMotionStyles}
-                      className={cn(mbtiCardTitle, colorStyle.text, "text-sm")}
-                    >
-                      {step.title}
-                    </motion.h4>
-                    <motion.p
-                      {...mbtiMotionStyles}
-                      className={cn(mbtiCardDescription, "text-xs")}
-                    >
-                      {step.description}
-                    </motion.p>
-                    <motion.div
-                      {...mbtiMotionStyles}
-                      className={cn(
-                        "rounded-lg p-2 font-medium text-xs",
-                        colorStyle.bg,
-                        colorStyle.text
-                      )}
-                    >
-                      {stepResult.result}
-                    </motion.div>
-                    <motion.div
-                      {...mbtiMotionStyles}
-                      className={cn(
-                        "rounded-lg p-2 whitespace-pre-line text-xs",
-                        "bg-gray-50 dark:bg-gray-700",
-                        "text-gray-700 dark:text-gray-300"
-                      )}
-                    >
-                      {stepResult.explanation}
-                    </motion.div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      )}
-
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, colorStyle.bg)}
-      >
-        <motion.h3
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, colorStyle.text)}
-        >
-          最终认知功能栈
-        </motion.h3>
-      </motion.div>
-
-      <motion.div {...mbtiMotionStyles} className="p-4 space-y-3">
-        {type.cognitiveFunctions.split(" ").map((funcName, index) => {
-          const funcType =
-            cognitiveFunctions.categories.judging.functions[
-              funcName as keyof typeof cognitiveFunctions.categories.judging.functions
-            ] ||
-            cognitiveFunctions.categories.perceiving.functions[
-              funcName as keyof typeof cognitiveFunctions.categories.perceiving.functions
-            ];
-          const level = cognitiveFunctions.levels[index];
-
-          return (
-            <motion.div
-              key={funcName}
-              {...mbtiMotionStyles}
-              className={cn(
-                "relative flex flex-col gap-3 p-4 rounded-xl transition-all duration-200",
-                "hover:bg-gray-50 dark:hover:bg-gray-800/50",
-                "group"
-              )}
-            >
-              {/* Level Indicator */}
-              <div
-                className={cn(
-                  "absolute left-0 top-0 bottom-0 w-1 rounded-l-xl transition-all duration-200",
-                  colorStyle.bg,
-                  "opacity-20 group-hover:opacity-100"
-                )}
-              />
-
-              {/* Header Section */}
-              <div className="flex items-start gap-3">
-                {/* Icon */}
-                <div
-                  className={cn(
-                    "flex-shrink-0 w-10 h-10 rounded-lg shadow-sm flex items-center justify-center text-xl",
-                    "bg-white dark:bg-gray-800"
-                  )}
-                >
-                  {funcType.icon}
-                </div>
-
-                {/* Title Area */}
-                <div className="flex-1 min-w-0">
-                  {/* Level Info */}
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="text-lg">{level.icon}</span>
-                    <h4
-                      className={cn("font-semibold text-sm", colorStyle.text)}
-                    >
-                      {level.name}
-                    </h4>
-                  </div>
-
-                  {/* Function Type */}
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={cn(
-                        "px-1.5 py-0.5 rounded font-mono text-xs font-medium",
-                        colorStyle.bg,
-                        colorStyle.text,
-                        "bg-opacity-10 dark:bg-opacity-20"
-                      )}
-                    >
-                      {funcName}
-                    </span>
-                    <span className="font-medium text-xs text-gray-800 dark:text-gray-200">
-                      {funcType.name}
-                    </span>
-                  </div>
-
-                  {/* Skill Bar */}
-                  <div className="mt-2 space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-gray-600 dark:text-gray-400">
-                        熟练度
-                      </span>
-                      <span className={cn("font-medium", colorStyle.text)}>
-                        {
-                          [
-                            "精通 (80%)",
-                            "熟练 (60%)",
-                            "进阶 (40%)",
-                            "入门 (20%)",
-                          ][index]
-                        }
-                      </span>
-                    </div>
-                    <div className="h-1.5 bg-gray-50 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div
-                        className={cn(
-                          "h-full rounded-full transition-all duration-500",
-                          colorStyle.bgDark
-                        )}
-                        style={{
-                          width: [
-                            "80%", // 主导功能
-                            "60%", // 辅助功能
-                            "40%", // 第三功能
-                            "20%", // 劣势功能
-                          ][index],
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stack Level */}
-                <div
-                  className={cn(
-                    "flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium",
-                    colorStyle.bg,
-                    colorStyle.text,
-                    "bg-opacity-10 dark:bg-opacity-20"
-                  )}
-                >
-                  {`#${index + 1}`}
-                </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="space-y-3 pl-[52px]">
-                {/* Quick Description */}
-                <div
-                  className={cn(
-                    "p-2 rounded-lg text-xs",
-                    colorStyle.bg,
-                    "bg-opacity-5 dark:bg-opacity-10"
-                  )}
-                >
-                  <p
-                    className={cn(
-                      "text-lg text-gray-800 dark:text-gray-200",
-                      colorStyle.text
-                    )}
-                  >
-                    &ldquo;{funcType.description}&rdquo;
-                  </p>
-                </div>
-
-                {/* Detailed Info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {/* Left Column */}
-                  <div className="space-y-2">
-                    {/* Definition */}
-                    <div className="space-y-0.5">
-                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                        定义
-                      </h5>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {funcType.definition}
-                      </p>
-                    </div>
-
-                    {/* Characteristics */}
-                    <div className="space-y-0.5">
-                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                        特征
-                      </h5>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {funcType.characteristics}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-2">
-                    {/* Training */}
-                    <div className="space-y-0.5">
-                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                        加强训练方式
-                      </h5>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {funcType.training}
-                      </p>
-                    </div>
-
-                    {/* Details */}
-                    <div className="space-y-0.5">
-                      <h5 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                        详细说明
-                      </h5>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {funcType.details}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Level Description */}
-                <div
-                  className={cn(
-                    "p-2 rounded-lg border text-xs",
-                    "border-gray-100 dark:border-gray-800",
-                    "bg-gray-50 dark:bg-gray-800/50"
-                  )}
-                >
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {level.description}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
       </motion.div>
     </motion.div>
   );

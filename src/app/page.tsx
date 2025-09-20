@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MBTIGrid } from "@/components/mbti-grid";
 import { Footer } from "@/components/footer";
 import { MBTITest } from "@/components/mbti-test";

@@ -21,7 +21,7 @@ export function MBTIGrid() {
   }, {} as Record<string, typeof mbtiTypes>);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-8 relative">
       {Object.entries(groupedMBTIs).map(([group, mbtis], index) => {
         const explanation =
           groupExplanations[group as keyof typeof groupExplanations];
@@ -30,9 +30,10 @@ export function MBTIGrid() {
           <div
             key={group}
             className={cn(
-              "animate-slide-up rounded-2xl flex flex-col",
+              "animate-slide-up rounded-2xl flex flex-col relative",
               explanation.bgColor,
-              "hover:shadow-lg transition-shadow duration-200"
+              "hover:shadow-lg transition-shadow duration-200",
+              mbtis.some(m => selectedType?.type === m.type) ? "z-[90]" : "z-[1]"
             )}
             style={{ animationDelay: `${0.1 + index * 0.1}s` }}
           >
@@ -104,7 +105,10 @@ export function MBTIGrid() {
               {mbtis.map((mbti, mbtiIndex) => (
                 <div
                   key={mbti.type}
-                  className="animate-slide-up h-[100px]"
+                  className={cn(
+                    "animate-slide-up h-[100px]",
+                    selectedType?.type === mbti.type ? "z-[100]" : "z-[1]"
+                  )}
                   style={{
                     animationDelay: `${0.2 + index * 0.1 + mbtiIndex * 0.05}s`,
                   }}

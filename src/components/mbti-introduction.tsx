@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MBTIType } from "@/types/mbti";
 import { mbtiTypes } from "@/data/mbti-data";
 
