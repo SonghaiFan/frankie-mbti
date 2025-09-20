@@ -281,7 +281,7 @@ export function MBTICard({
                     }}
                     className={cn(
                       "font-medium transition-all duration-300",
-                      isExpanded ? "text-lg sm:text-xl" : "text-base",
+                      isExpanded ? "text-xl sm:text-3xl" : "text-sm",
                       colorStyle.text
                     )}
                   >
