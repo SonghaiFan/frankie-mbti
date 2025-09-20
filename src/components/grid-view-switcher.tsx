@@ -31,15 +31,6 @@ export function GridViewSwitcher() {
 
   return (
     <div className="mb-4 sm:mb-6 px-2 sm:px-0">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-2">
-        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
-          视图模式
-        </h2>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
-          选择不同的展示方式
-        </span>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
         {viewModes.map((mode) => {
           const isActive = viewMode === mode.id;
