@@ -77,16 +77,26 @@ export function MatchMatrixView() {
       );
   }, []);
 
-  // 从 mbtiMatches 中查找匹配类型和描述
-  const getMatchTypeInfo = (type1: string, type2: string) => {
+  // 荣格配对：从 mbtiMatches 查找配对类型与描述
+  const getJungPairInfo = (type1: string, type2: string) => {
     const match = mbtiMatches.find(
       (m) =>
         (m.pair[0] === type1 && m.pair[1] === type2) ||
         (m.pair[0] === type2 && m.pair[1] === type1)
     );
     return match
-      ? { matchType: match.matchType, description: match.description }
+      ? { jungMatchType: match.matchType, jungDescription: match.description }
       : null;
+  };
+
+  // 官方配对：以每个 MBTIType 中的 bestPartners 作为官方最佳配对
+  const isOfficialBestPair = (type1: string, type2: string) => {
+    const a = mbtiTypes.find((t) => t.type === type1);
+    const b = mbtiTypes.find((t) => t.type === type2);
+    if (!a || !b) return false;
+    const aList = a.bestPartners || [];
+    const bList = b.bestPartners || [];
+    return aList.includes(type2) || bList.includes(type1);
   };
 
   // 获取配对信息
@@ -104,17 +114,19 @@ export function MatchMatrixView() {
       return null;
     }
 
-    // 从 mbtiMatches 中获取匹配类型和描述
-    const matchTypeInfo = getMatchTypeInfo(type1, type2);
+    // 荣格配对信息
+    const jungInfo = getJungPairInfo(type1, type2);
 
     return {
       name: matchData.label,
       matchType: getMatchTypeFromCompatibility(matchData.score),
       description: `配对度: ${matchData.score}%`,
       compatibility: matchData.score,
-      // 添加来自 mbtiMatches 的信息
-      officialMatchType: matchTypeInfo?.matchType,
-      officialDescription: matchTypeInfo?.description,
+      // 官方最佳配对（基于 bestPartners）
+      isOfficialBestPair: isOfficialBestPair(type1, type2),
+      // 荣格配对信息（来源于 mbtiMatches）
+      jungMatchType: jungInfo?.jungMatchType,
+      jungDescription: jungInfo?.jungDescription,
     };
   };
 
@@ -395,6 +407,22 @@ export function MatchMatrixView() {
                               配对度：{matchInfo.compatibility}%
                             </div>
 
+                            {/* 官方最佳配对（来源：MBTIType.bestPartners） */}
+                            {matchInfo.isOfficialBestPair && (
+                              <div className="mt-2">
+                                <span
+                                  className={cn(
+                                    "text-xs px-2 py-1 rounded",
+                                    matchInfo.isOfficialBestPair
+                                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/30 dark:text-emerald-200"
+                                      : "bg-gray-100 text-gray-700 dark:bg-gray-700/50 dark:text-gray-300"
+                                  )}
+                                >
+                                  官方最佳配对 ✅
+                                </span>
+                              </div>
+                            )}
+
                             {/* 显示基于配对度的分类 */}
                             <div
                               className={cn(
@@ -407,15 +435,15 @@ export function MatchMatrixView() {
                               {matchInfo.matchType}
                             </div>
 
-                            {/* 显示来自 mbtiMatches 的官方匹配类型和描述 */}
-                            {matchInfo.officialMatchType && (
+                            {/* 荣格配对类型与描述（来自 mbtiMatches） */}
+                            {matchInfo.jungMatchType && (
                               <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
                                 <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                                  官方匹配类型：{matchInfo.officialMatchType}
+                                  荣格配对类型：{matchInfo.jungMatchType}
                                 </div>
-                                {matchInfo.officialDescription && (
+                                {matchInfo.jungDescription && (
                                   <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                                    {matchInfo.officialDescription}
+                                    {matchInfo.jungDescription}
                                   </div>
                                 )}
                               </div>
