@@ -219,14 +219,15 @@ const getStepResult = (
       let third: string;
       const auxResult = getStepResult(mbti, 4);
       const aux = auxResult.result;
-      
+
       if (aux.startsWith("T")) {
         third = aux.endsWith("e") ? "Fe" : "Fi";
       } else if (aux.startsWith("F")) {
         third = aux.endsWith("e") ? "Te" : "Ti";
       } else if (aux.startsWith("N")) {
         third = aux.endsWith("e") ? "Se" : "Si";
-      } else { // S
+      } else {
+        // S
         third = aux.endsWith("e") ? "Ne" : "Ni";
       }
 
@@ -250,14 +251,15 @@ const getStepResult = (
       let fourth: string;
       const domResult = getStepResult(mbti, 3);
       const dom = domResult.result;
-      
+
       if (dom.startsWith("T")) {
         fourth = dom.endsWith("e") ? "Fi" : "Fe";
       } else if (dom.startsWith("F")) {
         fourth = dom.endsWith("e") ? "Ti" : "Te";
       } else if (dom.startsWith("N")) {
         fourth = dom.endsWith("e") ? "Si" : "Se";
-      } else { // S
+      } else {
+        // S
         fourth = dom.endsWith("e") ? "Ni" : "Ne";
       }
 
