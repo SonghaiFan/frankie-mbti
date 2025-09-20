@@ -277,63 +277,6 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             {cognitiveFunctions.description.content}
           </p>
         </div>
-        {/* 你的功能栈总结 */}
-        <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div
-            className={cn(
-              "p-4 rounded-lg border bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50",
-              colorStyle.border
-            )}
-          >
-            <span
-              className={cn(
-                "flex items-center gap-2 mb-3 font-semibold text-base",
-                colorStyle.text
-              )}
-            >
-              🎯 你的认知功能栈
-            </span>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-              {userFunctions.map((code, index) => {
-                const level = cognitiveFunctions.levels[index];
-                return (
-                  <div
-                    key={code}
-                    className={cn(
-                      "p-3 rounded-lg border text-center",
-                      colorStyle.border,
-                      colorStyle.bg,
-                      index === 0 && "bg-opacity-25 border-2 shadow-md",
-                      index === 1 && "bg-opacity-20 border-2",
-                      index === 2 && "bg-opacity-15",
-                      index === 3 && "bg-opacity-10 border-dashed"
-                    )}
-                  >
-                    <div className="flex items-center justify-center gap-1 mb-1">
-                      <span className="text-lg">{level.icon}</span>
-                      <span
-                        className={cn(
-                          "font-mono font-bold text-sm",
-                          colorStyle.text
-                        )}
-                      >
-                        {code}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
-                      {level.name.replace(/功能.*/, "")}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-              高亮显示的是你的四个主要认知功能，按优先级排序。点击任意功能卡片查看详细说明。
-            </p>
-          </div>
-        </div>
 
         {/* 按分类显示所有8个认知功能 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
