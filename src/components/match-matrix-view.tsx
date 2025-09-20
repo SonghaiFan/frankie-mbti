@@ -228,7 +228,7 @@ export function MatchMatrixView() {
       >
         <div className="inline-block shrink-0">
           {/* 表格容器 */}
-          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-visible relative">
+          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden relative ">
             {/* 顶部类型标签行 */}
             <div className="flex bg-gray-100 dark:bg-gray-800">
               {/* 左上角空白 */}
