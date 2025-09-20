@@ -38,7 +38,7 @@ export default function Home() {
             className="text-center space-y-3 mb-16"
           >
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-              🔮从MBTI到荣格八维
+              从MBTI到荣格八维-速查手册
             </h1>
             <p className="text-base text-gray-800 dark:text-gray-300 max-w-2xl mx-auto mb-8">
               在有限颗粒度下，这似乎是最好的谈论性格的方法
