@@ -77,10 +77,10 @@ export function GroupsView() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-4 sm:mb-6"
       >
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           MBTI 四大组别视图
         </h2>
-        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
+        <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
           按照四大组别和态度倾向的矩阵布局
         </p>
       </motion.div>
@@ -90,19 +90,14 @@ export function GroupsView() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="hidden sm:grid sm:grid-cols-4 gap-3 mb-4 px-2 sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-white/50 dark:supports-[backdrop-filter]:bg-gray-900/40"
+        className="hidden lg:grid lg:grid-cols-4 gap-3 mb-4 px-2 sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-white/50 dark:supports-[backdrop-filter]:bg-gray-900/40"
       >
         {colLabels.map((col) => (
           <div
             key={col.label}
-            className="text-center p-2 sm:p-3 bg-gray-100/80 dark:bg-gray-800/70 rounded-lg border border-gray-200 dark:border-gray-700"
+            className="text-center p-3 bg-gray-100/80 dark:bg-gray-800/70 rounded-lg border border-gray-200 dark:border-gray-700"
           >
-            <div
-              className={cn(
-                "font-mono font-bold text-sm sm:text-base",
-                col.color
-              )}
-            >
+            <div className={cn("font-mono font-bold text-base", col.color)}>
               {col.label}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">
@@ -112,7 +107,7 @@ export function GroupsView() {
         ))}
       </motion.div>
 
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-6">
         {enhancedGroupLayout.map((row, rowIndex) => {
           const rowInfo = rowLabels[rowIndex];
           const explanation =
@@ -124,34 +119,34 @@ export function GroupsView() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: rowIndex * 0.1 }}
-              className="space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-2 sm:p-3"
+              className="space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-3"
             >
               {/* 组别标题 - 带左侧色条增强层级 */}
               <div
                 className={cn(
-                  "p-3 sm:p-4 rounded-lg relative overflow-hidden",
+                  "p-4 rounded-lg relative overflow-hidden",
                   explanation.bgColor
                 )}
               >
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                     <div className="flex items-center gap-3">
                       <div
                         className={cn(
-                          "font-mono font-bold text-xl sm:text-2xl",
+                          "font-mono font-bold text-xl md:text-2xl",
                           rowInfo.color
                         )}
                       >
                         {rowInfo.label}
                       </div>
-                      <div className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                      <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">
                         {rowInfo.description}
                       </div>
                     </div>
                     <div
                       className={cn(
-                        "text-sm sm:text-base font-medium",
+                        "text-sm md:text-base font-medium",
                         explanation.color
                       )}
                     >
@@ -159,7 +154,7 @@ export function GroupsView() {
                     </div>
                   </div>
                   {/* 添加 trait 和 keywords 信息 */}
-                  <div className="flex flex-col sm:flex-row gap-2 text-xs">
+                  <div className="flex flex-col md:flex-row gap-2 text-xs">
                     <div className="text-gray-600 dark:text-gray-400">
                       <span className="font-medium">特质：</span>
                       {
@@ -179,7 +174,7 @@ export function GroupsView() {
               </div>
 
               {/* MBTI 类型卡片网格 - 响应式布局 */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {row.map((typeCode, colIndex) => {
                   const type = mbtiTypes.find((t) => t.type === typeCode);
                   if (!type) return null;
@@ -195,12 +190,12 @@ export function GroupsView() {
                         stiffness: 100,
                       }}
                       className={cn(
-                        "h-[100px] sm:h-[120px]",
+                        "h-[120px]",
                         selectedType?.type === typeCode ? "z-[100]" : "z-[1]"
                       )}
                     >
                       {/* 移动端角标：显示列态度（IJ/IP/EJ/EP） */}
-                      <div className="sm:hidden absolute top-1 left-1 text-[10px] px-1 py-0.5 rounded bg-gray-900/70 text-white">
+                      <div className="lg:hidden absolute top-1 left-1 text-[10px] px-1 py-0.5 rounded bg-gray-900/70 text-white">
                         {colLabels[colIndex]?.label}
                       </div>
                       <MBTICard
@@ -223,7 +218,7 @@ export function GroupsView() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-xl"
+        className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl"
       >
         <h3 className="font-medium text-sm text-gray-900 dark:text-gray-100 mb-3">
           布局说明

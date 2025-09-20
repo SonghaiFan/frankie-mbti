@@ -65,7 +65,11 @@ const columns: Column[] = [
   { key: "type", label: "类型", width: "w-20", className: "font-mono" },
   // removed title & group per request
   { key: "nickname", label: "昵称", width: "w-48" },
-  { key: "cognitiveFunctions", label: "认知功能", width: "w-30 font-mono" },
+  {
+    key: "cognitiveFunctions",
+    label: "认知功能",
+    width: "w-[7.5rem] font-mono",
+  },
   { key: "surfaceTraits", label: "表面特征", width: "w-48" },
   { key: "actualTraits", label: "实际特征", width: "w-48" },
   { key: "strengths", label: "优势", width: "w-44" },

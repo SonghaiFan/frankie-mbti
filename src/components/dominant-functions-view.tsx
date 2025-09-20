@@ -85,15 +85,15 @@ export function DominantFunctionsView() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-4 sm:mb-6"
       >
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           主导功能分组
         </h2>
-        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
+        <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
           按照认知功能的主导类型进行分组展示
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {Object.entries(dominantFunctionGroups).map(([func, group], index) => {
           const groupTypes = mbtiTypes.filter((type) =>
             group.types.includes(type.type)
@@ -106,7 +106,7 @@ export function DominantFunctionsView() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className={cn(
-                "space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-2 sm:p-3",
+                "space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-3",
                 "flex flex-col relative hover:shadow-lg transition-shadow duration-200",
                 groupTypes.some((type) => selectedType?.type === type.type)
                   ? "z-[90]"
@@ -120,7 +120,7 @@ export function DominantFunctionsView() {
                   group.bgColor
                 )}
               >
-                <div className="absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{group.icon}</span>
@@ -166,7 +166,7 @@ export function DominantFunctionsView() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.1 + typeIndex * 0.05 }}
                     className={cn(
-                      "h-[100px] sm:h-[120px]",
+                      "h-[120px]",
                       selectedType?.type === type.type ? "z-[100]" : "z-[1]"
                     )}
                   >

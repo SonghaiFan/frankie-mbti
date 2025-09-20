@@ -149,15 +149,17 @@ export function MBTICard({
             : {}
         }
         className={cn(
-          "relative cursor-pointer",
+          "relative",
           // 展开与收起均允许溢出，营造 out-of-box 效果
           "overflow-visible",
           isExpanded
-            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-50"
-            : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300"
+            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-[200] cursor-default"
+            : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300 cursor-pointer"
         )}
         onClick={!isExpanded ? onExpand : undefined}
         id={`mbti-card-${type.type}`}
+        role={isExpanded ? "dialog" : undefined}
+        aria-modal={isExpanded ? true : undefined}
       >
         {/* Image overlay for out-of-box effect (sibling to card to avoid clipping) */}
         <motion.div
@@ -236,7 +238,9 @@ export function MBTICard({
                   e.stopPropagation();
                   onCollapse();
                 }}
-                className="absolute top-3 right-3 z-40 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 dark:bg-gray-800/10 dark:hover:bg-gray-800/20 transition-colors"
+                type="button"
+                aria-label="关闭"
+                className="absolute top-3 right-3 z-[100] p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 dark:bg-gray-800/10 dark:hover:bg-gray-800/20 transition-colors pointer-events-auto"
               >
                 <svg
                   className="w-5 h-5 text-gray-600 dark:text-gray-300"

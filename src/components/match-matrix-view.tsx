@@ -308,8 +308,8 @@ export function MatchMatrixView() {
                       <Image
                         src={`/mbti_img/${rowTypeData.image}`}
                         alt={rowTypeData.title}
-                        width={20}
-                        height={20}
+                        width={40}
+                        height={40}
                         className="mb-1 rounded-full"
                       />
                     )}
