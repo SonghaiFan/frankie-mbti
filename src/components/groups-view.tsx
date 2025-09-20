@@ -127,7 +127,12 @@ export function EnhancedGroupsView() {
               className="space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-2 sm:p-3"
             >
               {/* 组别标题 - 带左侧色条增强层级 */}
-              <div className={cn("p-3 sm:p-4 rounded-lg relative overflow-hidden", explanation.bgColor)}>
+              <div
+                className={cn(
+                  "p-3 sm:p-4 rounded-lg relative overflow-hidden",
+                  explanation.bgColor
+                )}
+              >
                 <div className="absolute left-0 top-0 bottom-0 w-1.5 sm:w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
                 <div className="flex flex-col gap-2">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
