@@ -149,7 +149,9 @@ export function MBTICard({
             : {}
         }
         className={cn(
-          "relative overflow-hidden cursor-pointer",
+          "relative cursor-pointer",
+          // 展开与收起均允许溢出，营造 out-of-box 效果
+          "overflow-visible",
           isExpanded
             ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-50"
             : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300"
@@ -157,6 +159,49 @@ export function MBTICard({
         onClick={!isExpanded ? onExpand : undefined}
         id={`mbti-card-${type.type}`}
       >
+        {/* Image overlay for out-of-box effect (sibling to card to avoid clipping) */}
+        <motion.div
+          layout
+          layoutId={`mbti-image-${type.type}`}
+          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+          className={cn(
+            "absolute left-0 top-0 pointer-events-none",
+            // Ensure overlay sits above card chrome
+            "z-30",
+            // Size matches the reserved placeholder width
+            isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24",
+            // Allow image to exceed top
+            "overflow-visible"
+          )}
+        >
+          <div
+            className={cn(
+              "relative inset-0",
+              isExpanded ? "h-[120px] sm:h-[140px]" : "h-[100px] sm:h-[120px]"
+            )}
+          >
+            <Image
+              src={`/mbti_img/${mbtiInfo.image}`}
+              alt={mbtiInfo.type}
+              fill
+              sizes={
+                isExpanded
+                  ? "(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                  : "(max-width: 640px) 25vw, (max-width: 1024px) 20vw, 15vw"
+              }
+              className={cn(
+                "object-contain object-left-bottom transition-transform duration-300 ease-out will-change-transform",
+                isExpanded
+                  ? // Expanded: remove rounding so head can go beyond modal curve
+                    "-translate-y-2 sm:-translate-y-3 scale-[1.4] origin-bottom-left drop-shadow-lg "
+                  : // Small/collapsed: move a bit more upward
+                    "rounded-l-xl -translate-y-5 sm:-translate-y-6 scale-[1.2] origin-bottom-left drop-shadow-lg"
+              )}
+              priority
+            />
+          </div>
+        </motion.div>
+
         <motion.div
           layout
           transition={{
@@ -166,6 +211,8 @@ export function MBTICard({
             mbtiCard,
             colorStyle.border,
             !isExpanded && "hover:border-opacity-80",
+            // 恢复裁剪以保持圆角完整，图片已移动到上方 sibling 覆盖层
+            "overflow-hidden z-0",
             "h-full"
           )}
         >
@@ -189,7 +236,7 @@ export function MBTICard({
                   e.stopPropagation();
                   onCollapse();
                 }}
-                className="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 dark:bg-gray-800/10 dark:hover:bg-gray-800/20 transition-colors"
+                className="absolute top-3 right-3 z-40 p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 dark:bg-gray-800/10 dark:hover:bg-gray-800/20 transition-colors"
               >
                 <svg
                   className="w-5 h-5 text-gray-600 dark:text-gray-300"
@@ -212,50 +259,22 @@ export function MBTICard({
                 damping: 30,
               }}
               className={cn(
-                "flex flex-row items-stretch",
-                !isExpanded && "h-[100px]"
+                "flex flex-row",
+                // 两种状态均保持垂直居中，收起固定高度，展开最小高度
+                !isExpanded
+                  ? "items-center h-[100px]"
+                  : "items-center min-h-[120px] sm:min-h-[140px]"
               )}
             >
-              <motion.div
-                layout
-                layoutId={`mbti-image-${type.type}`} // 图片区域的共享元素ID
-                transition={{
-                  type: "spring",
-                  stiffness: 320,
-                  damping: 28,
-                }}
+              {/* Placeholder column to reserve space for the image overlay */}
+              <div
                 className={cn(
-                  "relative overflow-hidden",
-                  isExpanded ? "w-32 sm:w-40" : "w-20 sm:w-24",
-                  isExpanded && "border-b border-gray-200 dark:border-gray-700"
+                  "shrink-0",
+                  isExpanded
+                    ? "w-32 sm:w-40 mr-0 h-[120px] sm:h-[140px]"
+                    : "w-20 sm:w-24 mr-3 sm:mr-4 h-[100px]"
                 )}
-              >
-                <motion.div
-                  className="absolute inset-0"
-                  layout
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                >
-                  <Image
-                    src={`/mbti_img/${mbtiInfo.image}`}
-                    alt={mbtiInfo.type}
-                    fill
-                    sizes={
-                      isExpanded
-                        ? "(max-width: 640px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                        : "(max-width: 640px) 25vw, (max-width: 1024px) 20vw, 15vw"
-                    }
-                    className={cn(
-                      "object-cover transition-all duration-300 ease-out",
-                      isExpanded ? "rounded-tl-xl" : "rounded-l-xl"
-                    )}
-                    priority
-                  />
-                </motion.div>
-              </motion.div>
+              />
 
               <motion.div
                 layout
@@ -266,7 +285,11 @@ export function MBTICard({
                   delayChildren: 0.1,
                 }}
                 className={cn(
-                  "flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4",
+                  "relative z-40 flex-1 space-y-3 sm:space-y-4",
+                  // 收起时减少内边距，顶部对齐
+                  !isExpanded && "p-0 sm:py-0 sm:pr-2",
+                  // 展开时恢复更舒适的留白
+                  isExpanded && "p-4 sm:p-6",
                   isExpanded && "border-b border-gray-200 dark:border-gray-700 "
                 )}
               >
@@ -280,7 +303,7 @@ export function MBTICard({
                       damping: 25,
                     }}
                     className={cn(
-                      "font-medium transition-all duration-300",
+                      "font-medium transition-all duration-300 leading-tight",
                       isExpanded ? "text-xl sm:text-3xl" : "text-sm",
                       colorStyle.text
                     )}

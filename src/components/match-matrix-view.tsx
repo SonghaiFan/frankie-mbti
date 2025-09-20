@@ -344,10 +344,10 @@ export function MatchMatrixView() {
                             : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700",
                           isHovered && "z-20 shadow-xl transform scale-[1.06]",
                           isCellHighlighted &&
-                            "ring-1 ring-white/70 dark:ring-white/30",
+                            "ring-1 ring-gray-800/70 dark:ring-white/30 z-10",
                           // 避免改变尺寸导致纵向滚动：仅使用外发光，不加粗边框
                           isIntersectionCell &&
-                            "ring-4 ring-white dark:ring-white/90 z-30"
+                            "ring-4 ring-gray-800 dark:ring-white/90 z-30"
                         )}
                       >
                         {matchInfo && (
