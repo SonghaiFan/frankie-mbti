@@ -36,13 +36,12 @@ const cardVariants = {
     borderRadius: 12,
     scale: 1,
     transformOrigin: "center center" as const,
-    zIndex: 1,
   },
   expanded: {
     borderRadius: 24,
     scale: 1,
     y: 0,
-    zIndex: 100,
+    zIndex: 50,
   },
 };
 
@@ -117,7 +116,7 @@ export function MBTICard({
           animate={{ opacity: 1, backdropFilter: "blur(8px)" }}
           exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-black/30 z-[90] pointer-events-auto"
+          className="fixed inset-0 bg-black/30 z-40"
           onClick={onCollapse}
         />
       )}
@@ -152,8 +151,8 @@ export function MBTICard({
         className={cn(
           "relative overflow-hidden cursor-pointer",
           isExpanded
-            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-[100]"
-            : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300 z-[1]"
+            ? "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-4xl max-h-[90vh] z-50"
+            : "w-full transform-gpu hover:shadow-xl transition-shadow duration-300"
         )}
         onClick={!isExpanded ? onExpand : undefined}
         id={`mbti-card-${type.type}`}
