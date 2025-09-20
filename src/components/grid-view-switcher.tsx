@@ -8,7 +8,7 @@ const viewModes = [
   {
     id: "groups" as GridViewMode,
     name: "分组视图",
-    description: "按MBTI四大组别分类",
+    description: "按MBTI四大组别和态度倾向排列",
     icon: "🎯",
   },
   {
@@ -23,12 +23,6 @@ const viewModes = [
     description: "16×16配对关系矩阵",
     icon: "💕",
   },
-  {
-    id: "grid4x4" as GridViewMode,
-    name: "4x4网格",
-    description: "经典16宫格布局",
-    icon: "📱",
-  },
 ];
 
 export function GridViewSwitcher() {
@@ -36,9 +30,9 @@ export function GridViewSwitcher() {
   const setViewMode = useMBTIStore((state) => state.setViewMode);
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+    <div className="mb-4 sm:mb-6 px-2 sm:px-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4 gap-2">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
           视图模式
         </h2>
         <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -46,7 +40,7 @@ export function GridViewSwitcher() {
         </span>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
         {viewModes.map((mode) => {
           const isActive = viewMode === mode.id;
 
@@ -55,21 +49,21 @@ export function GridViewSwitcher() {
               key={mode.id}
               onClick={() => setViewMode(mode.id)}
               className={cn(
-                "p-4 rounded-xl border-2 transition-all duration-200",
-                "hover:shadow-md active:scale-95",
+                "p-3 sm:p-4 rounded-xl border-2 transition-all duration-200",
+                "hover:shadow-md active:scale-95 w-full",
                 isActive
                   ? "border-gray-900 dark:border-gray-100 bg-gray-100 dark:bg-gray-700 shadow-lg"
                   : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600"
               )}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
-              <div className="flex flex-col items-center text-center space-y-2">
-                <span className="text-2xl">{mode.icon}</span>
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center text-center sm:text-left space-y-2 sm:space-y-0 sm:space-x-3">
+                <span className="text-xl sm:text-2xl">{mode.icon}</span>
+                <div className="flex-1 sm:flex-initial">
                   <p
                     className={cn(
-                      "text-sm font-medium",
+                      "text-sm sm:text-base font-medium",
                       isActive
                         ? "text-gray-900 dark:text-gray-100"
                         : "text-gray-900 dark:text-gray-100"
@@ -79,7 +73,7 @@ export function GridViewSwitcher() {
                   </p>
                   <p
                     className={cn(
-                      "text-xs mt-1",
+                      "text-xs sm:text-sm mt-1",
                       isActive
                         ? "text-gray-700 dark:text-gray-300"
                         : "text-gray-500 dark:text-gray-400"
@@ -89,16 +83,6 @@ export function GridViewSwitcher() {
                   </p>
                 </div>
               </div>
-
-              {/* 选中指示器 */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeIndicator"
-                  className="absolute inset-0 border-2 border-gray-900 dark:border-gray-100 rounded-xl pointer-events-none"
-                  initial={false}
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
             </motion.button>
           );
         })}

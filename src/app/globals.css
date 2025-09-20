@@ -28,10 +28,32 @@ body {
   color: var(--foreground);
   min-height: 100vh;
   font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  /* 移动端优化 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 移动端滚动优化 */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* 优化触摸滚动 */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .overflow-x-auto::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Google Fonts CSS Classes - Official Implementation */

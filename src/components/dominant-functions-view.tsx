@@ -79,89 +79,104 @@ export function DominantFunctionsView() {
   const collapseCard = useMBTIStore((state) => state.collapseCard);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      {Object.entries(dominantFunctionGroups).map(([func, group], index) => {
-        const groupTypes = mbtiTypes.filter((type) =>
-          group.types.includes(type.type)
-        );
+    <div className="mb-8 px-2 sm:px-0">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-4 sm:mb-6"
+      >
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          主导功能分组
+        </h2>
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
+          按照认知功能的主导类型进行分组展示
+        </p>
+      </motion.div>
 
-        return (
-          <motion.div
-            key={func}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className={cn(
-              "rounded-2xl flex flex-col relative",
-              group.bgColor,
-              "hover:shadow-lg transition-shadow duration-200",
-              groupTypes.some((type) => selectedType?.type === type.type)
-                ? "z-[90]"
-                : "z-[1]"
-            )}
-          >
-            <div className="p-6 flex flex-col h-[200px]">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{group.icon}</span>
-                  <div>
-                    <h3 className={cn("text-lg font-bold", group.color)}>
-                      {func}
-                    </h3>
-                    <p className={cn("text-xs font-medium", group.color)}>
-                      {group.name}
-                    </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {Object.entries(dominantFunctionGroups).map(([func, group], index) => {
+          const groupTypes = mbtiTypes.filter((type) =>
+            group.types.includes(type.type)
+          );
+
+          return (
+            <motion.div
+              key={func}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className={cn(
+                "rounded-2xl flex flex-col relative",
+                group.bgColor,
+                "hover:shadow-lg transition-shadow duration-200",
+                groupTypes.some((type) => selectedType?.type === type.type)
+                  ? "z-[90]"
+                  : "z-[1]"
+              )}
+            >
+              <div className="p-6 flex flex-col h-[200px]">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{group.icon}</span>
+                    <div>
+                      <h3 className={cn("text-lg font-bold", group.color)}>
+                        {func}
+                      </h3>
+                      <p className={cn("text-xs font-medium", group.color)}>
+                        {group.name}
+                      </p>
+                    </div>
                   </div>
+                </div>
+
+                <div className="flex-1">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {group.description}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 mt-4">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    主导功能类型:
+                  </span>
+                  <span
+                    className={cn(
+                      "text-xs font-mono px-2 py-1 rounded",
+                      group.color,
+                      group.bgColor,
+                      "bg-opacity-50"
+                    )}
+                  >
+                    {group.types.join(" · ")}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex-1">
-                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {group.description}
-                </p>
+              <div className="grid gap-2 px-6 pb-6">
+                {groupTypes.map((type, typeIndex) => (
+                  <motion.div
+                    key={type.type}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 + typeIndex * 0.05 }}
+                    className={cn(
+                      "h-[100px]",
+                      selectedType?.type === type.type ? "z-[100]" : "z-[1]"
+                    )}
+                  >
+                    <MBTICard
+                      type={type}
+                      isExpanded={selectedType?.type === type.type}
+                      onExpand={() => expandCard(type)}
+                      onCollapse={collapseCard}
+                    />
+                  </motion.div>
+                ))}
               </div>
-
-              <div className="flex items-center gap-2 mt-4">
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  主导功能类型:
-                </span>
-                <span
-                  className={cn(
-                    "text-xs font-mono px-2 py-1 rounded",
-                    group.color,
-                    group.bgColor,
-                    "bg-opacity-50"
-                  )}
-                >
-                  {group.types.join(" · ")}
-                </span>
-              </div>
-            </div>
-
-            <div className="grid gap-2 px-6 pb-6">
-              {groupTypes.map((type, typeIndex) => (
-                <motion.div
-                  key={type.type}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 + typeIndex * 0.05 }}
-                  className={cn(
-                    "h-[100px]",
-                    selectedType?.type === type.type ? "z-[100]" : "z-[1]"
-                  )}
-                >
-                  <MBTICard
-                    type={type}
-                    isExpanded={selectedType?.type === type.type}
-                    onExpand={() => expandCard(type)}
-                    onCollapse={collapseCard}
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        );
-      })}
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }

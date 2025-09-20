@@ -16,7 +16,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900/90 relative">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900/90 relative overflow-x-hidden">
       {/* Header Mountains Background */}
       <div
         className="absolute top-0 left-0 right-0 h-[400px] bg-no-repeat bg-cover bg-bottom z-0 opacity-60 dark:opacity-40"
@@ -29,18 +29,18 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <div className="relative z-10 pt-20 pb-80">
-        <div className="container mx-auto px-4 max-w-8xl">
+      <div className="relative z-10 pt-10 sm:pt-20 pb-40 sm:pb-80">
+        <div className="container mx-auto px-2 sm:px-4 max-w-8xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-center space-y-3 mb-16"
+            className="text-center space-y-3 mb-8 sm:mb-16"
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 mb-4 sm:mb-6 px-2">
               从MBTI到荣格八维-速查手册
             </h1>
-            <p className="text-base text-gray-800 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+            <p className="text-sm sm:text-base text-gray-800 dark:text-gray-300 max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
               在有限颗粒度下，这似乎是最好的谈论性格的方法
             </p>
             <div className="flex items-center justify-center gap-2">

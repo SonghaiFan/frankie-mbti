@@ -52,7 +52,6 @@ const matchTypePriority = {
 };
 
 export function MatchMatrixView() {
-  const selectedType = useMBTIStore((state) => state.selectedType);
   const expandCard = useMBTIStore((state) => state.expandCard);
   const [hoveredCell, setHoveredCell] = useState<{
     type1: string;
@@ -64,6 +63,9 @@ export function MatchMatrixView() {
     label: string;
     score: number;
   }> | null>(null);
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
+  const [selectedCol, setSelectedCol] = useState<string | null>(null);
+  const [sortByCompatibility, setSortByCompatibility] = useState(false);
 
   // 加载配对数据
   useEffect(() => {
@@ -82,7 +84,9 @@ export function MatchMatrixView() {
         (m.pair[0] === type1 && m.pair[1] === type2) ||
         (m.pair[0] === type2 && m.pair[1] === type1)
     );
-    return match ? { matchType: match.matchType, description: match.description } : null;
+    return match
+      ? { matchType: match.matchType, description: match.description }
+      : null;
   };
 
   // 获取配对信息
@@ -121,7 +125,9 @@ export function MatchMatrixView() {
     if (compatibility === 60) return "有可能成";
     if (compatibility === 40) return "还行吧不算完美";
     return "不合适";
-  };  // 获取类型的颜色
+  };
+
+  // 获取类型的颜色
   const getTypeColor = (typeCode: string) => {
     const type = mbtiTypes.find((t) => t.type === typeCode);
     if (!type) return "text-gray-600";
@@ -140,24 +146,86 @@ export function MatchMatrixView() {
     }
   };
 
+  // 按兼容度排序类型
+  const getSortedTypes = (baseType: string, isRow: boolean) => {
+    if (!sortByCompatibility || !compatibilityData) {
+      return orderedTypes;
+    }
+
+    return [...orderedTypes].sort((a, b) => {
+      const scoreA = isRow
+        ? getMatchInfo(baseType, a)?.compatibility || 0
+        : getMatchInfo(a, baseType)?.compatibility || 0;
+      const scoreB = isRow
+        ? getMatchInfo(baseType, b)?.compatibility || 0
+        : getMatchInfo(b, baseType)?.compatibility || 0;
+      return scoreB - scoreA; // 降序排列
+    });
+  };
+
+  // 处理行/列选择
+  const handleRowClick = (typeCode: string) => {
+    const type = mbtiTypes.find((t) => t.type === typeCode);
+    if (type) expandCard(type);
+
+    if (selectedRow === typeCode) {
+      setSelectedRow(null);
+    } else {
+      setSelectedRow(typeCode);
+    }
+    // 只要有选中的行或列就启用排序
+    setSortByCompatibility(
+      !!(selectedRow !== typeCode ? typeCode : null) || !!selectedCol
+    );
+  };
+
+  const handleColClick = (typeCode: string) => {
+    const type = mbtiTypes.find((t) => t.type === typeCode);
+    if (type) expandCard(type);
+
+    if (selectedCol === typeCode) {
+      setSelectedCol(null);
+    } else {
+      setSelectedCol(typeCode);
+    }
+    // 只要有选中的行或列就启用排序
+    setSortByCompatibility(
+      !!selectedRow || !!(selectedCol !== typeCode ? typeCode : null)
+    );
+  };
+
+  // 获取当前显示的类型顺序
+  const displayedRowTypes = selectedCol
+    ? getSortedTypes(selectedCol, false)
+    : orderedTypes;
+  const displayedColTypes = selectedRow
+    ? getSortedTypes(selectedRow, true)
+    : orderedTypes;
+
   return (
-    <div className="mb-8">
+    <div className="mb-8 px-2 sm:px-0">
       {/* 标题 */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-6"
+        className="text-center mb-4 sm:mb-6"
       >
-        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           MBTI 配对关系矩阵
         </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          16×16 配对矩阵：横轴和纵轴交汇处显示配对名称，点击类型代码可查看详情
+        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
+          16×16 配对矩阵：点击行列标签高亮并排序，悬停单元格查看配对详情
         </p>
+        <div className="block sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-2">
+          💡 可以左右滑动查看完整矩阵
+        </div>
       </motion.div>
 
       {/* 配对矩阵 */}
-      <div className="overflow-x-auto flex justify-center">
+      <div
+        className="overflow-x-auto flex justify-center"
+        style={{ scrollSnapType: "x mandatory" }}
+      >
         <div className="inline-block shrink-0">
           {/* 表格容器 */}
           <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -167,26 +235,25 @@ export function MatchMatrixView() {
               <div className="w-16 h-16 flex-none border-r border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-900"></div>
 
               {/* 顶部类型标签 */}
-              {orderedTypes.map((typeCode, index) => {
+              {displayedColTypes.map((typeCode, index) => {
                 const type = mbtiTypes.find((t) => t.type === typeCode);
-                const isLastColumn = index === orderedTypes.length - 1;
+                const isLastColumn = index === displayedColTypes.length - 1;
+
                 return (
                   <motion.button
                     key={`top-${typeCode}`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.02 }}
-                    onClick={() => {
-                      if (type) expandCard(type);
-                    }}
+                    onClick={() => handleColClick(typeCode)}
                     className={cn(
                       "w-16 h-16 flex-none flex flex-col items-center justify-center",
                       !isLastColumn &&
                         "border-r border-gray-300 dark:border-gray-700",
                       "text-xs font-mono font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
                       getTypeColor(typeCode),
-                      selectedType?.type === typeCode &&
-                        "bg-gray-300 dark:bg-gray-600"
+                      selectedCol === typeCode &&
+                        "bg-white dark:bg-white/10 ring-2 ring-white/60 dark:ring-white/40"
                     )}
                   >
                     {type && (
@@ -205,8 +272,9 @@ export function MatchMatrixView() {
             </div>
 
             {/* 矩阵行 */}
-            {orderedTypes.map((rowType, rowIndex) => {
+            {displayedRowTypes.map((rowType, rowIndex) => {
               const rowTypeData = mbtiTypes.find((t) => t.type === rowType);
+
               return (
                 <div key={`row-${rowType}`} className="flex">
                   {/* 左侧类型标签 */}
@@ -214,16 +282,14 @@ export function MatchMatrixView() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: rowIndex * 0.02 }}
-                    onClick={() => {
-                      if (rowTypeData) expandCard(rowTypeData);
-                    }}
+                    onClick={() => handleRowClick(rowType)}
                     className={cn(
                       "w-16 h-16 flex-none border-r border-b border-gray-300 dark:border-gray-700",
                       "flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800",
                       "text-xs font-mono font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
                       getTypeColor(rowType),
-                      selectedType?.type === rowType &&
-                        "bg-gray-300 dark:bg-gray-600"
+                      selectedRow === rowType &&
+                        "bg-white dark:bg-white/10 ring-2 ring-white/60 dark:ring-white/40"
                     )}
                   >
                     {rowTypeData && (
@@ -239,16 +305,18 @@ export function MatchMatrixView() {
                   </motion.button>
 
                   {/* 配对单元格 */}
-                  {orderedTypes.map((colType, colIndex) => {
+                  {displayedColTypes.map((colType, colIndex) => {
                     const matchInfo = getMatchInfo(rowType, colType);
-                    const isSelected =
-                      selectedType?.type === rowType ||
-                      selectedType?.type === colType;
                     const isHovered =
                       hoveredCell?.type1 === rowType &&
                       hoveredCell?.type2 === colType;
-                    const isLastColumn = colIndex === orderedTypes.length - 1;
-                    const isLastRow = rowIndex === orderedTypes.length - 1;
+                    const isLastColumn =
+                      colIndex === displayedColTypes.length - 1;
+                    const isLastRow = rowIndex === displayedRowTypes.length - 1;
+                    const isCellHighlighted =
+                      selectedRow === rowType || selectedCol === colType;
+                    const isIntersectionCell =
+                      selectedRow === rowType && selectedCol === colType;
 
                     return (
                       <motion.div
@@ -274,8 +342,11 @@ export function MatchMatrixView() {
                                 ]?.color || "bg-gray-50 dark:bg-gray-800"
                               )
                             : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700",
-                          isSelected && "ring-2 ring-gray-900 dark:ring-gray-100 ring-inset",
-                          isHovered && "z-20 shadow-xl transform scale-110"
+                          isHovered && "z-20 shadow-xl transform scale-110",
+                          isCellHighlighted &&
+                            "ring-1 ring-white/70 dark:ring-white/30",
+                          isIntersectionCell &&
+                            "ring-4 ring-white border-4 border-white dark:border-white/80 z-30"
                         )}
                       >
                         {matchInfo && (
@@ -293,52 +364,52 @@ export function MatchMatrixView() {
 
                         {/* 悬停提示 */}
                         {isHovered && matchInfo && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={cn(
+                              "absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-30",
+                              "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
+                              "rounded-lg shadow-xl p-3 min-w-56 max-w-72"
+                            )}
+                          >
+                            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                              {rowType} × {colType}
+                            </div>
+                            <div className="text-sm font-medium mt-1 text-gray-800 dark:text-gray-200">
+                              配对名称：{matchInfo.name}
+                            </div>
+                            <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                              配对度：{matchInfo.compatibility}%
+                            </div>
+
+                            {/* 显示基于配对度的分类 */}
+                            <div
                               className={cn(
-                                "absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-30",
-                                "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
-                                "rounded-lg shadow-xl p-3 min-w-56 max-w-72"
+                                "text-xs px-2 py-1 rounded mt-2 inline-block",
+                                matchTypePriority[
+                                  matchInfo.matchType as keyof typeof matchTypePriority
+                                ]?.color || "bg-gray-100 text-gray-800"
                               )}
                             >
-                              <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                {rowType} × {colType}
-                              </div>
-                              <div className="text-sm font-medium mt-1 text-gray-800 dark:text-gray-200">
-                                配对名称：{matchInfo.name}
-                              </div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                                配对度：{matchInfo.compatibility}%
-                              </div>
-                              
-                              {/* 显示基于配对度的分类 */}
-                              <div
-                                className={cn(
-                                  "text-xs px-2 py-1 rounded mt-2 inline-block",
-                                  matchTypePriority[
-                                    matchInfo.matchType as keyof typeof matchTypePriority
-                                  ]?.color || "bg-gray-100 text-gray-800"
-                                )}
-                              >
-                                {matchInfo.matchType}
-                              </div>
+                              {matchInfo.matchType}
+                            </div>
 
-                              {/* 显示来自 mbtiMatches 的官方匹配类型和描述 */}
-                              {matchInfo.officialMatchType && (
-                                <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
-                                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                                    官方匹配类型：{matchInfo.officialMatchType}
-                                  </div>
-                                  {matchInfo.officialDescription && (
-                                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-                                      {matchInfo.officialDescription}
-                                    </div>
-                                  )}
+                            {/* 显示来自 mbtiMatches 的官方匹配类型和描述 */}
+                            {matchInfo.officialMatchType && (
+                              <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
+                                <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                  官方匹配类型：{matchInfo.officialMatchType}
                                 </div>
-                              )}
-                            </motion.div>
-                          )}
+                                {matchInfo.officialDescription && (
+                                  <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                                    {matchInfo.officialDescription}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
                       </motion.div>
                     );
                   })}
@@ -364,17 +435,20 @@ export function MatchMatrixView() {
             <div key={matchType} className="flex items-center gap-2">
               <div className={cn("w-4 h-4 rounded", config.color)}></div>
               <span className="text-xs text-gray-700 dark:text-gray-300">
-                {matchType === "官配类型" && "官配类型 (100分) - 官方设定最合适的灵魂伴侣"}
-                {matchType === "天作之合" && "天作之合 (80分) - 可以很好的相处在一起"}
+                {matchType === "官配类型" &&
+                  "官配类型 (100分) - 官方设定最合适的灵魂伴侣"}
+                {matchType === "天作之合" &&
+                  "天作之合 (80分) - 可以很好的相处在一起"}
                 {matchType === "有可能成" && "有可能成 (60分) - 但不是最佳配对"}
-                {matchType === "还行吧不算完美" && "还行吧不算完美 (40分) - 但是不够理想"}
+                {matchType === "还行吧不算完美" &&
+                  "还行吧不算完美 (40分) - 但是不够理想"}
                 {matchType === "不合适" && "不合适 (20分) - 建议你再考虑一下"}
               </span>
             </div>
           ))}
         </div>
         <p className="text-xs text-gray-600 dark:text-gray-400 mt-3">
-          💡 提示：点击行列标签查看类型详情，悬停单元格查看配对名称和配对度
+          💡 提示：点击行列标签进行高亮并按兼容度排序，悬停单元格查看详情
         </p>
       </motion.div>
     </div>
