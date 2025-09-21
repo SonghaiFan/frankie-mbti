@@ -9,23 +9,42 @@ import Image from "next/image";
 
 // 16种MBTI类型按逻辑顺序排列
 const orderedTypes = [
-  "INTJ",
-  "INTP",
-  "ENTJ",
-  "ENTP",
-  "INFJ",
   "INFP",
-  "ENFJ",
   "ENFP",
-  "ISTJ",
+  "INFJ",
+  "ENFJ",
+  "INTJ",
+  "ENTJ",
+  "INTP",
+  "ENTP",
+  "ISFP",
+  "ESFP",
   "ISTP",
-  "ESTJ",
   "ESTP",
   "ISFJ",
-  "ISFP",
   "ESFJ",
-  "ESFP",
+  "ISTJ",
+  "ESTJ",
 ];
+
+// const orderedTypes = [
+//   "INTJ",
+//   "INTP",
+//   "ENTJ",
+//   "ENTP",
+//   "INFJ",
+//   "INFP",
+//   "ENFJ",
+//   "ENFP",
+//   "ISTJ",
+//   "ISFJ",
+//   "ESTJ",
+//   "ESFJ",
+//   "ISTP",
+//   "ISFP",
+//   "ESTP",
+//   "ESFP",
+// ];
 
 // 配对类型的颜色和优先级（基于配对度）- 红色到灰色渐变（越红越高）
 const matchTypePriority = {
@@ -130,12 +149,12 @@ export function MatchMatrixView() {
     };
   };
 
-  // 根据配对度确定配对类型
+  // 根据配对度确定配对类型 - 使用范围判断而非硬边界
   const getMatchTypeFromCompatibility = (compatibility: number) => {
-    if (compatibility === 100) return "灵魂伴侣";
-    if (compatibility === 80) return "天作之合";
-    if (compatibility === 60) return "有趣搭配";
-    if (compatibility === 40) return "互补成长";
+    if (compatibility >= 90) return "灵魂伴侣";
+    if (compatibility >= 70) return "天作之合";
+    if (compatibility >= 50) return "有趣搭配";
+    if (compatibility >= 30) return "互补成长";
     return "欢喜冤家";
   };
 
@@ -476,15 +495,15 @@ export function MatchMatrixView() {
               <div className={cn("w-4 h-4 rounded", config.color)}></div>
               <span className="text-xs text-gray-700 dark:text-gray-300">
                 {matchType === "灵魂伴侣" &&
-                  "灵魂伴侣 (100分) - 完美契合的理想配对"}
+                  "灵魂伴侣 (90-100分) - 完美契合的理想配对"}
                 {matchType === "天作之合" &&
-                  "天作之合 (80分) - 和谐美好的默契搭档"}
+                  "天作之合 (70-89分) - 和谐美好的默契搭档"}
                 {matchType === "有趣搭配" &&
-                  "有趣搭配 (60分) - 充满惊喜的奇妙组合"}
+                  "有趣搭配 (50-69分) - 充满惊喜的奇妙组合"}
                 {matchType === "互补成长" &&
-                  "互补成长 (40分) - 在差异中共同进步"}
+                  "互补成长 (30-49分) - 在差异中共同进步"}
                 {matchType === "欢喜冤家" &&
-                  "欢喜冤家 (20分) - 充满挑战的有趣关系"}
+                  "欢喜冤家 (0-29分) - 充满挑战的有趣关系"}
               </span>
             </div>
           ))}

@@ -33,7 +33,7 @@
     "type1": "INFP",
     "type2": "ENTJ",
     "label": "沉淀",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "INFP",
@@ -62,25 +62,25 @@
   {
     "type1": "INFP",
     "type2": "ISFJ",
-    "label": "倾斜",
-    "score": 20
-  },
-  {
-    "type1": "INFP",
-    "type2": "ESFJ",
-    "label": "脉搏",
-    "score": 20
-  },
-  {
-    "type1": "INFP",
-    "type2": "ISTP",
     "label": "慰藉",
     "score": 20
   },
   {
     "type1": "INFP",
-    "type2": "ESTP",
+    "type2": "ESFJ",
     "label": "生理盐水",
+    "score": 20
+  },
+  {
+    "type1": "INFP",
+    "type2": "ISTP",
+    "label": "倾斜",
+    "score": 20
+  },
+  {
+    "type1": "INFP",
+    "type2": "ESTP",
+    "label": "脉搏",
     "score": 20
   },
   {
@@ -111,7 +111,7 @@
     "type1": "ENFP",
     "type2": "INFJ",
     "label": "十四行诗",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ENFP",
@@ -134,7 +134,7 @@
   {
     "type1": "ENFP",
     "type2": "INTP",
-    "label": "翔羽",
+    "label": "翎羽",
     "score": 80
   },
   {
@@ -158,25 +158,25 @@
   {
     "type1": "ENFP",
     "type2": "ISFJ",
-    "label": "坠落唤醒",
-    "score": 20
-  },
-  {
-    "type1": "ENFP",
-    "type2": "ESFJ",
-    "label": "墒增",
-    "score": 20
-  },
-  {
-    "type1": "ENFP",
-    "type2": "ISTP",
     "label": "杏花雨",
     "score": 20
   },
   {
     "type1": "ENFP",
-    "type2": "ESTP",
+    "type2": "ESFJ",
     "label": "雨过天晴",
+    "score": 20
+  },
+  {
+    "type1": "ENFP",
+    "type2": "ISTP",
+    "label": "坠落唤醒",
+    "score": 20
+  },
+  {
+    "type1": "ENFP",
+    "type2": "ESTP",
+    "label": "墒增",
     "score": 20
   },
   {
@@ -201,7 +201,7 @@
     "type1": "INFJ",
     "type2": "ENFP",
     "label": "十四行诗",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "INFJ",
@@ -254,25 +254,25 @@
   {
     "type1": "INFJ",
     "type2": "ISFJ",
-    "label": "边缘",
-    "score": 20
-  },
-  {
-    "type1": "INFJ",
-    "type2": "ESFJ",
-    "label": "废墟",
-    "score": 20
-  },
-  {
-    "type1": "INFJ",
-    "type2": "ISTP",
     "label": "潮汐",
     "score": 20
   },
   {
     "type1": "INFJ",
-    "type2": "ESTP",
+    "type2": "ESFJ",
     "label": "避风港",
+    "score": 20
+  },
+  {
+    "type1": "INFJ",
+    "type2": "ISTP",
+    "label": "边缘",
+    "score": 20
+  },
+  {
+    "type1": "INFJ",
+    "type2": "ESTP",
+    "label": "废墟",
     "score": 20
   },
   {
@@ -332,14 +332,14 @@
   {
     "type1": "ENFJ",
     "type2": "ENTP",
-    "label": "号交",
+    "label": "号角",
     "score": 80
   },
   {
     "type1": "ENFJ",
     "type2": "ISFP",
     "label": "救赎",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ENFJ",
@@ -350,25 +350,25 @@
   {
     "type1": "ENFJ",
     "type2": "ISFJ",
-    "label": "晚钟",
-    "score": 20
-  },
-  {
-    "type1": "ENFJ",
-    "type2": "ESFJ",
-    "label": "悬崖",
-    "score": 20
-  },
-  {
-    "type1": "ENFJ",
-    "type2": "ISTP",
     "label": "扶手",
     "score": 20
   },
   {
     "type1": "ENFJ",
-    "type2": "ESTP",
+    "type2": "ESFJ",
     "label": "无字碑",
+    "score": 20
+  },
+  {
+    "type1": "ENFJ",
+    "type2": "ISTP",
+    "label": "晚钟",
+    "score": 20
+  },
+  {
+    "type1": "ENFJ",
+    "type2": "ESTP",
+    "label": "悬崖",
     "score": 20
   },
   {
@@ -429,24 +429,24 @@
     "type1": "INTJ",
     "type2": "ENTP",
     "label": "辩论",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "INTJ",
     "type2": "ISFP",
     "label": "玫瑰",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "INTJ",
     "type2": "ESFP",
     "label": "虚实",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "INTJ",
     "type2": "ISFJ",
-    "label": "旁观",
+    "label": "荒谬",
     "score": 40
   },
   {
@@ -458,32 +458,32 @@
   {
     "type1": "INTJ",
     "type2": "ISTP",
-    "label": "荒谬",
-    "score": 80
+    "label": "旁观",
+    "score": 60
   },
   {
     "type1": "INTJ",
     "type2": "ESTP",
     "label": "等待",
-    "score": 80
+    "score": 60
   },
   {
     "type1": "INTJ",
     "type2": "ISTJ",
     "label": "傲娇",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "INTJ",
     "type2": "ESTJ",
     "label": "征服",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ENTJ",
     "type2": "INFP",
     "label": "沉淀",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ENTJ",
@@ -531,36 +531,36 @@
     "type1": "ENTJ",
     "type2": "ISFP",
     "label": "颂歌",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ENTJ",
     "type2": "ESFP",
     "label": "焚烧",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ENTJ",
     "type2": "ISFJ",
-    "label": "飞鸟",
-    "score": 40
-  },
-  {
-    "type1": "ENTJ",
-    "type2": "ESFJ",
-    "label": "飓风",
-    "score": 40
-  },
-  {
-    "type1": "ENTJ",
-    "type2": "ISTP",
     "label": "荫庇",
     "score": 60
   },
   {
     "type1": "ENTJ",
-    "type2": "ESTP",
+    "type2": "ESFJ",
     "label": "日月",
+    "score": 60
+  },
+  {
+    "type1": "ENTJ",
+    "type2": "ISTP",
+    "label": "飞鸟",
+    "score": 60
+  },
+  {
+    "type1": "ENTJ",
+    "type2": "ESTP",
+    "label": "飓风",
     "score": 60
   },
   {
@@ -584,7 +584,7 @@
   {
     "type1": "INTP",
     "type2": "ENFP",
-    "label": "翔羽",
+    "label": "翎羽",
     "score": 80
   },
   {
@@ -627,49 +627,49 @@
     "type1": "INTP",
     "type2": "ISFP",
     "label": "旧梦",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "INTP",
     "type2": "ESFP",
     "label": "轻逸",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "INTP",
     "type2": "ISFJ",
-    "label": "修电脑",
+    "label": "雨夜",
     "score": 40
   },
   {
     "type1": "INTP",
     "type2": "ESFJ",
-    "label": "游戏",
+    "label": "憧憬",
     "score": 40
   },
   {
     "type1": "INTP",
     "type2": "ISTP",
-    "label": "雨夜",
-    "score": 80
+    "label": "修电脑",
+    "score": 60
   },
   {
     "type1": "INTP",
     "type2": "ESTP",
-    "label": "憧憬",
-    "score": 80
+    "label": "游戏",
+    "score": 60
   },
   {
     "type1": "INTP",
     "type2": "ISTJ",
     "label": "证明",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "INTP",
     "type2": "ESTJ",
     "label": "黑箱",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ENTP",
@@ -692,14 +692,14 @@
   {
     "type1": "ENTP",
     "type2": "ENFJ",
-    "label": "号交",
+    "label": "号角",
     "score": 80
   },
   {
     "type1": "ENTP",
     "type2": "INTJ",
     "label": "辩论",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ENTP",
@@ -716,56 +716,56 @@
   {
     "type1": "ENTP",
     "type2": "ENTP",
-    "label": "浪屿",
+    "label": "浪𪩘",
     "score": 80
   },
   {
     "type1": "ENTP",
     "type2": "ISFP",
     "label": "锈斑",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ENTP",
     "type2": "ESFP",
     "label": "漂泊",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ENTP",
     "type2": "ISFJ",
-    "label": "暗巷",
+    "label": "倒吊人",
     "score": 40
   },
   {
     "type1": "ENTP",
     "type2": "ESFJ",
-    "label": "出走",
+    "label": "河流",
     "score": 40
   },
   {
     "type1": "ENTP",
     "type2": "ISTP",
-    "label": "倒吊人",
-    "score": 80
+    "label": "暗巷",
+    "score": 60
   },
   {
     "type1": "ENTP",
     "type2": "ESTP",
-    "label": "河流",
-    "score": 80
+    "label": "公路",
+    "score": 60
   },
   {
     "type1": "ENTP",
     "type2": "ISTJ",
     "label": "冰水混合物",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ENTP",
     "type2": "ESTJ",
     "label": "审判",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ISFP",
@@ -789,67 +789,67 @@
     "type1": "ISFP",
     "type2": "ENFJ",
     "label": "救赎",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ISFP",
     "type2": "INTJ",
     "label": "玫瑰",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ISFP",
     "type2": "ENTJ",
     "label": "颂歌",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ISFP",
     "type2": "INTP",
     "label": "旧梦",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ISFP",
     "type2": "ENTP",
     "label": "锈斑",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ISFP",
     "type2": "ISFP",
     "label": "藻井",
-    "score": 60
+    "score": 40
   },
   {
     "type1": "ISFP",
     "type2": "ESFP",
     "label": "彩绘玻璃",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ISFP",
     "type2": "ISFJ",
-    "label": "放逐",
-    "score": 80
-  },
-  {
-    "type1": "ISFP",
-    "type2": "ESFJ",
-    "label": "桑葚",
-    "score": 80
-  },
-  {
-    "type1": "ISFP",
-    "type2": "ISTP",
     "label": "云霞",
     "score": 60
   },
   {
     "type1": "ISFP",
-    "type2": "ESTP",
+    "type2": "ESFJ",
     "label": "染料",
-    "score": 100
+    "score": 99
+  },
+  {
+    "type1": "ISFP",
+    "type2": "ISTP",
+    "label": "放逐",
+    "score": 40
+  },
+  {
+    "type1": "ISFP",
+    "type2": "ESTP",
+    "label": "桑葚",
+    "score": 40
   },
   {
     "type1": "ISFP",
@@ -891,61 +891,61 @@
     "type1": "ESFP",
     "type2": "INTJ",
     "label": "虚实",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ESFP",
     "type2": "ENTJ",
     "label": "焚烧",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ESFP",
     "type2": "INTP",
     "label": "轻逸",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ESFP",
     "type2": "ENTP",
     "label": "漂泊",
-    "score": 40
+    "score": 60
   },
   {
     "type1": "ESFP",
     "type2": "ISFP",
     "label": "彩绘玻璃",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ESFP",
     "type2": "ESFP",
     "label": "烟草",
-    "score": 60
+    "score": 40
   },
   {
     "type1": "ESFP",
     "type2": "ISFJ",
-    "label": "金绿宝石",
-    "score": 80
+    "label": "奔赴",
+    "score": 99
   },
   {
     "type1": "ESFP",
     "type2": "ESFJ",
-    "label": "黄金",
-    "score": 80
+    "label": "晨昏",
+    "score": 60
   },
   {
     "type1": "ESFP",
     "type2": "ISTP",
-    "label": "奔赴",
-    "score": 100
+    "label": "金绿宝石",
+    "score": 40
   },
   {
     "type1": "ESFP",
     "type2": "ESTP",
-    "label": "晨昏",
-    "score": 60
+    "label": "黄金",
+    "score": 40
   },
   {
     "type1": "ESFP",
@@ -962,73 +962,73 @@
   {
     "type1": "ISFJ",
     "type2": "INFP",
-    "label": "倾斜",
+    "label": "慰藉",
     "score": 20
   },
   {
     "type1": "ISFJ",
     "type2": "ENFP",
-    "label": "坠落唤醒",
+    "label": "杏花雨",
     "score": 20
   },
   {
     "type1": "ISFJ",
     "type2": "INFJ",
-    "label": "边缘",
+    "label": "潮汐",
     "score": 20
   },
   {
     "type1": "ISFJ",
     "type2": "ENFJ",
-    "label": "晚钟",
+    "label": "扶手",
     "score": 20
   },
   {
     "type1": "ISFJ",
     "type2": "INTJ",
-    "label": "旁观",
+    "label": "荒谬",
     "score": 40
   },
   {
     "type1": "ISFJ",
     "type2": "ENTJ",
-    "label": "飞鸟",
-    "score": 40
+    "label": "荫庇",
+    "score": 60
   },
   {
     "type1": "ISFJ",
     "type2": "INTP",
-    "label": "修电脑",
+    "label": "雨夜",
     "score": 40
   },
   {
     "type1": "ISFJ",
     "type2": "ENTP",
-    "label": "暗巷",
+    "label": "倒吊人",
     "score": 40
   },
   {
     "type1": "ISFJ",
     "type2": "ISFP",
-    "label": "放逐",
-    "score": 80
-  },
-  {
-    "type1": "ISFJ",
-    "type2": "ESFP",
-    "label": "金绿宝石",
-    "score": 80
-  },
-  {
-    "type1": "ISFJ",
-    "type2": "ISFJ",
-    "label": "匕首",
+    "label": "云霞",
     "score": 60
   },
   {
     "type1": "ISFJ",
+    "type2": "ESFP",
+    "label": "奔赴",
+    "score": 99
+  },
+  {
+    "type1": "ISFJ",
+    "type2": "ISFJ",
+    "label": "烛光",
+    "score": 80
+  },
+  {
+    "type1": "ISFJ",
     "type2": "ESFJ",
-    "label": "焰火",
+    "label": "榴花白露",
     "score": 80
   },
   {
@@ -1040,43 +1040,43 @@
   {
     "type1": "ISFJ",
     "type2": "ESTP",
-    "label": "融化",
+    "label": "单桅帆船",
     "score": 100
   },
   {
     "type1": "ISFJ",
     "type2": "ISTJ",
-    "label": "铁灰",
-    "score": 60
+    "label": "下午茶",
+    "score": 80
   },
   {
     "type1": "ISFJ",
     "type2": "ESTJ",
-    "label": "瑞士军刀",
-    "score": 100
+    "label": "冰镇甜点",
+    "score": 80
   },
   {
     "type1": "ESFJ",
     "type2": "INFP",
-    "label": "脉搏",
+    "label": "生理盐水",
     "score": 20
   },
   {
     "type1": "ESFJ",
     "type2": "ENFP",
-    "label": "墒增",
+    "label": "雨过天晴",
     "score": 20
   },
   {
     "type1": "ESFJ",
     "type2": "INFJ",
-    "label": "废墟",
+    "label": "避风港",
     "score": 20
   },
   {
     "type1": "ESFJ",
     "type2": "ENFJ",
-    "label": "悬崖",
+    "label": "无字碑",
     "score": 20
   },
   {
@@ -1088,49 +1088,49 @@
   {
     "type1": "ESFJ",
     "type2": "ENTJ",
-    "label": "飓风",
-    "score": 40
+    "label": "日月",
+    "score": 60
   },
   {
     "type1": "ESFJ",
     "type2": "INTP",
-    "label": "游戏",
+    "label": "憧憬",
     "score": 40
   },
   {
     "type1": "ESFJ",
     "type2": "ENTP",
-    "label": "出走",
+    "label": "河流",
     "score": 40
   },
   {
     "type1": "ESFJ",
     "type2": "ISFP",
-    "label": "桑葚",
-    "score": 80
+    "label": "染料",
+    "score": 99
   },
   {
     "type1": "ESFJ",
     "type2": "ESFP",
-    "label": "黄金",
-    "score": 80
+    "label": "晨昏",
+    "score": 60
   },
   {
     "type1": "ESFJ",
     "type2": "ISFJ",
-    "label": "焰火",
+    "label": "榴花白露",
     "score": 80
   },
   {
     "type1": "ESFJ",
     "type2": "ESFJ",
-    "label": "长庚",
-    "score": 60
+    "label": "琥珀",
+    "score": 80
   },
   {
     "type1": "ESFJ",
     "type2": "ISTP",
-    "label": "单桅帆船",
+    "label": "融化",
     "score": 100
   },
   {
@@ -1142,74 +1142,74 @@
   {
     "type1": "ESFJ",
     "type2": "ISTJ",
-    "label": "海峡",
-    "score": 100
+    "label": "刻度",
+    "score": 80
   },
   {
     "type1": "ESFJ",
     "type2": "ESTJ",
-    "label": "史诗",
-    "score": 60
+    "label": "告诫",
+    "score": 80
   },
   {
     "type1": "ISTP",
     "type2": "INFP",
-    "label": "慰藉",
+    "label": "倾斜",
     "score": 20
   },
   {
     "type1": "ISTP",
     "type2": "ENFP",
-    "label": "杏花雨",
+    "label": "坠落唤醒",
     "score": 20
   },
   {
     "type1": "ISTP",
     "type2": "INFJ",
-    "label": "潮汐",
+    "label": "边缘",
     "score": 20
   },
   {
     "type1": "ISTP",
     "type2": "ENFJ",
-    "label": "扶手",
+    "label": "晚钟",
     "score": 20
   },
   {
     "type1": "ISTP",
     "type2": "INTJ",
-    "label": "荒谬",
-    "score": 80
+    "label": "旁观",
+    "score": 60
   },
   {
     "type1": "ISTP",
     "type2": "ENTJ",
-    "label": "荫庇",
+    "label": "飞鸟",
     "score": 60
   },
   {
     "type1": "ISTP",
     "type2": "INTP",
-    "label": "雨夜",
-    "score": 80
-  },
-  {
-    "type1": "ISTP",
-    "type2": "ENTP",
-    "label": "倒吊人",
-    "score": 80
-  },
-  {
-    "type1": "ISTP",
-    "type2": "ISFP",
-    "label": "云霞",
+    "label": "修电脑",
     "score": 60
   },
   {
     "type1": "ISTP",
+    "type2": "ENTP",
+    "label": "暗巷",
+    "score": 60
+  },
+  {
+    "type1": "ISTP",
+    "type2": "ISFP",
+    "label": "放逐",
+    "score": 40
+  },
+  {
+    "type1": "ISTP",
     "type2": "ESFP",
-    "label": "奔赴",
-    "score": 100
+    "label": "金绿宝石",
+    "score": 40
   },
   {
     "type1": "ISTP",
@@ -1220,97 +1220,97 @@
   {
     "type1": "ISTP",
     "type2": "ESFJ",
-    "label": "单桅帆船",
+    "label": "融化",
     "score": 100
   },
   {
     "type1": "ISTP",
     "type2": "ISTP",
-    "label": "烛光",
-    "score": 20
+    "label": "匕首",
+    "score": 40
   },
   {
     "type1": "ISTP",
     "type2": "ESTP",
-    "label": "榴花白露",
-    "score": 20
+    "label": "焰火",
+    "score": 40
   },
   {
     "type1": "ISTP",
     "type2": "ISTJ",
-    "label": "下午茶",
-    "score": 20
+    "label": "铁灰",
+    "score": 60
   },
   {
     "type1": "ISTP",
     "type2": "ESTJ",
-    "label": "冰镇甜点",
-    "score": 20
+    "label": "瑞士军刀",
+    "score": 99
   },
   {
     "type1": "ESTP",
     "type2": "INFP",
-    "label": "生理盐水",
+    "label": "脉搏",
     "score": 20
   },
   {
     "type1": "ESTP",
     "type2": "ENFP",
-    "label": "雨过天晴",
+    "label": "墒增",
     "score": 20
   },
   {
     "type1": "ESTP",
     "type2": "INFJ",
-    "label": "避风港",
+    "label": "废墟",
     "score": 20
   },
   {
     "type1": "ESTP",
     "type2": "ENFJ",
-    "label": "无字碑",
+    "label": "悬崖",
     "score": 20
   },
   {
     "type1": "ESTP",
     "type2": "INTJ",
     "label": "等待",
-    "score": 80
+    "score": 60
   },
   {
     "type1": "ESTP",
     "type2": "ENTJ",
-    "label": "日月",
+    "label": "飓风",
     "score": 60
   },
   {
     "type1": "ESTP",
     "type2": "INTP",
-    "label": "憧憬",
-    "score": 80
-  },
-  {
-    "type1": "ESTP",
-    "type2": "ENTP",
-    "label": "河流",
-    "score": 80
-  },
-  {
-    "type1": "ESTP",
-    "type2": "ISFP",
-    "label": "染料",
-    "score": 100
-  },
-  {
-    "type1": "ESTP",
-    "type2": "ESFP",
-    "label": "晨昏",
+    "label": "游戏",
     "score": 60
   },
   {
     "type1": "ESTP",
+    "type2": "ENTP",
+    "label": "公路",
+    "score": 60
+  },
+  {
+    "type1": "ESTP",
+    "type2": "ISFP",
+    "label": "桑葚",
+    "score": 40
+  },
+  {
+    "type1": "ESTP",
+    "type2": "ESFP",
+    "label": "黄金",
+    "score": 40
+  },
+  {
+    "type1": "ESTP",
     "type2": "ISFJ",
-    "label": "融化",
+    "label": "单桅帆船",
     "score": 100
   },
   {
@@ -1322,26 +1322,26 @@
   {
     "type1": "ESTP",
     "type2": "ISTP",
-    "label": "榴花白露",
-    "score": 20
+    "label": "焰火",
+    "score": 40
   },
   {
     "type1": "ESTP",
     "type2": "ESTP",
-    "label": "琥珀",
-    "score": 20
+    "label": "长庚",
+    "score": 40
   },
   {
     "type1": "ESTP",
     "type2": "ISTJ",
-    "label": "刻度",
-    "score": 20
+    "label": "海峡",
+    "score": 99
   },
   {
     "type1": "ESTP",
     "type2": "ESTJ",
-    "label": "告诫",
-    "score": 20
+    "label": "史诗",
+    "score": 60
   },
   {
     "type1": "ISTJ",
@@ -1371,7 +1371,7 @@
     "type1": "ISTJ",
     "type2": "INTJ",
     "label": "傲娇",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ISTJ",
@@ -1383,13 +1383,13 @@
     "type1": "ISTJ",
     "type2": "INTP",
     "label": "证明",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ISTJ",
     "type2": "ENTP",
     "label": "冰水混合物",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ISTJ",
@@ -1406,38 +1406,38 @@
   {
     "type1": "ISTJ",
     "type2": "ISFJ",
+    "label": "下午茶",
+    "score": 80
+  },
+  {
+    "type1": "ISTJ",
+    "type2": "ESFJ",
+    "label": "刻度",
+    "score": 80
+  },
+  {
+    "type1": "ISTJ",
+    "type2": "ISTP",
     "label": "铁灰",
     "score": 60
   },
   {
     "type1": "ISTJ",
-    "type2": "ESFJ",
-    "label": "海峡",
-    "score": 100
-  },
-  {
-    "type1": "ISTJ",
-    "type2": "ISTP",
-    "label": "下午茶",
-    "score": 20
-  },
-  {
-    "type1": "ISTJ",
     "type2": "ESTP",
-    "label": "刻度",
-    "score": 20
+    "label": "海峡",
+    "score": 99
   },
   {
     "type1": "ISTJ",
     "type2": "ISTJ",
     "label": "街道",
-    "score": 20
+    "score": 80
   },
   {
     "type1": "ISTJ",
     "type2": "ESTJ",
     "label": "岩层",
-    "score": 20
+    "score": 80
   },
   {
     "type1": "ESTJ",
@@ -1467,7 +1467,7 @@
     "type1": "ESTJ",
     "type2": "INTJ",
     "label": "征服",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ESTJ",
@@ -1479,13 +1479,13 @@
     "type1": "ESTJ",
     "type2": "INTP",
     "label": "黑箱",
-    "score": 100
+    "score": 99
   },
   {
     "type1": "ESTJ",
     "type2": "ENTP",
     "label": "审判",
-    "score": 80
+    "score": 40
   },
   {
     "type1": "ESTJ",
@@ -1502,37 +1502,37 @@
   {
     "type1": "ESTJ",
     "type2": "ISFJ",
-    "label": "瑞士军刀",
-    "score": 100
+    "label": "冰镇甜点",
+    "score": 80
   },
   {
     "type1": "ESTJ",
     "type2": "ESFJ",
+    "label": "告诫",
+    "score": 80
+  },
+  {
+    "type1": "ESTJ",
+    "type2": "ISTP",
+    "label": "瑞士军刀",
+    "score": 99
+  },
+  {
+    "type1": "ESTJ",
+    "type2": "ESTP",
     "label": "史诗",
     "score": 60
   },
   {
     "type1": "ESTJ",
-    "type2": "ISTP",
-    "label": "冰镇甜点",
-    "score": 20
-  },
-  {
-    "type1": "ESTJ",
-    "type2": "ESTP",
-    "label": "告诫",
-    "score": 20
-  },
-  {
-    "type1": "ESTJ",
     "type2": "ISTJ",
     "label": "岩层",
-    "score": 20
+    "score": 80
   },
   {
     "type1": "ESTJ",
     "type2": "ESTJ",
     "label": "百叶窗",
-    "score": 20
+    "score": 80
   }
 ]
