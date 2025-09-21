@@ -3,31 +3,33 @@
 import { motion } from "motion/react";
 import { useMBTIStore, GridViewMode } from "@/store/mbti-store";
 import { cn } from "@/lib/utils";
+import { HiViewGrid, HiHeart, HiCollection } from "react-icons/hi";
+import { TbBrain } from "react-icons/tb";
 
 const viewModes = [
   {
     id: "groups" as GridViewMode,
     name: "分组视图",
     description: "按MBTI四大组别和态度倾向排列",
-    icon: "🎯",
+    icon: HiViewGrid,
   },
   {
     id: "dominantFunctions" as GridViewMode,
     name: "主导功能",
     description: "按认知功能主导类型分组",
-    icon: "🧠",
+    icon: TbBrain,
   },
   {
     id: "matchPairs" as GridViewMode,
     name: "配对矩阵",
     description: "16×16配对关系矩阵",
-    icon: "💕",
+    icon: HiHeart,
   },
   {
     id: "compact" as GridViewMode,
     name: "一览表",
     description: "表格快速浏览与检索",
-    icon: "🗂️",
+    icon: HiCollection,
   },
 ];
 
@@ -56,7 +58,7 @@ export function GridViewSwitcher() {
               whileTap={{ scale: 0.99 }}
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center text-center sm:text-left space-y-2 sm:space-y-0 sm:space-x-3">
-                <span className="text-xl sm:text-2xl">{mode.icon}</span>
+                <mode.icon className="text-xl sm:text-2xl mx-auto sm:mx-0" />
                 <div className="flex-1 sm:flex-initial">
                   <p
                     className={cn(

@@ -9,7 +9,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "purple",
     group: "分析师",
     traits: "N直觉 + T理性 = 紫色脑力派",
-    image: "Architect.png",
+    image: "Architect.svg",
     strengths: ["擅于解决问题", "对理念非常坚定", "善于吸收知识", "洞察力精准"],
     weaknesses: [
       "不擅于沟通表达",
@@ -59,7 +59,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "purple",
     group: "分析师",
     traits: "N直觉 + T理性 = 紫色脑力派",
-    image: "Logician.png",
+    image: "Logician.svg",
     strengths: [
       "天资聪颖反应快",
       "逻辑和组织能力强",
@@ -103,7 +103,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "purple",
     group: "分析师",
     traits: "N直觉 + T理性 = 紫色脑力派",
-    image: "Commander.png",
+    image: "Commander.svg",
     strengths: [
       "擅于决策有领导力",
       "沟通、社交能力强",
@@ -153,7 +153,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "purple",
     group: "分析师",
     traits: "N直觉 + T理性 = 紫色脑力派",
-    image: "Debater.png",
+    image: "Debater.svg",
     strengths: [
       "拥有领袖气质",
       "思维灵活思绪清晰",
@@ -201,7 +201,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "green",
     group: "外交官",
     traits: "N直觉 + F情感 = 绿色理想派",
-    image: "Advocate.png",
+    image: "Advocate.svg",
     strengths: ["为人处世圆融", "擅长聆听", "具备正义感", "学习能力强"],
     weaknesses: [
       "燃烧自己照亮他人",
@@ -241,7 +241,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "green",
     group: "外交官",
     traits: "N直觉 + F情感 = 绿色理想派",
-    image: "Mediator.png",
+    image: "Mediator.svg",
     strengths: ["平易近人", "喜欢挑战新事物", "表达能力强", "非常了解自己目标"],
     weaknesses: [
       "容易活在自己世界",
@@ -288,7 +288,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "green",
     group: "外交官",
     traits: "N直觉 + F情感 = 绿色理想派",
-    image: "Protagonist.png",
+    image: "Protagonist.svg",
     strengths: ["外向活泼", "富有同情心", "领导能力出色", "乐观开朗"],
     weaknesses: [
       "过于渴望得到认同",
@@ -330,7 +330,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "green",
     group: "外交官",
     traits: "N直觉 + F情感 = 绿色理想派",
-    image: "Campaigner.png",
+    image: "Campaigner.svg",
     strengths: [
       "个性乐观开朗",
       "关心激励身边的人",
@@ -371,7 +371,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "blue",
     group: "守护者",
     traits: "S实感 + J判断 = 蓝色传统派",
-    image: "Logistician.png",
+    image: "Logistician.svg",
     strengths: [
       "内敛稳重",
       "理性",
@@ -424,7 +424,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "blue",
     group: "守护者",
     traits: "S实感 + J判断 = 蓝色传统派",
-    image: "Defender.png",
+    image: "Defender.svg",
     strengths: [
       "具有同理心",
       "责任感强",
@@ -474,7 +474,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "blue",
     group: "守护者",
     traits: "S实感 + J判断 = 蓝色传统派",
-    image: "Executive.png",
+    image: "Executive.svg",
     strengths: [
       "优秀的管理能力",
       "坚强的意志力",
@@ -522,7 +522,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "blue",
     group: "守护者",
     traits: "S实感 + J判断 = 蓝色传统派",
-    image: "Consul.png",
+    image: "Consul.svg",
     strengths: [
       "活泼外向乐于助人",
       "擅于处理人际关系",
@@ -569,7 +569,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "yellow",
     group: "探险家",
     traits: "S实感 + P感知 = 黄色体验派",
-    image: "Virtuoso.png",
+    image: "Virtuoso.svg",
     strengths: [
       "喜欢在实践中学习",
       "手脚灵活",
@@ -617,7 +617,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "yellow",
     group: "探险家",
     traits: "S实感 + P感知 = 黄色体验派",
-    image: "Adventurer.png",
+    image: "Adventurer.svg",
     strengths: [
       "温柔",
       "善解人意",
@@ -661,7 +661,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "yellow",
     group: "探险家",
     traits: "S实感 + P感知 = 黄色体验派",
-    image: "Entrepreneur.png",
+    image: "Entrepreneur.svg",
     strengths: [
       "行动派不拖泥带水",
       "适应能力强",
@@ -708,7 +708,7 @@ export const mbtiTypes: MBTIType[] = [
     color: "yellow",
     group: "探险家",
     traits: "S实感 + P感知 = 黄色体验派",
-    image: "Entertainer.png",
+    image: "Entertainer.svg",
     strengths: ["专注于当下", "乐观开朗", "大胆", "勇于尝试", "优秀的社交能力"],
     weaknesses: [
       "沉迷物质享乐",
