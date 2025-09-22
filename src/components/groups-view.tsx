@@ -41,29 +41,6 @@ const rowLabels = [
   },
 ];
 
-const colLabels = [
-  {
-    label: "IJ",
-    description: "内向判断",
-    color: "text-gray-700 dark:text-gray-300",
-  },
-  {
-    label: "IP",
-    description: "内向感知",
-    color: "text-gray-700 dark:text-gray-300",
-  },
-  {
-    label: "EJ",
-    description: "外向判断",
-    color: "text-gray-700 dark:text-gray-300",
-  },
-  {
-    label: "EP",
-    description: "外向感知",
-    color: "text-gray-700 dark:text-gray-300",
-  },
-];
-
 export function GroupsView() {
   const selectedType = useMBTIStore((state) => state.selectedType);
   const expandCard = useMBTIStore((state) => state.expandCard);
@@ -81,30 +58,8 @@ export function GroupsView() {
           MBTI 四大组别视图
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
-          按照四大组别和态度倾向的矩阵布局
+          按照四大组别的矩阵布局
         </p>
-      </motion.div>
-
-      {/* 态度倾向标题行 - 仅桌面端显示（吸顶增强层级） */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="hidden lg:grid lg:grid-cols-4 gap-3 mb-4 px-2 sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-white/50 dark:supports-[backdrop-filter]:bg-gray-900/40"
-      >
-        {colLabels.map((col) => (
-          <div
-            key={col.label}
-            className="text-center p-3 bg-gray-100/80 dark:bg-gray-800/70 rounded-lg border border-gray-200 dark:border-gray-700"
-          >
-            <div className={cn("font-mono font-bold text-base", col.color)}>
-              {col.label}
-            </div>
-            <div className="text-xs text-gray-600 dark:text-gray-400">
-              {col.description}
-            </div>
-          </div>
-        ))}
       </motion.div>
 
       <div className="space-y-6">
@@ -194,10 +149,6 @@ export function GroupsView() {
                         selectedType?.type === typeCode ? "z-[100]" : "z-[1]"
                       )}
                     >
-                      {/* 移动端角标：显示列态度（IJ/IP/EJ/EP） */}
-                      <div className="lg:hidden absolute top-1 left-1 text-[10px] px-1 py-0.5 rounded bg-gray-900/70 text-white">
-                        {colLabels[colIndex]?.label}
-                      </div>
                       <MBTICard
                         type={type}
                         isExpanded={selectedType?.type === typeCode}
