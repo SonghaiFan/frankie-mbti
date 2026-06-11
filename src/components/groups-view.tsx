@@ -5,6 +5,7 @@ import { mbtiTypes, groupExplanations, mbtiGroups } from "@/data/mbti-data";
 import { MBTICard } from "@/components/mbti-card";
 import { cn } from "@/lib/utils";
 import { useMBTIStore } from "@/store/mbti-store";
+import { getMbtiColor } from "@/styles/mbti-styles";
 
 // 按照MBTI四大组别和态度倾向排列
 const enhancedGroupLayout = [
@@ -18,25 +19,21 @@ const rowLabels = [
   {
     label: "NT",
     description: "分析师 - 直觉+思维",
-    color: "text-purple-900 dark:text-purple-100",
     group: "分析师",
   },
   {
     label: "NF",
     description: "外交官 - 直觉+情感",
-    color: "text-green-900 dark:text-green-100",
     group: "外交官",
   },
   {
     label: "SJ",
     description: "守护者 - 感觉+判断",
-    color: "text-blue-900 dark:text-blue-100",
     group: "守护者",
   },
   {
     label: "SP",
     description: "探险家 - 感觉+感知",
-    color: "text-orange-900 dark:text-orange-100",
     group: "探险家",
   },
 ];
@@ -52,21 +49,23 @@ export function GroupsView() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4 sm:mb-6"
+        className="text-left mb-6 border-b-4 border-black pb-4"
       >
-        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <span className="bg-bauhaus-red text-white text-xs font-bold px-2.5 py-1 tracking-widest uppercase inline-block mb-2">CATEGORY CLASSIFICATION</span>
+        <h2 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tighter">
           MBTI 四大组别视图
         </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
-          按照四大组别的矩阵布局
+        <p className="text-sm text-gray-700 font-medium mt-1">
+          按照四大基本组别的平面平面网格矩阵布局进行展示
         </p>
       </motion.div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {enhancedGroupLayout.map((row, rowIndex) => {
           const rowInfo = rowLabels[rowIndex];
           const explanation =
             groupExplanations[rowInfo.group as keyof typeof groupExplanations];
+          const colorStyle = getMbtiColor(rowInfo.label);
 
           return (
             <motion.div
@@ -74,62 +73,45 @@ export function GroupsView() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: rowIndex * 0.1 }}
-              className="space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-3"
+              className="space-y-4 rounded-none border-4 border-black bg-white p-4 sm:p-6 shadow-[6px_6px_0px_0px_rgba(18,18,18,1)] text-left"
             >
-              {/* 组别标题 - 带左侧色条增强层级 */}
+              {/* 组别标题 - 采用高饱和度色块包豪斯条形 */}
               <div
                 className={cn(
-                  "p-4 rounded-lg relative overflow-hidden",
-                  explanation.bgColor
+                  "p-4 border-4 border-black rounded-none relative overflow-hidden",
+                  colorStyle.bgDark
                 )}
               >
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div className="flex flex-col gap-3">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div
-                        className={cn(
-                          "font-mono font-bold text-xl md:text-2xl",
-                          rowInfo.color
-                        )}
-                      >
+                      <div className="font-sans font-black text-lg md:text-xl bg-black text-white px-3 py-0.5 tracking-widest">
                         {rowInfo.label}
                       </div>
-                      <div className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+                      <div className="text-sm md:text-base font-bold uppercase tracking-wide">
                         {rowInfo.description}
                       </div>
                     </div>
-                    <div
-                      className={cn(
-                        "text-sm md:text-base font-medium",
-                        explanation.color
-                      )}
-                    >
+                    <div className="text-sm md:text-base font-black uppercase tracking-wider">
                       {explanation.title}
                     </div>
                   </div>
                   {/* 添加 trait 和 keywords 信息 */}
-                  <div className="flex flex-col md:flex-row gap-2 text-xs">
-                    <div className="text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">特质：</span>
-                      {
-                        mbtiGroups[rowInfo.label as keyof typeof mbtiGroups]
-                          ?.trait
-                      }
+                  <div className="flex flex-col sm:flex-row gap-4 text-xs font-bold uppercase tracking-wider pt-2 border-t border-current/20">
+                    <div>
+                      <span className="opacity-70 mr-1.5">[特质]</span>
+                      {mbtiGroups[rowInfo.label as keyof typeof mbtiGroups]?.trait}
                     </div>
-                    <div className="text-gray-600 dark:text-gray-400">
-                      <span className="font-medium">关键词：</span>
-                      {
-                        mbtiGroups[rowInfo.label as keyof typeof mbtiGroups]
-                          ?.keywords
-                      }
+                    <div>
+                      <span className="opacity-70 mr-1.5">[关键词]</span>
+                      {mbtiGroups[rowInfo.label as keyof typeof mbtiGroups]?.keywords}
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* MBTI 类型卡片网格 - 响应式布局 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {row.map((typeCode, colIndex) => {
                   const type = mbtiTypes.find((t) => t.type === typeCode);
                   if (!type) return null;
@@ -137,12 +119,13 @@ export function GroupsView() {
                   return (
                     <motion.div
                       key={typeCode}
-                      initial={{ opacity: 0, scale: 0.8 }}
+                      initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{
                         delay: rowIndex * 0.1 + colIndex * 0.05,
                         type: "spring",
-                        stiffness: 100,
+                        stiffness: 120,
+                        damping: 15,
                       }}
                       className={cn(
                         "h-[120px]",
@@ -168,20 +151,21 @@ export function GroupsView() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-        className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl"
+        transition={{ delay: 0.5 }}
+        className="mt-12 p-6 bg-white border-4 border-black rounded-none shadow-[4px_4px_0px_0px_black] text-left"
       >
-        <h3 className="font-medium text-sm text-gray-900 dark:text-gray-100 mb-3">
-          布局说明
+        <h3 className="font-black tracking-widest text-sm uppercase text-gray-900 border-b-2 border-black pb-2 mb-3">
+          LAYOUT SPECIFICATION / 布局说明
         </h3>
-        <div className="text-xs text-gray-600 dark:text-gray-400">
-          <p className="mb-2">
-            <span className="font-semibold">矩阵布局：</span>
-            横向为四大MBTI组别（NT分析师、NF外交官、SJ守护者、SP探险家），
-            纵向为态度倾向（IJ内向判断、IP内向感知、EJ外向判断、EP外向感知）
+        <div className="text-xs sm:text-sm text-gray-800 font-medium space-y-2 leading-relaxed">
+          <p>
+            <span className="font-black bg-[#F0C020] text-black px-1 mr-1.5">[平面矩阵]</span>
+            横向网格为四大包豪斯色彩划分组别（NT 分析师-紫色、NF 外交官-绿色、SJ 守护者-蓝色、SP 探险家-黄色），
+            纵向网格为四种心智态度倾向（IJ 内向判断、IP 内向感知、EJ 外向判断、EP 外向感知）。
           </p>
         </div>
       </motion.div>
     </div>
   );
 }
+

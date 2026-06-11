@@ -1,73 +1,73 @@
 import { cn } from "@/lib/utils";
 
-// MBTI 四大组别颜色 - 保持语义一致性
+// MBTI 四大组别颜色 - Bauhaus 风格，同时保持语义色相一致
 export const mbtiGroupColors = {
   purple: {
     // 分析师 (NT) - 紫色
-    bg: "bg-purple-50 dark:bg-purple-900/20",
-    bgDark: "bg-purple-100 dark:bg-purple-900/40",
-    text: "text-purple-900 dark:text-purple-100",
-    border: "border-purple-200 dark:border-purple-800",
-    hover: "hover:bg-purple-100 dark:hover:bg-purple-900/40",
+    bg: "bg-[#F5EEFF] border-2 md:border-4 border-[#121212]",
+    bgDark: "bg-mbti-nt text-white border-2 md:border-4 border-[#121212]",
+    text: "text-mbti-nt",
+    border: "border-[#121212]",
+    hover: "hover:bg-[#E8D5FF]",
   },
   green: {
     // 外交官 (NF) - 绿色
-    bg: "bg-green-50 dark:bg-green-900/20",
-    bgDark: "bg-green-100 dark:bg-green-900/40",
-    text: "text-green-900 dark:text-green-100",
-    border: "border-green-200 dark:border-green-800",
-    hover: "hover:bg-green-100 dark:hover:bg-green-900/40",
+    bg: "bg-[#EEF7EE] border-2 md:border-4 border-[#121212]",
+    bgDark: "bg-mbti-nf text-white border-2 md:border-4 border-[#121212]",
+    text: "text-mbti-nf",
+    border: "border-[#121212]",
+    hover: "hover:bg-[#DCF2DC]",
   },
   blue: {
-    // 守护者 (SJ) - 蓝色
-    bg: "bg-blue-50 dark:bg-blue-900/20",
-    bgDark: "bg-blue-100 dark:bg-blue-900/40",
-    text: "text-blue-900 dark:text-blue-100",
-    border: "border-blue-200 dark:border-blue-800",
-    hover: "hover:bg-blue-100 dark:hover:bg-blue-900/40",
+    // 守护者 (SJ) - 蓝色 (Bauhaus Blue)
+    bg: "bg-[#EEF4FF] border-2 md:border-4 border-[#121212]",
+    bgDark: "bg-mbti-sj text-white border-2 md:border-4 border-[#121212]",
+    text: "text-mbti-sj",
+    border: "border-[#121212]",
+    hover: "hover:bg-[#D4E4FF]",
   },
   yellow: {
-    // 探险家 (SP) - 黄色
-    bg: "bg-orange-50 dark:bg-orange-900/20",
-    bgDark: "bg-orange-100 dark:bg-orange-900/40",
-    text: "text-orange-900 dark:text-orange-100",
-    border: "border-orange-200 dark:border-orange-800",
-    hover: "hover:bg-orange-100 dark:hover:bg-orange-900/40",
+    // 探险家 (SP) - 黄色 (Bauhaus Yellow)
+    bg: "bg-[#FFFCE8] border-2 md:border-4 border-[#121212]",
+    bgDark: "bg-mbti-sp text-[#121212] border-2 md:border-4 border-[#121212]",
+    text: "text-amber-600 font-bold", // 提升黄色在亮色底上的可读性
+    border: "border-[#121212]",
+    hover: "hover:bg-[#FFF8C4]",
   },
 };
 
-// 配对度颜色系统 - 红色渐变表示配对强度
+// 配对度颜色系统 - 纯色色块，符合包豪斯几何色块分割
 export const matchingColors = {
   highest: {
-    bg: "bg-red-400 text-red-900 dark:bg-red-600/50 dark:text-red-200",
+    bg: "bg-bauhaus-red text-white border-2 border-black",
   },
   high: {
-    bg: "bg-red-200 text-red-800 dark:bg-red-800/50 dark:text-red-300",
+    bg: "bg-bauhaus-blue text-white border-2 border-black",
   },
   medium: {
-    bg: "bg-gray-300 text-gray-800 dark:bg-gray-500/50 dark:text-gray-300",
+    bg: "bg-bauhaus-yellow text-black border-2 border-black",
   },
   low: {
-    bg: "bg-gray-200 text-gray-800 dark:bg-gray-600/50 dark:text-gray-300",
+    bg: "bg-[#E0E0E0] text-black border-2 border-black",
   },
   lowest: {
-    bg: "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300",
+    bg: "bg-white text-[#888888] border-2 border-black",
   },
 };
 
 // UI 通用颜色 - 黑白灰色调，不与组别颜色冲突
 export const uiColors = {
   neutral: {
-    bg: "bg-gray-50 dark:bg-gray-900/20",
-    bgDark: "bg-gray-100 dark:bg-gray-900/40",
-    text: "text-gray-900 dark:text-gray-100",
-    border: "border-gray-200 dark:border-gray-700",
-    hover: "hover:bg-gray-100 dark:hover:bg-gray-800",
+    bg: "bg-white border-2 md:border-4 border-[#121212]",
+    bgDark: "bg-[#121212] text-white border-2 md:border-4 border-[#121212]",
+    text: "text-[#121212]",
+    border: "border-[#121212]",
+    hover: "hover:bg-gray-100",
   },
   selected: {
-    bg: "bg-gray-300 dark:bg-gray-600",
-    border: "border-gray-900 dark:border-gray-100",
-    ring: "ring-2 ring-gray-900 dark:ring-gray-100 ring-inset",
+    bg: "bg-[#D02020] text-white",
+    border: "border-[#121212]",
+    ring: "ring-2 ring-black ring-inset",
   },
 };
 
@@ -75,33 +75,39 @@ export const uiColors = {
 export const mbtiColors = mbtiGroupColors;
 
 export const mbtiCardStyles = {
-  base: "rounded-xl shadow-lg overflow-hidden transition-colors duration-300",
-  content: "p-6 space-y-4",
-  header: "p-6 border-b border-gray-200 dark:border-gray-700",
-  title: "text-2xl font-medium text-gray-800 dark:text-gray-200",
-  description: "text-gray-600 dark:text-gray-400",
+  base: "border-2 md:border-4 border-[#121212] shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] md:shadow-[6px_6px_0px_0px_rgba(18,18,18,1)] transition-all duration-200 rounded-none overflow-hidden",
+  content: "p-4 sm:p-6 space-y-4 font-sans",
+  header: "p-4 sm:p-6 border-b-2 md:border-b-4 border-[#121212]",
+  title: "text-xl sm:text-2xl font-black uppercase tracking-tighter text-gray-900 leading-tight",
+  description: "text-sm text-gray-800 font-medium",
 };
 
 export const mbtiMotionStyles = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 0, y: 15 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.3 },
+  transition: { duration: 0.2, ease: "easeOut" as const },
 };
 
 export const getMbtiColor = (groupOrColor?: string) => {
-  // 为向后兼容保留参数签名，但当前统一使用黑白灰中性配色
-  // 触发一次读取以满足 no-unused-vars 规则
-  void groupOrColor;
-  return {
-    bg: "bg-gray-50 dark:bg-gray-900/20",
-    bgDark: "bg-gray-100 dark:bg-gray-900/40",
-    text: "text-gray-900 dark:text-gray-100",
-    border: "border-gray-200 dark:border-gray-700",
-    hover: "hover:bg-gray-100 dark:hover:bg-gray-800",
-  };
+  if (!groupOrColor) return mbtiGroupColors.blue;
+  const val = groupOrColor.toLowerCase();
+  
+  if (val === "purple" || val === "分析师" || val === "nt") {
+    return mbtiGroupColors.purple;
+  }
+  if (val === "green" || val === "外交官" || val === "nf") {
+    return mbtiGroupColors.green;
+  }
+  if (val === "blue" || val === "守护者" || val === "sj") {
+    return mbtiGroupColors.blue;
+  }
+  if (val === "yellow" || val === "探险家" || val === "sp") {
+    return mbtiGroupColors.yellow;
+  }
+  return mbtiGroupColors.blue; // 默认返回蓝色
 };
 
-export const mbtiCard = cn(mbtiCardStyles.base, "bg-white dark:bg-gray-800");
+export const mbtiCard = cn(mbtiCardStyles.base, "bg-white");
 
 export const mbtiCardHeader = cn(mbtiCardStyles.header);
 
@@ -110,3 +116,4 @@ export const mbtiCardTitle = cn(mbtiCardStyles.title);
 export const mbtiCardContent = cn(mbtiCardStyles.content);
 
 export const mbtiCardDescription = cn(mbtiCardStyles.description);
+

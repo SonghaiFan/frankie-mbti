@@ -46,27 +46,27 @@ const orderedTypes = [
 //   "ESFP",
 // ];
 
-// 配对类型的颜色和优先级（基于配对度）- 红色到灰色渐变（越红越高）
+// 配对类型的颜色和优先级（基于配对度）- 纯色色块，符合包豪斯几何色块分割
 const matchTypePriority = {
   灵魂伴侣: {
     priority: 1,
-    color: "bg-red-400 text-red-900 dark:bg-red-600/50 dark:text-red-200",
+    color: "bg-[#D02020] text-white border-2 border-black",
   },
   天作之合: {
     priority: 2,
-    color: "bg-red-200 text-red-800 dark:bg-red-800/50 dark:text-red-300",
+    color: "bg-[#1040C0] text-white border-2 border-black",
   },
   有趣搭配: {
     priority: 3,
-    color: "bg-gray-300 text-gray-800 dark:bg-gray-500/50 dark:text-gray-300",
+    color: "bg-[#F0C020] text-black border-2 border-black",
   },
   互补成长: {
     priority: 4,
-    color: "bg-gray-200 text-gray-800 dark:bg-gray-600/50 dark:text-gray-300",
+    color: "bg-[#E0E0E0] text-black border-2 border-black",
   },
   欢喜冤家: {
     priority: 5,
-    color: "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-300",
+    color: "bg-white text-[#121212] border-2 border-black",
   },
 };
 
@@ -161,19 +161,19 @@ export function MatchMatrixView() {
   // 获取类型的颜色
   const getTypeColor = (typeCode: string) => {
     const type = mbtiTypes.find((t) => t.type === typeCode);
-    if (!type) return "text-gray-600";
+    if (!type) return "text-[#121212]";
 
     switch (type.group) {
       case "分析师":
-        return "text-purple-600 dark:text-purple-400";
+        return "text-mbti-nt";
       case "外交官":
-        return "text-green-600 dark:text-green-400";
+        return "text-mbti-nf";
       case "守护者":
-        return "text-blue-900 dark:text-blue-100";
+        return "text-mbti-sj";
       case "探险家":
-        return "text-yellow-600 dark:text-yellow-400";
+        return "text-amber-600 font-bold";
       default:
-        return "text-gray-600";
+        return "text-[#121212]";
     }
   };
 
@@ -234,36 +234,36 @@ export function MatchMatrixView() {
     : orderedTypes;
 
   return (
-    <div className="mb-8 px-2 sm:px-0">
+    <div className="mb-12 px-2 sm:px-0">
       {/* 标题 */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4 sm:mb-6"
+        className="text-center mb-6 sm:mb-8"
       >
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          MBTI 配对关系矩阵
+        <h2 className="text-xl sm:text-3xl font-black uppercase tracking-tighter text-[#121212] mb-3">
+          MBTI 配对关系矩阵 / RELATION MATRIX
         </h2>
-        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 px-2">
-          16×16 配对矩阵：点击行列标签高亮并排序，悬停单元格查看配对详情
+        <p className="text-xs sm:text-sm text-gray-700 font-bold max-w-2xl mx-auto px-4 leading-relaxed">
+          16×16 交互式配对矩阵：点击行列标签可进行高亮与自动排序，悬浮单元格可查看详细契合度分析与荣格心理学配对原理。
         </p>
-        <div className="block sm:hidden text-xs text-gray-500 dark:text-gray-400 mt-2">
-          💡 可以左右滑动查看完整矩阵
+        <div className="block sm:hidden text-xs text-[#D02020] font-black uppercase tracking-wider mt-3">
+          ⚡️ 左右滑动以查看完整矩阵
         </div>
       </motion.div>
 
       {/* 配对矩阵 */}
       <div
-        className="overflow-x-auto overflow-y-hidden flex justify-center relative"
+        className="overflow-x-auto overflow-y-hidden flex justify-center relative py-4"
         style={{ scrollSnapType: "x mandatory" }}
       >
         <div className="inline-block shrink-0">
           {/* 表格容器 */}
-          <div className="border border-gray-300 dark:border-gray-700 rounded-lg overflow-visible relative ">
+          <div className="border-4 border-black rounded-none overflow-visible relative shadow-[8px_8px_0px_0px_rgba(18,18,18,1)] bg-white">
             {/* 顶部类型标签行 */}
-            <div className="flex bg-gray-100 dark:bg-gray-800">
+            <div className="flex bg-[#F0F0F0] border-b-4 border-black">
               {/* 左上角空白 */}
-              <div className="w-16 h-16 flex-none border-r border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-900"></div>
+              <div className="w-16 h-16 flex-none border-r-4 border-black bg-[#E0E0E0]"></div>
 
               {/* 顶部类型标签 */}
               {displayedColTypes.map((typeCode, index) => {
@@ -275,28 +275,26 @@ export function MatchMatrixView() {
                     key={`top-${typeCode}`}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.02 }}
+                    transition={{ delay: index * 0.01 }}
                     onClick={() => handleColClick(typeCode)}
                     className={cn(
-                      "w-16 h-16 flex-none flex flex-col items-center justify-center",
-                      !isLastColumn &&
-                        "border-r border-gray-300 dark:border-gray-700",
-                      "text-xs font-mono font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
+                      "w-16 h-16 flex-none flex flex-col items-center justify-center transition-colors cursor-pointer",
+                      !isLastColumn && "border-r-4 border-black",
+                      "text-[10px] font-black uppercase tracking-tighter hover:bg-[#E0E0E0]",
                       getTypeColor(typeCode),
-                      selectedCol === typeCode &&
-                        "bg-white dark:bg-white/10 ring-2 ring-white/60 dark:ring-white/40"
+                      selectedCol === typeCode ? "bg-[#D02020] !text-white" : "bg-[#F0F0F0]"
                     )}
                   >
                     {type && (
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.title}
-                        width={40}
-                        height={40}
-                        className="mb-1 rounded-full"
+                        width={36}
+                        height={36}
+                        className="mb-1 rounded-none border border-black shadow-[1px_1px_0px_0px_black]"
                       />
                     )}
-                    <span className="text-[10px] leading-none">{typeCode}</span>
+                    <span className="text-[10px] font-black leading-none">{typeCode}</span>
                   </motion.button>
                 );
               })}
@@ -305,6 +303,7 @@ export function MatchMatrixView() {
             {/* 矩阵行 */}
             {displayedRowTypes.map((rowType, rowIndex) => {
               const rowTypeData = mbtiTypes.find((t) => t.type === rowType);
+              const isLastRow = rowIndex === displayedRowTypes.length - 1;
 
               return (
                 <div key={`row-${rowType}`} className="flex">
@@ -312,27 +311,27 @@ export function MatchMatrixView() {
                   <motion.button
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: rowIndex * 0.02 }}
+                    transition={{ delay: rowIndex * 0.01 }}
                     onClick={() => handleRowClick(rowType)}
                     className={cn(
-                      "w-16 h-16 flex-none border-r border-b border-gray-300 dark:border-gray-700",
-                      "flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800",
-                      "text-xs font-mono font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors",
+                      "w-16 h-16 flex-none border-r-4",
+                      !isLastRow && "border-b-4 border-black",
+                      "flex flex-col items-center justify-center transition-colors cursor-pointer font-sans",
+                      "text-[10px] font-black uppercase tracking-tighter hover:bg-[#E0E0E0]",
                       getTypeColor(rowType),
-                      selectedRow === rowType &&
-                        "bg-white dark:bg-white/10 ring-2 ring-white/60 dark:ring-white/40"
+                      selectedRow === rowType ? "bg-[#D02020] !text-white" : "bg-[#F0F0F0]"
                     )}
                   >
                     {rowTypeData && (
                       <Image
                         src={`/mbti_img/${rowTypeData.image}`}
                         alt={rowTypeData.title}
-                        width={40}
-                        height={40}
-                        className="mb-1 rounded-full"
+                        width={36}
+                        height={36}
+                        className="mb-1 rounded-none border border-black shadow-[1px_1px_0px_0px_black]"
                       />
                     )}
-                    <span className="text-[10px] leading-none">{rowType}</span>
+                    <span className="text-[10px] font-black leading-none">{rowType}</span>
                   </motion.button>
 
                   {/* 配对单元格 */}
@@ -343,133 +342,114 @@ export function MatchMatrixView() {
                       hoveredCell?.type2 === colType;
                     const isLastColumn =
                       colIndex === displayedColTypes.length - 1;
-                    const isLastRow = rowIndex === displayedRowTypes.length - 1;
                     const isCellHighlighted =
                       selectedRow === rowType || selectedCol === colType;
                     const isIntersectionCell =
                       selectedRow === rowType && selectedCol === colType;
 
                     return (
-                      <motion.div
+                      <div
                         key={`${rowType}-${colType}`}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: (rowIndex + colIndex) * 0.005 }}
                         onMouseEnter={() =>
                           setHoveredCell({ type1: rowType, type2: colType })
                         }
                         onMouseLeave={() => setHoveredCell(null)}
                         className={cn(
-                          "w-16 h-16 flex-none border-gray-300 dark:border-gray-700",
-                          !isLastRow && "border-b",
-                          !isLastColumn && "border-r",
-                          "flex items-center justify-center cursor-pointer transition-all duration-200",
-                          // base stacking context
-                          "relative will-change-transform transform-gpu z-[1] hover:shadow-lg",
+                          "w-16 h-16 flex-none border-black",
+                          !isLastRow && "border-b-4",
+                          !isLastColumn && "border-r-4",
+                          "flex items-center justify-center cursor-pointer transition-all duration-150 rounded-none relative z-[1]",
                           matchInfo
                             ? cn(
-                                "hover:scale-[1.06]",
                                 matchTypePriority[
                                   matchInfo.matchType as keyof typeof matchTypePriority
-                                ]?.color || "bg-gray-50 dark:bg-gray-800"
+                                ]?.color || "bg-white text-[#121212]"
                               )
-                            : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700",
-                          // selected row/col under hovered
-                          isCellHighlighted &&
-                            "ring-1 ring-gray-800/70 dark:ring-white/30 z-[60]",
-                          // hovered cell above selected
-                          isHovered &&
-                            "z-[70] shadow-xl transform scale-[1.06]",
-                          // 避免改变尺寸导致纵向滚动：仅使用外发光，不加粗边框
-                          isIntersectionCell &&
-                            "ring-4 ring-gray-800 dark:ring-white/90 z-[80]"
+                            : "bg-white text-[#121212] hover:bg-[#F0F0F0]",
+                          // row/column highlighted active state
+                          isCellHighlighted && "after:absolute after:inset-0 after:bg-black/10 z-[2]",
+                          // intersection of highlighted row and column
+                          isIntersectionCell && "outline outline-4 outline-black z-[10] scale-105 shadow-[4px_4px_0px_0px_black]",
+                          // hovered state above all
+                          isHovered && "z-[20] scale-110 shadow-[6px_6px_0px_0px_black] outline outline-4 outline-black"
                         )}
                       >
                         {matchInfo && (
-                          <div className="text-center p-1">
-                            <div className="text-xs font-medium leading-tight">
+                          <div className="text-center p-1 select-none">
+                            <div className="text-[10px] font-black uppercase tracking-tighter leading-tight">
                               {matchInfo.name}
                             </div>
                             {matchInfo.compatibility && (
-                              <div className="text-[10px] opacity-70 mt-0.5">
+                              <div className="text-[9px] font-bold opacity-80 mt-0.5">
                                 {matchInfo.compatibility}%
                               </div>
                             )}
                           </div>
                         )}
 
-                        {/* 悬停提示 */}
+                        {/* 悬停提示 - Bauhaus Poster style */}
                         {isHovered && matchInfo && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
+                          <div
                             className={cn(
                               "absolute z-[100] pointer-events-none",
-                              "bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600",
-                              "rounded-lg shadow-xl p-3 w-64",
+                              "bg-white border-4 border-black text-[#121212]",
+                              "rounded-none shadow-[8px_8px_0px_0px_black] p-4 w-72",
                               // 智能定位：根据位置调整方向
                               colIndex > displayedColTypes.length / 2
-                                ? "right-0 translate-x-0" // 右半部分向左显示
-                                : "left-0 translate-x-0", // 左半部分向右显示
+                                ? "right-0" // 右半部分向左显示
+                                : "left-0", // 左半部分向右显示
                               rowIndex < displayedRowTypes.length / 2
                                 ? "top-full mt-2" // 上半部分向下显示
                                 : "bottom-full mb-2" // 下半部分向上显示
                             )}
                           >
-                            <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                            <div className="text-sm font-black uppercase tracking-tighter text-[#121212] border-b-2 border-black pb-1.5 mb-2">
                               {rowType} × {colType}
                             </div>
-                            <div className="text-sm font-medium mt-1 text-gray-800 dark:text-gray-200">
-                              配对名称：{matchInfo.name}
+                            <div className="text-xs font-black text-[#121212] mb-1">
+                              配对关系：{matchInfo.name}
                             </div>
-                            <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                              配对度：{matchInfo.compatibility}%
+                            <div className="text-xs font-bold text-gray-700 mb-2">
+                              契合指数：{matchInfo.compatibility}%
                             </div>
 
-                            {/* 官方最佳配对（来源：MBTIType.bestPartners） */}
+                            {/* 官方最佳配对 */}
                             {matchInfo.isOfficialBestPair && (
-                              <div className="mt-2">
-                                <span
-                                  className={cn(
-                                    "text-xs px-2 py-1 rounded",
-                                    matchInfo.isOfficialBestPair
-                                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/30 dark:text-emerald-200"
-                                      : "bg-gray-100 text-gray-700 dark:bg-gray-700/50 dark:text-gray-300"
-                                  )}
-                                >
-                                  官方最佳配对 ✅
+                              <div className="mb-2.5">
+                                <span className="text-[9px] font-black uppercase tracking-tighter bg-mbti-nf text-white px-2 py-0.5 border border-black rounded-none">
+                                  官方推荐理想配对 ★
                                 </span>
                               </div>
                             )}
 
-                            {/* 显示基于配对度的分类 */}
+                            {/* 级别标签 */}
                             <div
                               className={cn(
-                                "text-xs px-2 py-1 rounded mt-2 inline-block",
+                                "text-[9px] font-black uppercase tracking-tighter px-2 py-0.5 border border-black rounded-none mb-3 inline-block",
                                 matchTypePriority[
                                   matchInfo.matchType as keyof typeof matchTypePriority
-                                ]?.color || "bg-gray-100 text-gray-800"
+                                ]?.color || "bg-white text-black"
                               )}
                             >
                               {matchInfo.matchType}
                             </div>
 
-                            {/* 荣格配对类型与描述（来自 mbtiMatches） */}
+                            {/* 荣格配对描述 */}
                             {matchInfo.jungMatchType && (
-                              <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
-                                <div className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                              <div className="mt-2 pt-2 border-t border-black border-dashed">
+                                <div className="text-[10px] font-black uppercase tracking-tight text-[#121212] mb-1">
                                   荣格配对类型：{matchInfo.jungMatchType}
                                 </div>
                                 {matchInfo.jungDescription && (
-                                  <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                                  <div className="text-[10px] text-gray-800 leading-relaxed font-medium">
                                     {matchInfo.jungDescription}
                                   </div>
                                 )}
                               </div>
                             )}
-                          </motion.div>
+                          </div>
                         )}
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </div>
@@ -483,34 +463,33 @@ export function MatchMatrixView() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl"
+        transition={{ delay: 0.3 }}
+        className="mt-8 p-6 bg-white border-4 border-black rounded-none shadow-[8px_8px_0px_0px_black] text-[#121212]"
       >
-        <h3 className="font-medium text-sm text-gray-900 dark:text-gray-100 mb-3">
-          配对度图例
+        <h3 className="font-black text-sm uppercase tracking-wider text-black border-b-4 border-black pb-2 mb-4">
+          配对度分类图例 / COMPATIBILITY LEGEND
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(matchTypePriority).map(([matchType, config]) => (
-            <div key={matchType} className="flex items-center gap-2">
-              <div className={cn("w-4 h-4 rounded", config.color)}></div>
-              <span className="text-xs text-gray-700 dark:text-gray-300">
-                {matchType === "灵魂伴侣" &&
-                  "灵魂伴侣 (90-100分) - 完美契合的理想配对"}
-                {matchType === "天作之合" &&
-                  "天作之合 (70-89分) - 和谐美好的默契搭档"}
-                {matchType === "有趣搭配" &&
-                  "有趣搭配 (50-69分) - 充满惊喜的奇妙组合"}
-                {matchType === "互补成长" &&
-                  "互补成长 (30-49分) - 在差异中共同进步"}
-                {matchType === "欢喜冤家" &&
-                  "欢喜冤家 (0-29分) - 充满挑战的有趣关系"}
-              </span>
+            <div key={matchType} className="flex items-start gap-3">
+              <div className={cn("w-6 h-6 flex-none rounded-none border-2 border-black shadow-[2px_2px_0px_0px_black]", config.color.split(' ')[0])}></div>
+              <div className="text-xs leading-tight font-medium">
+                <span className="font-black uppercase block mb-0.5">{matchType}</span>
+                <span className="text-gray-700">
+                  {matchType === "灵魂伴侣" && "90-100分 — 完美契合的理想配对"}
+                  {matchType === "天作之合" && "70-89分 — 和谐稳定的默契搭档"}
+                  {matchType === "有趣搭配" && "50-69分 — 充满惊喜的奇妙组合"}
+                  {matchType === "互补成长" && "30-49分 — 在差异中共同学习进步"}
+                  {matchType === "欢喜冤家" && "0-29分 — 极具挑战但有趣的张力关系"}
+                </span>
+              </div>
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mt-3">
-          💡 提示：点击行列标签进行高亮并按兼容度排序，悬停单元格查看详情
-        </p>
+        <div className="text-xs font-bold text-gray-800 mt-6 pt-4 border-t-2 border-dashed border-gray-300 flex items-center gap-2">
+          <span className="bg-[#D02020] text-white w-2 h-2 rounded-full inline-block"></span>
+          <span>提示：点击行或列标签进行高亮并自动进行降序兼容度排序，悬停单元格可了解详细契合度分析。</span>
+        </div>
       </motion.div>
     </div>
   );

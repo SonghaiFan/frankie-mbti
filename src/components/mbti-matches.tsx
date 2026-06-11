@@ -68,84 +68,87 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
     >
       <motion.div
         {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, "py-2", colorStyle.bg)}
+        className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
       >
         <motion.h3
           {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, colorStyle.text)}
+          className={cn(mbtiCardTitle, "!text-black")}
         >
-          🤗 认知拍档
+          🤗 认知功能拍档 / COGNITIVE PARTNERS
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className="p-3">
-        <div className="space-y-3">
+      <motion.div {...mbtiMotionStyles} className="p-4 bg-[#F0F0F0]">
+        <div className="space-y-4">
           {Object.values(combinedMatches).map(
             ({ partner, matches, uniqueNames }, index) => (
               <motion.div
                 key={index}
                 {...mbtiMotionStyles}
-                className="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700"
+                className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-none border-4 border-black bg-white shadow-[4px_4px_0px_0px_black]"
               >
-                <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                  {/* Left Partner */}
                   <div
-                    className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
+                    className="flex flex-row md:flex-col items-center gap-3 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => setSelectedType(type)}
                   >
-                    <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <div className="relative w-12 h-12 rounded-none overflow-hidden border-2 border-black shadow-[2px_2px_0px_0px_black] flex-none">
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.title}
                         fill
-                        sizes="(max-width: 768px) 40px, 48px"
+                        sizes="48px"
                         className="object-cover"
                       />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-medium truncate">
+                      <span className="text-xs font-black uppercase tracking-tighter truncate">
                         {type.type}
                       </span>
-                      <span className="text-xs text-gray-500 truncate">
+                      <span className="text-[10px] text-gray-600 font-bold font-mono truncate">
                         {type.cognitiveFunctions}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center w-full md:w-[160px] px-2">
-                    <span className="text-sm font-bold text-pink-500 text-center line-clamp-1">
+                  {/* Matching Info Badge */}
+                  <div className="flex flex-col items-center w-full md:w-[160px] py-2 px-3 border-2 border-dashed border-black bg-gray-50">
+                    <span className="text-xs font-black text-[#D02020] text-center line-clamp-1 uppercase tracking-tight">
                       {Array.from(uniqueNames).join("；")}
                     </span>
-                    <span className="text-xs text-gray-500 text-center line-clamp-1">
+                    <span className="text-[10px] text-black font-extrabold text-center mt-1 uppercase tracking-tighter">
                       {matches.map((m) => m.matchType).join("；")}
                     </span>
                   </div>
 
+                  {/* Right Partner */}
                   <div
-                    className="flex flex-row md:flex-col items-center gap-2 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
+                    className="flex flex-row md:flex-col items-center gap-3 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={() => setSelectedType(partner)}
                   >
-                    <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <div className="relative w-12 h-12 rounded-none overflow-hidden border-2 border-black shadow-[2px_2px_0px_0px_black] flex-none">
                       <Image
                         src={`/mbti_img/${partner.image}`}
                         alt={partner.title}
                         fill
-                        sizes="(max-width: 768px) 40px, 48px"
+                        sizes="48px"
                         className="object-cover"
                       />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-medium truncate">
+                      <span className="text-xs font-black uppercase tracking-tighter truncate">
                         {partner.type}
                       </span>
-                      <span className="text-xs text-gray-500 truncate">
+                      <span className="text-[10px] text-gray-600 font-bold font-mono truncate">
                         {partner.cognitiveFunctions}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="w-full md:flex-1 mt-3 md:mt-0 md:pl-4 md:border-l md:border-gray-200 dark:md:border-gray-700">
-                  <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2">
+                <div className="w-full md:flex-1 mt-3 md:mt-0 md:pl-4 md:border-l-4 md:border-black">
+                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
                     {matches.map((m) => m.description).join("；")}
                   </p>
                 </div>
@@ -177,17 +180,17 @@ export function MBTIOfficialMatches(
     >
       <motion.div
         {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, "py-2", colorStyle.bg)}
+        className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
       >
         <motion.h3
           {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, colorStyle.text)}
+          className={cn(mbtiCardTitle, "!text-black")}
         >
-          🥰 最佳拍档（MBTI官配）
+          🥰 官方最佳拍档 / MBTI OFFICIAL MATCHES
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className="p-3">
+      <motion.div {...mbtiMotionStyles} className="p-4 bg-white">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {type.bestPartners.map((partnerType, index) => {
             const partner = mbtiTypes.find((t) => t.type === partnerType);
@@ -197,10 +200,10 @@ export function MBTIOfficialMatches(
               <motion.div
                 key={index}
                 {...mbtiMotionStyles}
-                className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                className="flex items-center gap-3 cursor-pointer p-2 border-2 border-black rounded-none shadow-[2px_2px_0px_0px_black] hover:bg-gray-50 transition-colors"
                 onClick={() => setSelectedType(partner)}
               >
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform duration-200">
+                <div className="relative w-12 h-12 rounded-none overflow-hidden border border-black shadow-[1px_1px_0px_0px_black] flex-none">
                   <Image
                     src={`/mbti_img/${partner.image}`}
                     alt={partner.title}
@@ -209,13 +212,13 @@ export function MBTIOfficialMatches(
                     className="object-cover"
                   />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <span
-                    className={cn("text-sm font-medium block", colorStyle.text)}
+                    className={cn("text-xs font-black uppercase tracking-tighter block", colorStyle.text)}
                   >
                     {partner.type}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-[10px] text-gray-700 font-bold block truncate">
                     {partner.title}
                   </span>
                 </div>

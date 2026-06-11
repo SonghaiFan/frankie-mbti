@@ -83,17 +83,18 @@ export function DominantFunctionsView() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4 sm:mb-6"
+        className="text-left mb-6 border-b-4 border-black pb-4"
       >
-        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        <span className="bg-bauhaus-blue text-white text-xs font-bold px-2.5 py-1 tracking-widest uppercase inline-block mb-2">FUNCTION ANALYSIS</span>
+        <h2 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tighter">
           主导功能分组
         </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-400 px-2">
-          按照认知功能的主导类型进行分组展示
+        <p className="text-sm text-gray-700 font-medium mt-1">
+          按照认知功能的主导类型（Dominant Function）进行平面矩阵分组展示
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {Object.entries(dominantFunctionGroups).map(([func, group], index) => {
           const groupTypes = mbtiTypes.filter((type) =>
             group.types.includes(type.type)
@@ -104,67 +105,56 @@ export function DominantFunctionsView() {
               key={func}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.08 }}
               className={cn(
-                "space-y-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/60 dark:bg-gray-900/40 p-3",
-                "flex flex-col relative hover:shadow-lg transition-shadow duration-200",
+                "space-y-4 rounded-none border-4 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]",
+                "flex flex-col relative hover:shadow-[6px_6px_0px_0px_rgba(18,18,18,1)] transition-all duration-150 text-left",
                 groupTypes.some((type) => selectedType?.type === type.type)
                   ? "z-[90]"
                   : "z-[1]"
               )}
             >
-              {/* 组别标题 - 带左侧色条增强层级，轻度使用组别背景作为点缀 */}
+              {/* 组别标题 - 包豪斯几何框体 */}
               <div
                 className={cn(
-                  "p-6 flex flex-col rounded-lg relative overflow-hidden",
+                  "p-4 border-4 border-black rounded-none relative overflow-hidden flex flex-col justify-between h-36",
                   group.bgColor
                 )}
               >
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-b from-black/10 to-black/0 dark:from-white/10 dark:to-white/0" />
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{group.icon}</span>
-                    <div>
-                      <h3 className={cn("text-lg font-bold", group.color)}>
-                        {func}
-                      </h3>
-                      <p className={cn("text-xs font-medium", group.color)}>
-                        {group.name}
-                      </p>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{group.icon}</span>
+                    <h3 className={cn("text-lg font-black tracking-wider uppercase", group.color)}>
+                      {func}
+                    </h3>
                   </div>
+                  <span
+                    className={cn(
+                      "text-[10px] font-black uppercase tracking-widest px-2 py-0.5 border-2 border-black bg-white",
+                      group.color
+                    )}
+                  >
+                    {group.types.join(" / ")}
+                  </span>
                 </div>
 
-                <div className="mt-1">
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                <div className="mt-2">
+                  <p className={cn("text-xs font-black uppercase tracking-wider", group.color)}>
+                    {group.name}
+                  </p>
+                  <p className="text-xs text-gray-800 font-medium leading-snug mt-0.5">
                     {group.description}
                   </p>
                 </div>
-
-                <div className="flex items-center gap-2 mt-4">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    主导功能类型:
-                  </span>
-                  <span
-                    className={cn(
-                      "text-xs font-mono px-2 py-1 rounded",
-                      group.color,
-                      group.bgColor,
-                      "bg-opacity-50"
-                    )}
-                  >
-                    {group.types.join(" · ")}
-                  </span>
-                </div>
               </div>
 
-              <div className="grid gap-2 px-6 pb-6">
+              <div className="grid gap-4 flex-1">
                 {groupTypes.map((type, typeIndex) => (
                   <motion.div
                     key={type.type}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.1 + typeIndex * 0.05 }}
+                    transition={{ delay: index * 0.08 + typeIndex * 0.05 }}
                     className={cn(
                       "h-[120px]",
                       selectedType?.type === type.type ? "z-[100]" : "z-[1]"
@@ -186,3 +176,4 @@ export function DominantFunctionsView() {
     </div>
   );
 }
+

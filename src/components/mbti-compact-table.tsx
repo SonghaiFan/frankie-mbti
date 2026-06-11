@@ -109,33 +109,33 @@ export function MBTICompactTable() {
     ...columns.map((c) => (c.width ? c.width.split(" ")[0] : "w-40")),
   ];
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
-          MBTI 一览表
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 className="text-xl font-black uppercase tracking-tighter text-[#121212]">
+          MBTI 一览表 / COMPACT VIEW
         </h2>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="搜索 类型/昵称/认知功能/表面特征/实际特征/优势/弱点..."
-          className="px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-900/40 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400/50 w-64"
+          placeholder="搜索 类型/功能/特征/优势/弱点..."
+          className="px-3 py-2 text-sm rounded-none border-4 border-black bg-white text-black font-bold focus:outline-none shadow-[3px_3px_0px_0px_black] w-full sm:w-80"
         />
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40">
-        <table className="w-full text-sm table-fixed">
+      <div className="overflow-x-auto rounded-none border-4 border-black bg-white shadow-[8px_8px_0px_0px_black]">
+        <table className="w-full text-xs table-fixed">
           <colgroup>
             {colWidths.map((w, i) => (
               <col key={i} className={w} />
             ))}
           </colgroup>
-          <thead className="sticky top-0 bg-gray-50/90 dark:bg-gray-800/80 backdrop-blur border-b border-gray-200 dark:border-gray-700 z-10">
+          <thead className="sticky top-0 bg-[#E0E0E0] border-b-4 border-black z-10 text-black">
             <tr>
               <th
                 className={cn(
-                  "p-2 sticky left-0 z-20 bg-gray-50/90 dark:bg-gray-800/80 backdrop-blur",
+                  "p-2 sticky left-0 z-20 bg-[#E0E0E0] border-r-4 border-black",
                   colWidths[0]
                 )}
               />
@@ -149,11 +149,11 @@ export function MBTICompactTable() {
                   <th
                     key={c.key}
                     className={cn(
-                      "text-left font-medium text-gray-700 dark:text-gray-300 p-2",
+                      "text-left font-black uppercase tracking-tighter p-2 border-b-4 border-black",
                       c.width,
                       isSticky &&
                         cn(
-                          "sticky z-20 bg-gray-50/90 dark:bg-gray-800/80 backdrop-blur",
+                          "sticky z-20 bg-[#E0E0E0] border-r-4 border-black",
                           stickyLeftClass
                         )
                     )}
@@ -168,21 +168,21 @@ export function MBTICompactTable() {
             {filtered.map((t) => (
               <tr
                 key={t.type}
-                className="even:bg-gray-50/50 dark:even:bg-gray-800/20 hover:bg-gray-100/70 dark:hover:bg-gray-800/50 transition-colors"
+                className="border-b-2 border-black hover:bg-gray-50 transition-colors"
               >
-                <td className="p-2 align-middle sticky left-0 z-10 bg-white dark:bg-gray-900">
+                <td className="p-2 align-middle sticky left-0 z-10 bg-white border-r-4 border-black">
                   <Image
                     src={`/mbti_img/${t.image}`}
                     alt={t.title}
                     width={28}
                     height={28}
-                    className="rounded"
+                    className="rounded-none border border-black shadow-[1px_1px_0px_0px_black]"
                   />
                 </td>
                 <td
                   className={cn(
-                    "p-2 align-middle font-mono font-semibold text-gray-900 dark:text-gray-100 cursor-pointer hover:underline",
-                    "sticky left-[3rem] z-10 bg-white dark:bg-gray-900"
+                    "p-2 align-middle font-sans font-black text-black cursor-pointer hover:underline",
+                    "sticky left-[3rem] z-10 bg-white border-r-4 border-black"
                   )}
                   onClick={() => expandCard(t)}
                 >
@@ -190,30 +190,30 @@ export function MBTICompactTable() {
                 </td>
                 <td
                   className={cn(
-                    "p-2 align-middle text-gray-700 dark:text-gray-300 truncate whitespace-nowrap"
+                    "p-2 align-middle text-gray-800 font-bold truncate whitespace-nowrap"
                   )}
                   title={t.nickname}
                 >
                   {t.nickname}
                 </td>
-                <td className="p-2 align-middle font-mono text-gray-800 dark:text-gray-200 truncate whitespace-nowrap">
+                <td className="p-2 align-middle font-mono font-bold text-gray-800 truncate whitespace-nowrap">
                   {t.cognitiveFunctions}
                 </td>
-                <td className="p-2 align-middle text-gray-700 dark:text-gray-300">
+                <td className="p-2 align-middle text-gray-800 font-medium">
                   <CarouselCell items={t.surfaceTraits || []} />
                 </td>
-                <td className="p-2 align-middle text-gray-700 dark:text-gray-300">
+                <td className="p-2 align-middle text-gray-800 font-medium">
                   <CarouselCell items={t.actualTraits || []} />
                 </td>
-                <td className="p-2 align-middle text-gray-700 dark:text-gray-300">
+                <td className="p-2 align-middle text-gray-800 font-medium">
                   <CarouselCell items={t.strengths || []} />
                 </td>
-                <td className="p-2 align-middle text-gray-700 dark:text-gray-300">
+                <td className="p-2 align-middle text-gray-800 font-medium">
                   <CarouselCell items={t.weaknesses || []} />
                 </td>
-                <td className="p-2 align-middle text-gray-700 dark:text-gray-300">
+                <td className="p-2 align-middle text-gray-800 font-bold">
                   {(t.bestPartners || []).length > 0 ? (
-                    <span className="block truncate px-2 py-0.5 rounded">
+                    <span className="block truncate">
                       {t.bestPartners?.join(" · ")}
                     </span>
                   ) : (
@@ -226,8 +226,8 @@ export function MBTICompactTable() {
         </table>
       </div>
 
-      <p className="text-xs text-gray-500 dark:text-gray-400">
-        提示：点击类型代码可打开详细卡片；表面特征/实际特征/优势/弱点会自动轮播显示；搜索会匹配所有字段内容。
+      <p className="text-[10px] text-gray-600 font-bold">
+        提示：点击类型代码可展开详细性格卡片；表面特征/实际特征/优势/弱点会自动轮播显示；搜索会同时过滤匹配所有字段。
       </p>
     </div>
   );

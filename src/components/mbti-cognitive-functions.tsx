@@ -85,44 +85,43 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
           layout
           onClick={() => setExpandedFunction(isExpanded ? null : code)}
           className={cn(
-            "p-3 rounded-lg border transition-all duration-200 relative cursor-pointer hover:shadow-md",
+            "p-3 rounded-none border-2 border-black transition-all duration-150 relative cursor-pointer shadow-[2px_2px_0px_0px_black] hover:shadow-[4px_4px_0px_0px_black]",
             isUserFunction
               ? cn(
                   userIndex === 0 &&
                     cn(
                       colorStyle.border,
-                      colorStyle.bg,
-                      "bg-opacity-20 dark:bg-opacity-30 border-2 shadow-md"
+                      colorStyle.bg.split(' ')[0],
+                      "border-2 shadow-[3px_3px_0px_0px_black]"
                     ),
                   userIndex === 1 &&
                     cn(
                       colorStyle.border,
-                      colorStyle.bg,
-                      "bg-opacity-15 dark:bg-opacity-25 border-2"
+                      colorStyle.bg.split(' ')[0],
+                      "border-2 shadow-[2px_2px_0px_0px_black]"
                     ),
                   userIndex === 2 &&
                     cn(
                       colorStyle.border,
-                      colorStyle.bg,
-                      "bg-opacity-10 dark:bg-opacity-20"
+                      colorStyle.bg.split(' ')[0],
+                      "shadow-[1px_1px_0px_0px_black]"
                     ),
                   userIndex === 3 &&
                     cn(
                       colorStyle.border,
-                      colorStyle.bg,
-                      "bg-opacity-5 dark:bg-opacity-15 border-dashed"
+                      colorStyle.bg.split(' ')[0],
+                      "border-dashed"
                     )
                 )
-              : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/30 hover:bg-gray-100 dark:hover:bg-gray-700/50"
+              : "border-black bg-white hover:bg-gray-100"
           )}
         >
           {/* 层级指示器 */}
           {isUserFunction && (
             <div
               className={cn(
-                "absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold z-20 shadow-lg",
-                colorStyle.bgDark,
-                "text-black dark:text-white"
+                "absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-none border-2 border-black text-xs font-black z-20 shadow-[2px_2px_0px_0px_black]",
+                colorStyle.bgDark
               )}
             >
               <span className="text-sm">{level?.icon}</span>
@@ -140,33 +139,33 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "font-mono font-bold px-2 py-0.5 rounded shadow-sm shrink-0",
+                    "font-sans font-black px-2 py-0.5 rounded-none border border-black shadow-[1px_1px_0px_0px_black] shrink-0",
                     isUserFunction
                       ? cn(
-                          colorStyle.bg,
+                          colorStyle.bg.split(' ')[0],
                           colorStyle.text,
                           userIndex === 0 && "text-sm",
                           userIndex === 1 && "text-xs",
                           userIndex === 2 && "text-xs",
                           userIndex === 3 && "text-xs"
                         )
-                      : "bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 text-xs"
+                      : "bg-[#E0E0E0] text-gray-700 text-xs"
                   )}
                 >
                   {code}
                 </span>
                 <span
                   className={cn(
-                    "font-medium truncate",
+                    "font-black tracking-tighter truncate",
                     isUserFunction
                       ? cn(
                           colorStyle.text,
-                          userIndex === 0 && "text-base font-semibold",
-                          userIndex === 1 && "text-sm font-medium",
+                          userIndex === 0 && "text-base font-black",
+                          userIndex === 1 && "text-sm font-extrabold",
                           userIndex === 2 && "text-sm",
                           userIndex === 3 && "text-sm"
                         )
-                      : "text-gray-600 dark:text-gray-400 text-sm"
+                      : "text-gray-600 text-sm"
                   )}
                 >
                   {func.name}
@@ -175,10 +174,10 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
 
               <p
                 className={cn(
-                  "text-xs leading-relaxed mb-2",
+                  "text-xs leading-relaxed mb-2 font-bold",
                   isUserFunction
-                    ? "text-gray-700 dark:text-gray-300"
-                    : "text-gray-500 dark:text-gray-500"
+                    ? "text-gray-800"
+                    : "text-gray-500"
                 )}
               >
                 {func.description}
@@ -186,24 +185,24 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
 
               {/* 层级名称（用户功能） */}
               {isUserFunction && (
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-gray-600 dark:text-gray-400">
+                <div className="flex items-center gap-2 text-[10px] font-bold border-t border-black/10 pt-1.5">
+                  <span className="text-gray-600">
                     {level?.name}
                   </span>
-                  <span className={cn("font-medium", colorStyle.text)}>
+                  <span className={cn("font-black uppercase tracking-tighter", colorStyle.text)}>
                     {level?.description}
                   </span>
                 </div>
               )}
 
               {/* 展开指示器 */}
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-xs text-gray-500">
-                  {isExpanded ? "点击收起详情" : "点击查看详情"}
+              <div className="flex items-center justify-between mt-2 pt-1 border-t border-dashed border-black/10">
+                <span className="text-[10px] text-gray-500 font-bold">
+                  {isExpanded ? "点击收起详情 / COLLAPSE" : "点击查看详情 / EXPAND"}
                 </span>
                 <motion.span
                   animate={{ rotate: isExpanded ? 180 : 0 }}
-                  className="text-gray-400 text-xs"
+                  className="text-black text-[10px] font-black"
                 >
                   ▼
                 </motion.span>
@@ -219,24 +218,22 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
               <div
                 className={cn(
-                  "p-4 rounded-lg border-l-4 space-y-3",
-                  colorStyle.border,
-                  "bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700"
+                  "p-4 rounded-none border-2 border-black space-y-3 shadow-[3px_3px_0px_0px_black] bg-white text-[#121212]"
                 )}
               >
                 {/* 定义 */}
                 <div>
                   <h5
-                    className={cn("font-medium text-sm mb-1", colorStyle.text)}
+                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
                   >
-                    📖 定义
+                    📖 定义 / DEFINITION
                   </h5>
-                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
                     {func.definition}
                   </p>
                 </div>
@@ -244,11 +241,11 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 {/* 特征 */}
                 <div>
                   <h5
-                    className={cn("font-medium text-sm mb-1", colorStyle.text)}
+                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
                   >
-                    ✨ 特征
+                    ✨ 特征 / CHARACTERISTICS
                   </h5>
-                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
                     {func.characteristics}
                   </p>
                 </div>
@@ -256,11 +253,11 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 {/* 培养建议 */}
                 <div>
                   <h5
-                    className={cn("font-medium text-sm mb-1", colorStyle.text)}
+                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
                   >
-                    💡 培养建议
+                    💡 发展建议 / GROWTH
                   </h5>
-                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
                     {func.training}
                   </p>
                 </div>
@@ -268,11 +265,11 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 {/* 详细说明 */}
                 <div>
                   <h5
-                    className={cn("font-medium text-sm mb-1", colorStyle.text)}
+                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
                   >
-                    🔍 详细说明
+                    🔍 细节 / DETAILS
                   </h5>
-                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
                     {func.details}
                   </p>
                 </div>
@@ -291,27 +288,22 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
     >
       <motion.div
         {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, colorStyle.bg)}
+        className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
       >
         <motion.h3
           {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, colorStyle.text)}
+          className={cn(mbtiCardTitle, "!text-black")}
         >
-          🧠 {cognitiveFunctions.description.title}
+          🧠 {cognitiveFunctions.description.title} / COGNITIVE FUNCTIONS
         </motion.h3>
       </motion.div>
 
-      <motion.div {...mbtiMotionStyles} className="p-4 space-y-6">
+      <motion.div {...mbtiMotionStyles} className="p-4 space-y-6 bg-[#F0F0F0] dot-grid">
         {/* 总体说明 */}
         <div
-          className={cn(
-            "p-4 rounded-lg border",
-            colorStyle.border,
-            colorStyle.bg,
-            "bg-opacity-10"
-          )}
+          className="p-4 rounded-none border-4 border-black bg-white shadow-[4px_4px_0px_0px_black]"
         >
-          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-gray-800 font-bold leading-relaxed">
             {cognitiveFunctions.description.content}
           </p>
         </div>
@@ -319,33 +311,28 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
         {/* 主导功能推断层级 */}
         <motion.div
           layout
-          className={cn("border rounded-lg overflow-hidden", colorStyle.border)}
+          className="border-4 border-black rounded-none overflow-hidden shadow-[4px_4px_0px_0px_black]"
         >
           <motion.div
             layout
             onClick={() => setShowInference(!showInference)}
-            className={cn(
-              "p-4 cursor-pointer transition-all duration-200 hover:bg-opacity-20",
-              colorStyle.bg,
-              "bg-opacity-10 hover:bg-opacity-15"
-            )}
+            className="p-4 cursor-pointer bg-white transition-colors duration-150 hover:bg-gray-50 border-b-2 border-black"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="text-xl">🔍</span>
                 <div>
-                  <h4 className={cn("font-semibold text-sm", colorStyle.text)}>
-                    主导功能推断层级
+                  <h4 className="font-black text-sm text-black uppercase tracking-tighter">
+                    主导功能两步推断法 / COGNITIVE DEDUCTION
                   </h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    了解如何通过 {inference.mbtiCode} 推断出主导功能{" "}
-                    {inference.dominantFunction}
+                  <p className="text-xs text-gray-700 font-bold mt-0.5">
+                    了解如何通过 MBTI 字母代码 {inference.mbtiCode} 逆向推导出主导认知功能 {inference.dominantFunction}
                   </p>
                 </div>
               </div>
               <motion.div
                 animate={{ rotate: showInference ? 180 : 0 }}
-                className={cn("text-sm", colorStyle.text)}
+                className="text-black font-black text-sm"
               >
                 ▼
               </motion.div>
@@ -358,20 +345,17 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden bg-[#F0F0F0]"
               >
-                <div className="p-4 bg-gray-50 dark:bg-gray-800/30 border-t border-gray-200 dark:border-gray-700">
+                <div className="p-4 border-t border-black">
                   <div className="space-y-4">
                     {/* MBTI代码分解 */}
                     <div>
                       <h5
-                        className={cn(
-                          "font-medium text-sm mb-2",
-                          colorStyle.text
-                        )}
+                        className="font-black text-xs uppercase tracking-tighter mb-2 text-black"
                       >
-                        📋 MBTI 代码分解
+                        📋 MBTI 维度代码分解 / DECOMPOSITION
                       </h5>
                       <div className="grid grid-cols-4 gap-2 text-center">
                         {inference.mbtiCode.split("").map((letter, index) => (
@@ -379,26 +363,17 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                             key={index}
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: index * 0.1 }}
-                            className={cn(
-                              "p-2 rounded-lg border-2 font-mono font-bold text-lg",
-                              colorStyle.border,
-                              colorStyle.bg,
-                              "bg-opacity-20"
-                            )}
+                            transition={{ delay: index * 0.05 }}
+                            className="p-2 rounded-none border-2 border-black font-sans font-black text-lg shadow-[2px_2px_0px_0px_black] bg-white"
                           >
                             <div className={cn("text-xl", colorStyle.text)}>
                               {letter}
                             </div>
-                            <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                              {index === 0 &&
-                                (letter === "E" ? "外向" : "内向")}
-                              {index === 1 &&
-                                (letter === "N" ? "直觉" : "感觉")}
-                              {index === 2 &&
-                                (letter === "T" ? "思维" : "情感")}
-                              {index === 3 &&
-                                (letter === "J" ? "判断" : "知觉")}
+                            <div className="text-[10px] text-gray-700 font-black mt-1">
+                              {index === 0 && (letter === "E" ? "外向人" : "内向人")}
+                              {index === 1 && (letter === "N" ? "直觉型" : "感觉型")}
+                              {index === 2 && (letter === "T" ? "思维型" : "情感型")}
+                              {index === 3 && (letter === "J" ? "判断型" : "知觉型")}
                             </div>
                           </motion.div>
                         ))}
@@ -408,45 +383,31 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                     {/* 推断步骤 */}
                     <div>
                       <h5
-                        className={cn(
-                          "font-medium text-sm mb-2",
-                          colorStyle.text
-                        )}
+                        className="font-black text-xs uppercase tracking-tighter mb-2 text-black"
                       >
-                        🔄 两步推断法
+                        🔄 荣格类型两步推断步骤 / DEDUCTION STEPS
                       </h5>
 
                       {/* 第一步 */}
                       <motion.div
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className={cn(
-                          "p-3 rounded-lg mb-3 border-l-4",
-                          colorStyle.border,
-                          colorStyle.bg,
-                          "bg-opacity-15 dark:bg-opacity-20"
-                        )}
+                        transition={{ delay: 0.1 }}
+                        className="p-3 rounded-none mb-3 border-2 border-black shadow-[2px_2px_0px_0px_black] bg-white"
                       >
                         <div className="flex items-start gap-2">
                           <span
-                            className={cn(
-                              "rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 text-white",
-                              colorStyle.bgDark
-                            )}
+                            className="rounded-full w-6 h-6 flex items-center justify-center text-xs font-black shrink-0 mt-0.5 text-white bg-black border-2 border-black"
                           >
                             1
                           </span>
                           <div>
                             <p
-                              className={cn(
-                                "text-sm font-medium mb-1",
-                                colorStyle.text
-                              )}
+                              className="text-xs font-black mb-1 uppercase tracking-tighter text-black"
                             >
-                              看 E/I + J/P 组合
+                              看 E/I + J/P 组合确定主导功能朝向
                             </p>
-                            <p className="text-xs text-gray-700 dark:text-gray-300">
+                            <p className="text-xs text-gray-800 font-bold leading-relaxed">
                               {inference.step1Logic}
                             </p>
                           </div>
@@ -457,33 +418,22 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                       <motion.div
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.7 }}
-                        className={cn(
-                          "p-3 rounded-lg mb-3 border-l-4",
-                          colorStyle.border,
-                          colorStyle.bg,
-                          "bg-opacity-20 dark:bg-opacity-25"
-                        )}
+                        transition={{ delay: 0.2 }}
+                        className="p-3 rounded-none mb-3 border-2 border-black shadow-[2px_2px_0px_0px_black] bg-white"
                       >
                         <div className="flex items-start gap-2">
                           <span
-                            className={cn(
-                              "rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 text-white",
-                              colorStyle.bgDark
-                            )}
+                            className="rounded-full w-6 h-6 flex items-center justify-center text-xs font-black shrink-0 mt-0.5 text-white bg-black border-2 border-black"
                           >
                             2
                           </span>
                           <div>
                             <p
-                              className={cn(
-                                "text-sm font-medium mb-1",
-                                colorStyle.text
-                              )}
+                              className="text-xs font-black mb-1 uppercase tracking-tighter text-black"
                             >
-                              确定具体功能
+                              从判断/知觉偏好锁定主导功能类型
                             </p>
-                            <p className="text-xs text-gray-700 dark:text-gray-300">
+                            <p className="text-xs text-gray-800 font-bold leading-relaxed">
                               {inference.step2Logic}
                             </p>
                           </div>
@@ -494,25 +444,17 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                       <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.9 }}
-                        className={cn(
-                          "p-4 rounded-lg border-2 text-center",
-                          colorStyle.border,
-                          colorStyle.bg,
-                          "bg-opacity-20"
-                        )}
+                        transition={{ delay: 0.3 }}
+                        className="p-4 rounded-none border-4 border-black text-center shadow-[4px_4px_0px_0px_black] bg-bauhaus-yellow"
                       >
                         <div className="flex items-center justify-center gap-3">
                           <span className="text-2xl">🎯</span>
                           <div>
-                            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                              推断结果：主导功能是
+                            <p className="text-[10px] font-black uppercase text-black tracking-wider mb-0.5">
+                              推断结果：主导认知功能为
                             </p>
                             <p
-                              className={cn(
-                                "text-2xl font-bold font-mono",
-                                colorStyle.text
-                              )}
+                              className="text-2xl font-black font-mono text-black"
                             >
                               {inference.dominantFunction}
                             </p>
@@ -531,13 +473,13 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 判断功能 */}
           <div className="space-y-4">
-            <div>
+            <div className="border-b-2 border-black pb-2">
               <h4
-                className={cn("text-base font-semibold mb-1", colorStyle.text)}
+                className="text-sm font-black uppercase tracking-wider text-black"
               >
-                {cognitiveFunctions.categories.judging.title}
+                {cognitiveFunctions.categories.judging.title} / JUDGING FUNCTIONS
               </h4>
-              <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-[10px] text-gray-700 font-bold leading-relaxed mt-1">
                 {cognitiveFunctions.categories.judging.description}
               </p>
             </div>
@@ -550,13 +492,13 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
 
           {/* 感知功能 */}
           <div className="space-y-4">
-            <div>
+            <div className="border-b-2 border-black pb-2">
               <h4
-                className={cn("text-base font-semibold mb-1", colorStyle.text)}
+                className="text-sm font-black uppercase tracking-wider text-black"
               >
-                {cognitiveFunctions.categories.perceiving.title}
+                {cognitiveFunctions.categories.perceiving.title} / PERCEIVING FUNCTIONS
               </h4>
-              <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-[10px] text-gray-700 font-bold leading-relaxed mt-1">
                 {cognitiveFunctions.categories.perceiving.description}
               </p>
             </div>

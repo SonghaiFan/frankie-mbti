@@ -1,38 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --secondary: #8b5cf6;
-  --accent: #f59e0b;
+  --background: #F0F0F0; /* Off-white paper canvas */
+  --foreground: #121212; /* Stark Black */
+  
+  --bauhaus-red: #D02020;
+  --bauhaus-blue: #1040C0;
+  --bauhaus-yellow: #F0C020;
+  --color-border: #121212;
+  --color-muted: #E0E0E0;
+
+  --mbti-nt: #7B2CBF;
+  --mbti-nf: #107C41;
+  --mbti-sj: #1040C0;
+  --mbti-sp: #F0C020;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  --font-sans: var(--font-outfit), "Noto Sans SC", sans-serif;
+  --font-outfit: var(--font-outfit);
+  
+  --color-bauhaus-red: var(--bauhaus-red);
+  --color-bauhaus-blue: var(--bauhaus-blue);
+  --color-bauhaus-yellow: var(--bauhaus-yellow);
+  --color-border: var(--color-border);
+  --color-muted: var(--color-muted);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-mbti-nt: var(--mbti-nt);
+  --color-mbti-nf: var(--mbti-nf);
+  --color-mbti-sj: var(--mbti-sj);
+  --color-mbti-sp: var(--mbti-sp);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #F0F0F0;
+  color: #121212;
   min-height: 100vh;
-  font-family: "Noto Sans SC", sans-serif;
-  /* 移动端优化 */
+  font-family: var(--font-outfit), "Noto Sans SC", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+
+/* Stark Bauhaus Dot Grid Pattern */
+.dot-grid {
+  background-color: #F0F0F0;
+  background-image: radial-gradient(#121212 1px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+
 
 /* 移动端滚动优化 */
 @media (max-width: 768px) {

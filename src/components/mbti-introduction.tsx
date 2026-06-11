@@ -19,42 +19,33 @@ export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-colors duration-300"
+      className="bg-white border-4 border-black rounded-none shadow-[6px_6px_0px_0px_black] overflow-hidden text-[#121212]"
     >
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-xl font-medium text-gray-800 dark:text-gray-200">
-          MBTI vs 认知功能
+      <div className="p-4 border-b-4 border-black bg-[#E0E0E0]">
+        <h3 className="text-sm font-black uppercase tracking-wider text-black">
+          MBTI 性格 vs 认知功能 / CONCEPTS
         </h3>
       </div>
-      <div className="p-4 space-y-3">
+      <div className="p-4 space-y-3 font-sans">
         <motion.p
           layout="position"
-          className="text-sm text-gray-700 dark:text-gray-300"
+          className="text-xs text-gray-800 font-bold leading-relaxed"
         >
-          MBTI 是你的人设，认知功能是你大脑的操作系统。
+          MBTI 是你性格的“人设”，而认知功能则是你大脑底层的“操作系统”。
         </motion.p>
         <motion.p
           layout="position"
-          className="text-sm text-gray-700 dark:text-gray-300"
+          className="text-xs text-gray-800 font-medium leading-relaxed"
         >
-          你可以是{" "}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">
+          你是{" "}
+          <span className="font-black text-black underline decoration-4 decoration-[#D02020]">
             {mbtiType}
           </span>
-          ，但你的大脑主导功能是{" "}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">
+          ，这代表着你的表现特征；而你的大脑核心主导功能是{" "}
+          <span className="font-black text-black underline decoration-4 decoration-[#1040C0]">
             {cogFuncs}
           </span>
-          ；
-        </motion.p>
-        <motion.p
-          layout="position"
-          className="text-sm text-gray-700 dark:text-gray-300"
-        >
-          <span className="block">MBTI 揭示你性格的表现形式和特征；</span>
-          <span className="block mt-1">
-            认知功能解释你思维和行为的内在机制。
-          </span>
+          ，这解释了你思维的内在运作机制。
         </motion.p>
       </div>
     </motion.div>
