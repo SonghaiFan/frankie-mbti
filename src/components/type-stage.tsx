@@ -1,7 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
+import { MorphFigure } from "@/components/morph-figure";
 import { mbtiTypes, dimensions, cognitiveFunctions } from "@/data/mbti-data";
 import { MBTIType } from "@/types/mbti";
 import { cn } from "@/lib/utils";
@@ -117,8 +120,18 @@ export function TypeStage() {
   const setFeatured = useMBTIStore((s) => s.setFeatured);
   const expandCard = useMBTIStore((s) => s.expandCard);
 
-  const type: MBTIType = mbtiTypes.find((t) => t.type === code) ?? mbtiTypes[0];
+  const typeIndex = Math.max(
+    0,
+    mbtiTypes.findIndex((t) => t.type === code)
+  );
+  const type: MBTIType = mbtiTypes[typeIndex];
   const letters = type.type.split("");
+
+  // Stable for the life of the page — the morph engine keys its textures off it.
+  const figures = useMemo(
+    () => mbtiTypes.map((t) => ({ src: `/mbti_img/${t.image}`, alt: t.type })),
+    []
+  );
   const accent = accentOf(type.group);
   const stack = type.cognitiveFunctions.split(" ");
 
@@ -194,25 +207,26 @@ export function TypeStage() {
                 background: `radial-gradient(58% 52% at 50% 52%, ${accent}1F 0%, ${accent}0A 45%, transparent 72%)`,
               }}
             >
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={type.type}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.02 }}
-                  transition={{ duration: 0.45, ease: easeOut }}
-                  className="absolute inset-0 block"
-                >
+              <MorphFigure
+                items={figures}
+                index={typeIndex}
+                transition="melt"
+                duration={0.9}
+                intensity={0.5}
+                aberration={0.22}
+                drift={0.25}
+                className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                fallback={
                   <Image
                     src={`/mbti_img/${type.image}`}
                     alt={type.type}
                     fill
                     sizes="(max-width: 1024px) 90vw, 45vw"
-                    className="object-contain object-center p-6 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03] sm:p-10"
+                    className="object-contain object-center"
                     priority
                   />
-                </motion.span>
-              </AnimatePresence>
+                }
+              />
 
               <span className="pointer-events-none absolute inset-x-0 bottom-0 text-center text-[0.8125rem] text-ink-ghost opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100">
                 查看完整档案 →
