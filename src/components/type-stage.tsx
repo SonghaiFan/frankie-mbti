@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
@@ -14,6 +14,18 @@ import { useMBTIStore } from "@/store/mbti-store";
 const easeOut = [0.16, 1, 0.3, 1] as const;
 const knobSpring = { type: "spring" as const, stiffness: 520, damping: 34, mass: 0.7 };
 
+function useIsMobile() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const m = window.matchMedia("(max-width: 639px)");
+      m.addEventListener("change", onStoreChange);
+      return () => m.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(max-width: 639px)").matches,
+    () => false
+  );
+}
+
 function Block({
   label,
   children,
@@ -24,9 +36,9 @@ function Block({
   className?: string;
 }) {
   return (
-    <div className={cn("rule-t pt-4 lg:pt-3.5", className)}>
+    <div className={cn("rule-t pt-2.5 sm:pt-3 lg:pt-3.5", className)}>
       <span className="eyebrow">{label}</span>
-      <div className="mt-3 lg:mt-2.5">{children}</div>
+      <div className="mt-1.5 sm:mt-2 lg:mt-2.5">{children}</div>
     </div>
   );
 }
@@ -34,7 +46,9 @@ function Block({
 function Terms({ items, limit }: { items: string[]; limit?: number }) {
   const shown = limit ? items.slice(0, limit) : items;
   return (
-    <p className="text-[0.875rem] leading-[1.7] text-ink-soft">{shown.join(" · ")}</p>
+    <p className="line-clamp-2 min-h-[2.8em] text-[0.8125rem] leading-[1.4] text-ink-soft sm:min-h-[3em] sm:text-[0.875rem] sm:leading-[1.5]">
+      {shown.join(" · ")}
+    </p>
   );
 }
 
@@ -49,29 +63,32 @@ function PreferenceSwitch({
   letter,
   accent,
   onToggle,
+  isMobile,
 }: {
   dimension: (typeof dimensions)[number];
   letter: string;
   accent: string;
   onToggle: () => void;
+  isMobile: boolean;
 }) {
   const [left, right] = dimension.options;
   const atRight = right.type === letter;
   const active = atRight ? right : left;
   const other = atRight ? left : right;
+  const travel = isMobile ? 20 : 28;
 
   return (
-    <div>
+    <div className="w-full">
       {/* The pole labels carry the meaning; on a phone the category name is
           the first thing that can go. */}
       <span className="hidden text-[0.6875rem] tracking-[0.16em] text-ink-ghost sm:block">
         {dimension.name}
       </span>
 
-      <div className="mt-1.5 flex max-w-[21rem] items-center gap-3">
+      <div className="mt-1 flex w-full items-center justify-between gap-1 sm:mt-1.5 sm:max-w-[21rem] sm:justify-start sm:gap-2.5 lg:gap-3">
         <span
           className={cn(
-            "flex-1 text-right text-[0.9375rem] transition-colors duration-300",
+            "min-w-0 flex-1 text-right text-[0.75rem] transition-colors duration-300 sm:text-[0.9375rem]",
             atRight ? "text-ink-ghost" : "text-ink"
           )}
         >
@@ -79,7 +96,7 @@ function PreferenceSwitch({
         </span>
 
         <span
-          className="rams-lamp"
+          className="rams-lamp shrink-0"
           style={{ backgroundColor: atRight ? "#DCDCD8" : accent }}
         />
 
@@ -87,26 +104,25 @@ function PreferenceSwitch({
           type="button"
           onClick={onToggle}
           aria-label={`${dimension.name}：当前 ${active.type} ${active.name}，切换为 ${other.type} ${other.name}`}
-          className="rams-switch shrink-0 px-1 py-1.5 sm:py-2.5"
+          className="rams-switch shrink-0 px-0.5 py-1 sm:px-1 sm:py-2"
         >
-          <span className="rams-track relative block h-9 w-16 rounded-full">
+          <span className="rams-track relative flex h-7 w-12 items-center rounded-full sm:h-9 sm:w-16">
             <motion.span
-              animate={{ x: atRight ? 28 : 0 }}
+              animate={{ x: atRight ? travel : 0 }}
               transition={knobSpring}
-              style={{ top: "50%", marginTop: -14 }}
-              className="rams-knob absolute left-1 block h-7 w-7 rounded-full"
+              className="rams-knob absolute left-1 top-1 block h-5 w-5 rounded-full sm:h-7 sm:w-7"
             />
           </span>
         </button>
 
         <span
-          className="rams-lamp"
+          className="rams-lamp shrink-0"
           style={{ backgroundColor: atRight ? accent : "#DCDCD8" }}
         />
 
         <span
           className={cn(
-            "flex-1 text-[0.9375rem] transition-colors duration-300",
+            "min-w-0 flex-1 text-[0.75rem] transition-colors duration-300 sm:text-[0.9375rem]",
             atRight ? "text-ink" : "text-ink-ghost"
           )}
         >
@@ -121,6 +137,7 @@ export function TypeStage() {
   const code = useMBTIStore((s) => s.featured);
   const setFeatured = useMBTIStore((s) => s.setFeatured);
   const expandCard = useMBTIStore((s) => s.expandCard);
+  const isMobile = useIsMobile();
 
   const typeIndex = Math.max(
     0,
@@ -147,129 +164,139 @@ export function TypeStage() {
   return (
     <section
       className={cn(
-        "mx-auto w-full max-w-[1560px] px-6 sm:px-10 lg:px-16",
+        "mx-auto w-full max-w-[1560px] px-5 sm:px-10 lg:px-16",
         "lg:flex lg:min-h-full lg:flex-col lg:justify-center"
       )}
     >
       <div
         className={cn(
-          "grid gap-8 pb-10 pt-5 sm:gap-14 sm:py-14",
+          "grid gap-6 pb-10 pt-3 sm:gap-14 sm:py-14",
           "lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)_minmax(0,21rem)]",
           "lg:grid-rows-[auto_1fr] lg:min-h-0 lg:items-start",
           "lg:gap-x-16 lg:gap-y-5 lg:py-4"
         )}
       >
-        {/* On a phone the figure and the switches have to share one screen —
-           flipping a switch you cannot see the result of is useless. */}
-        <div className="flex min-h-[calc(100dvh-8rem)] flex-col gap-5 lg:contents">
-        {/* ── A · Identity ── */}
-        <div className="shrink-0 lg:col-start-1 lg:row-start-1">
-          <span className="eyebrow">16 种人格 · 更多可能</span>
+        {/* On a phone the hero header (Identity + Figure) and the switches sit together above the fold. */}
+        <div className="flex flex-col gap-5 sm:gap-6 lg:contents">
+          {/* Mobile top row: Identity on left, Character on right */}
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:gap-6 lg:contents">
+            {/* ── A · Identity ── */}
+            <div className="flex h-44 min-w-0 flex-col justify-between sm:h-56 lg:h-auto lg:col-start-1 lg:row-start-1">
+              <span className="eyebrow shrink-0">16 种人格 · 更多可能</span>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={type.type}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35, ease: easeOut }}
-            >
-              <h1
-                className="display mt-4 text-ink sm:mt-6 lg:mt-4"
-                style={{ fontSize: "clamp(3rem, 11vw, 5.75rem)" }}
-              >
-                {type.type}
-              </h1>
+              <div className="grid w-full flex-1 grid-cols-1">
+                <AnimatePresence initial={false} mode="popLayout">
+                <motion.div
+                  key={type.type}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, ease: easeOut }}
+                  className="col-start-1 row-start-1 w-full"
+                >
+                  <h1
+                    className="display mt-1 leading-none text-ink sm:mt-6 lg:mt-4"
+                    style={{ fontSize: "clamp(2.5rem, 9vw, 5.75rem)" }}
+                  >
+                    {type.type}
+                  </h1>
 
-              <p className="mt-3 text-2xl font-medium tracking-tight text-ink sm:mt-4 sm:text-3xl lg:mt-3">
-                {type.title}
-              </p>
-              <p className="mt-2 text-[0.875rem] leading-[1.7] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
-                {type.traits}
-              </p>
-              <div className="mt-3 flex items-center gap-2.5 sm:mt-5 lg:mt-4">
-                <span
-                  className="h-1.5 w-1.5 rounded-full"
-                  style={{ backgroundColor: accent }}
-                />
-                <span className="eyebrow" style={{ color: accent }}>
-                  {groupCode[type.group]} · {type.group}
-                </span>
+                  <p className="mt-1 truncate text-xl font-medium tracking-tight text-ink sm:mt-4 sm:text-3xl lg:mt-3">
+                    {type.title}
+                  </p>
+                  <p className="mt-1 truncate text-[0.75rem] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
+                    {type.traits}
+                  </p>
+                  <div className="mt-1.5 flex items-center gap-2 sm:mt-5 lg:mt-4">
+                    <span
+                      className="h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: accent }}
+                    />
+                    <span className="eyebrow truncate" style={{ color: accent }}>
+                      {groupCode[type.group]} · {type.group}
+                    </span>
+                  </div>
+                </motion.div>
+                </AnimatePresence>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+            </div>
 
-        {/* ── B · The figure. Also the way in. ── */}
-        <div className="min-h-0 flex-1 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-stretch">
-          <div className="flex h-full flex-col">
-            <button
-              type="button"
-              onClick={() => expandCard(type)}
-              aria-label={`查看 ${type.type} ${type.title} 的完整档案`}
-              className="group relative mx-auto flex min-h-[9rem] w-full max-w-[22rem] flex-1 items-center justify-center sm:max-w-[26rem] lg:min-h-0 lg:max-w-none"
-              style={{
-                background: `radial-gradient(58% 52% at 50% 52%, ${accent}1F 0%, ${accent}0A 45%, transparent 72%)`,
-              }}
-            >
-              <MorphFigure
-                items={figures}
-                index={typeIndex}
-                transition="melt"
-                duration={0.9}
-                intensity={0.5}
-                aberration={0.22}
-                drift={0.25}
-                className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-                fallback={
-                  <Image
-                    src={`/mbti_img/${type.image}`}
-                    alt={type.type}
-                    fill
-                    sizes="(max-width: 1024px) 90vw, 45vw"
-                    className="object-contain object-center"
-                    priority
+            {/* ── B · The figure. Also the way in. ── */}
+            <div className="h-44 w-36 shrink-0 sm:h-56 sm:w-48 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full lg:w-full lg:min-h-0 lg:self-stretch">
+              <div className="flex h-full flex-col">
+                <button
+                  type="button"
+                  onClick={() => expandCard(type)}
+                  aria-label={`查看 ${type.type} ${type.title} 的完整档案`}
+                  className="group relative flex h-full w-full items-center justify-center rounded-2xl lg:mx-auto lg:min-h-0 lg:max-w-none lg:flex-1"
+                  style={{
+                    background: `radial-gradient(58% 52% at 50% 52%, ${accent}1F 0%, ${accent}0A 45%, transparent 72%)`,
+                  }}
+                >
+                  <MorphFigure
+                    items={figures}
+                    index={typeIndex}
+                    transition="melt"
+                    duration={0.9}
+                    intensity={0.5}
+                    aberration={0.22}
+                    drift={0.25}
+                    className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                    fallback={
+                      <Image
+                        src={`/mbti_img/${type.image}`}
+                        alt={type.type}
+                        fill
+                        sizes="(max-width: 640px) 160px, (max-width: 1024px) 240px, 45vw"
+                        className="object-contain object-center"
+                        priority
+                      />
+                    }
                   />
-                }
-              />
 
-              <span className="pointer-events-none absolute inset-x-0 bottom-0 text-center text-[0.8125rem] text-ink-ghost opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100">
-                查看完整档案 →
-              </span>
-            </button>
+                  <span className="pointer-events-none absolute inset-x-0 bottom-1 text-center text-[0.6875rem] text-ink-ghost opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100 sm:bottom-0 sm:text-[0.8125rem]">
+                    查看完整档案 →
+                  </span>
+                </button>
 
-            <p className="mt-3 shrink-0 text-center text-[0.8125rem] italic leading-relaxed text-ink-faint sm:mt-5 sm:text-[0.875rem]">
-              {type.slogan}
-            </p>
-          </div>
-        </div>
-
-        {/* ── M · The control panel ── */}
-        <div className="shrink-0 lg:col-start-3 lg:row-start-1">
-          <div className="rule-t pt-3 sm:pt-4">
-            <div className="flex items-baseline justify-between gap-4">
-              <span className="eyebrow">四维偏好 Preference</span>
-              <span className="text-[0.75rem] text-ink-ghost">拨动切换</span>
-            </div>
-
-            <div className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
-              {dimensions.map((dimension, i) => (
-                <PreferenceSwitch
-                  key={dimension.name}
-                  dimension={dimension}
-                  letter={letters[i]}
-                  accent={accent}
-                  onToggle={() => flip(i)}
-                />
-              ))}
+                <p className="mt-3 hidden shrink-0 text-center text-[0.8125rem] italic leading-relaxed text-ink-faint sm:text-[0.875rem] lg:block">
+                  {type.slogan}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
+          {/* ── M · The control panel ── */}
+          <div className="shrink-0 lg:col-start-3 lg:row-start-1">
+            <div className="rule-t pt-3 sm:pt-4">
+              <div className="flex items-baseline justify-between gap-4">
+                <span className="eyebrow">四维偏好 Preference</span>
+                <span className="text-[0.75rem] text-ink-ghost">拨动切换</span>
+              </div>
+
+              <div className="mt-2.5 grid grid-cols-2 gap-x-2 gap-y-2.5 sm:mt-4 sm:gap-x-6 sm:gap-y-3 lg:block lg:space-y-3">
+                {dimensions.map((dimension, i) => (
+                  <PreferenceSwitch
+                    key={dimension.name}
+                    dimension={dimension}
+                    letter={letters[i]}
+                    accent={accent}
+                    onToggle={() => flip(i)}
+                    isMobile={isMobile}
+                  />
+                ))}
+              </div>
+
+              {/* Slogan on mobile shown below the 4 switches with stable height */}
+              <p className="mt-3 flex min-h-[2.4em] items-center justify-center text-center text-[0.8125rem] italic leading-tight text-ink-faint sm:text-[0.875rem] lg:hidden">
+                {type.slogan}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* ── T · Attributes ── */}
-        <div className="space-y-7 lg:col-start-1 lg:row-start-2 lg:space-y-4">
+        <div className="space-y-3.5 sm:space-y-5 lg:col-start-1 lg:row-start-2 lg:space-y-4">
           <Block label="关键特征 Key Traits">
             <Terms items={type.actualTraits} limit={4} />
           </Block>
@@ -282,9 +309,9 @@ export function TypeStage() {
         </div>
 
         {/* ── R · Relations & stack ── */}
-        <div className="space-y-7 lg:col-start-3 lg:row-start-2 lg:space-y-4">
+        <div className="space-y-3.5 sm:space-y-5 lg:col-start-3 lg:row-start-2 lg:space-y-4">
           <Block label="契合类型 Compatible">
-            <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <div className="flex flex-wrap gap-x-5 gap-y-1.5 sm:gap-y-2">
               {type.bestPartners.map((partner) => (
                 <button
                   key={partner}
@@ -296,13 +323,13 @@ export function TypeStage() {
                 </button>
               ))}
             </div>
-            <p className="mt-3 text-[0.8125rem] text-ink-ghost">
+            <p className="mt-1.5 text-[0.8125rem] text-ink-ghost sm:mt-3">
               功能栈互补，容易谈到一块去。点一个即可切换。
             </p>
           </Block>
 
           <Block label="认知功能栈 Function Stack">
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-4">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-2 sm:gap-y-4">
               {stack.map((fn, i) => (
                 <div key={fn}>
                   <dt className="text-[0.6875rem] tracking-[0.16em] text-ink-ghost">
