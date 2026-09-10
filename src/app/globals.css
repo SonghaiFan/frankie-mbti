@@ -187,3 +187,22 @@ body {
   width: 100%;
   height: 100%;
 }
+
+/* Reel geometry — art box, clear space to the next figure, and the sliver of
+   it that shows. Tighter on a phone so the pair and their score share a screen. */
+.reel-metrics {
+  --art: clamp(5rem, 19vh, 8.5rem);
+  --gap: 1.5rem;
+  --peek: 0.625rem;
+  --step: calc(var(--art) + var(--gap));
+  --win: calc(var(--art) + var(--gap) * 2 + var(--peek) * 2);
+  --pad: calc((var(--gap) + var(--peek) * 2) / 2);
+}
+
+@media (min-width: 640px) {
+  .reel-metrics {
+    --art: clamp(7.5rem, 30vh, 15rem);
+    --gap: 3.5rem;
+    --peek: 1rem;
+  }
+}

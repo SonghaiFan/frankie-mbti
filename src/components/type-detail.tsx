@@ -42,14 +42,14 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
         role="dialog"
         aria-modal
         aria-label={`${type.type} ${type.title}`}
-        className="fixed left-1/2 top-1/2 z-[200] w-[94vw] max-w-6xl -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-paper shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)]"
+        className="fixed left-1/2 top-1/2 z-[200] w-[96vw] max-w-6xl -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-paper shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] sm:w-[94vw]"
       >
-        <div className="flex max-h-[92vh] flex-col">
+        <div className="flex max-h-[94dvh] flex-col sm:max-h-[92vh]">
           <button
             onClick={onClose}
             type="button"
             aria-label="关闭"
-            className="absolute right-5 top-5 z-[100] flex h-10 w-10 items-center justify-center text-ink-faint transition-colors hover:text-ink"
+            className="absolute right-3 top-3 z-[100] flex h-10 w-10 items-center justify-center text-ink-faint transition-colors hover:text-ink sm:right-5 sm:top-5"
           >
             <svg
               className="h-5 w-5"
@@ -64,21 +64,21 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
           </button>
 
           {/* Masthead */}
-          <div className="rule-b flex shrink-0 flex-col sm:flex-row sm:items-stretch">
+          <div className="rule-b flex shrink-0 flex-row items-stretch">
             <div
-              className="relative h-44 w-full shrink-0 overflow-hidden sm:h-auto sm:min-h-[220px] sm:w-[34%] sm:max-w-[280px]"
+              className="relative w-24 shrink-0 overflow-hidden sm:h-auto sm:min-h-[220px] sm:w-[34%] sm:max-w-[280px]"
               style={{ backgroundColor: accentWash(type.group) }}
             >
               <Image
                 src={`/mbti_img/${type.image}`}
                 alt={type.type}
                 fill
-                sizes="(max-width: 640px) 100vw, 300px"
+                sizes="(max-width: 640px) 96px, 300px"
                 className="object-contain object-bottom"
               />
             </div>
 
-            <div className="flex flex-1 flex-col justify-between gap-8 p-6 sm:p-10">
+            <div className="flex flex-1 flex-col justify-between gap-8 p-4 pr-14 sm:p-10">
               <div>
                 <div className="flex items-center gap-2.5">
                   <span
@@ -91,17 +91,19 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 </div>
 
                 <h2
-                  className="display mt-5 text-ink"
-                  style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
+                  className="display mt-2 text-ink sm:mt-5"
+                  style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)" }}
                 >
                   {type.type}
                 </h2>
-                <p className="mt-3 text-lg text-ink-soft">
+                <p className="mt-1.5 text-[0.9375rem] text-ink-soft sm:mt-3 sm:text-lg">
                   {type.title} · {type.nickname}
                 </p>
               </div>
 
-              <dl className="grid grid-cols-1 gap-x-10 gap-y-5 sm:grid-cols-2">
+              {/* On a phone these move into the scrolling body — the masthead
+                  has to stay a header, not eat the sheet. */}
+              <dl className="hidden gap-x-10 gap-y-5 sm:grid sm:grid-cols-2">
                 <div>
                   <dt className="eyebrow">特征</dt>
                   <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
@@ -119,8 +121,23 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
           </div>
 
           {/* Body */}
-          <div className="scroll-quiet flex-1 overflow-y-auto bg-paper px-6 py-12 sm:px-10 sm:py-16">
-            <div className="space-y-20 sm:space-y-28">
+          <div className="scroll-quiet flex-1 overflow-y-auto bg-paper px-6 py-10 sm:px-10 sm:py-16">
+            <div className="space-y-16 sm:space-y-28">
+              <dl className="grid grid-cols-1 gap-5 sm:hidden">
+                <div>
+                  <dt className="eyebrow">特征</dt>
+                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                    {type.traits}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="eyebrow">宣告</dt>
+                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                    {type.slogan}
+                  </dd>
+                </div>
+              </dl>
+
               <MBTIIntroduction type={type} />
               <MBTIDimensions type={type} />
               <MBTICognitiveFunctions type={type} />

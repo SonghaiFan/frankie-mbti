@@ -148,7 +148,7 @@ function Reel({
       </div>
 
       {/* The name only changes once the reel has stopped */}
-      <div className="rule-t mt-4 w-full pt-4 text-center">
+      <div className="rule-t mt-2 w-full pt-2 text-center sm:mt-4 sm:pt-4">
         <AnimatePresence mode="wait">
           <motion.button
             key={current.type}
@@ -166,7 +166,7 @@ function Reel({
             >
               {current.type}
             </span>
-            <span className="mt-2 block truncate text-[0.8125rem] text-ink-faint">
+            <span className="mt-1 block truncate text-[0.75rem] text-ink-faint sm:mt-2 sm:text-[0.8125rem]">
               {current.title}
             </span>
           </motion.button>
@@ -225,39 +225,26 @@ export function PairingReelsView() {
 
   return (
     <section className="flex flex-col lg:h-full lg:min-h-0">
-      <header className="rule-b mb-12 shrink-0 pb-6 sm:mb-16 sm:pb-8 lg:mb-8 lg:pb-5">
+      <header className="rule-b mb-4 shrink-0 pb-4 sm:mb-16 sm:pb-8 lg:mb-8 lg:pb-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
           <div>
             <span className="eyebrow">Pairing</span>
             <h2
               className="display mt-4 text-ink lg:mt-3"
-              style={{ fontSize: "clamp(1.75rem, 3.4vw, 2.75rem)" }}
+              style={{ fontSize: "clamp(1.5rem, 3.4vw, 2.75rem)" }}
             >
               两个人放在一起
             </h2>
           </div>
-          <p className="max-w-[42ch] text-[0.875rem] leading-[1.8] text-ink-soft lg:text-right">
-            上下滑动左右两轮，看看功能栈怎么咬合。点名字可以看完整档案。
+          <p className="max-w-[42ch] text-[0.8125rem] leading-[1.7] text-ink-soft sm:text-[0.875rem] sm:leading-[1.8] lg:text-right">
+            上下滑动切换，点名字看完整档案。
           </p>
         </div>
       </header>
 
       <div
-        style={
-          {
-            // art = the figure box; gap = clear space to the next figure;
-            // peek = how much of the neighbour shows past that gap.
-            "--art": "clamp(7.5rem, 30vh, 15rem)",
-            "--gap": "3.5rem",
-            "--peek": "1rem",
-            "--step": "calc(var(--art) + var(--gap))",
-            "--win":
-              "calc(var(--art) + var(--gap) * 2 + var(--peek) * 2)",
-            "--pad": "calc((var(--gap) + var(--peek) * 2) / 2)",
-          } as React.CSSProperties
-        }
         className={cn(
-          "grid grid-cols-2 gap-x-6 gap-y-14 sm:gap-x-12",
+          "reel-metrics grid grid-cols-2 gap-x-5 gap-y-5 sm:gap-x-12 sm:gap-y-14",
           "lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)_minmax(0,1fr)]",
           "lg:items-center lg:gap-x-14 lg:gap-y-0"
         )}
@@ -290,38 +277,38 @@ export function PairingReelsView() {
               transition={{ duration: 0.32, ease: easeOut }}
               className="mx-auto max-w-sm text-center"
             >
-              <span className="eyebrow">契合度</span>
-              <p
-                className="mt-4 text-[4.5rem] font-medium leading-none tracking-tight tabular-nums"
-                style={{ color: accent }}
-              >
-                {pair ? pair.score : "—"}
-              </p>
+              <div className="flex items-baseline justify-center gap-4 sm:block">
+                <p
+                  className="text-[3.25rem] font-medium leading-none tracking-tight tabular-nums sm:mt-4 sm:text-[4.5rem]"
+                  style={{ color: accent }}
+                >
+                  {pair ? pair.score : "—"}
+                </p>
+                {tier && (
+                  <p className="text-[0.9375rem] text-ink sm:mt-4">{tier.name}</p>
+                )}
+              </div>
               {tier && (
-                <>
-                  <p className="mt-4 text-[0.9375rem] text-ink">{tier.name}</p>
-                  <p className="mt-1.5 text-[0.8125rem] text-ink-ghost">
-                    {tier.note}
-                  </p>
-                </>
+                <p className="mt-2 hidden text-[0.8125rem] text-ink-ghost sm:block">
+                  {tier.note}
+                </p>
               )}
 
-              <div className="rule-t mt-8 pt-7">
-                <span className="eyebrow">配对关系</span>
-                <p className="mt-4 text-3xl font-medium leading-none tracking-tight text-ink">
+              <div className="rule-t mt-4 pt-3 sm:mt-8 sm:pt-7">
+                <p className="text-2xl font-medium leading-none tracking-tight text-ink sm:mt-4 sm:text-3xl">
                   {pair ? pair.label : "—"}
                 </p>
-                <p className="mt-4 text-[0.8125rem] text-ink-ghost">
+                <p className="mt-2 text-[0.8125rem] text-ink-ghost sm:mt-4">
                   {left.type} × {right.type}
-                  {official && " · 官方推荐理想配对"}
+                  {official && " · 官方推荐"}
                 </p>
               </div>
 
-              <div className="rule-t mt-8 pt-7">
+              <div className="rule-t mt-3 pt-2 sm:mt-8 sm:pt-7">
                 <span className="eyebrow">
                   荣格配对{jung ? ` · ${jung.matchType}` : ""}
                 </span>
-                <p className="mt-4 text-[0.875rem] leading-[1.8] text-ink-soft">
+                <p className="mt-2 text-[0.8125rem] leading-[1.7] text-ink-soft sm:mt-4 sm:text-[0.875rem] sm:leading-[1.8]">
                   {jung
                     ? jung.description
                     : "这一对没有直接的功能栈镜像关系——差异本身就是它的题目。"}

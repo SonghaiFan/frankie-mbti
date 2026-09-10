@@ -62,7 +62,9 @@ function PreferenceSwitch({
 
   return (
     <div>
-      <span className="block text-[0.6875rem] tracking-[0.16em] text-ink-ghost">
+      {/* The pole labels carry the meaning; on a phone the category name is
+          the first thing that can go. */}
+      <span className="hidden text-[0.6875rem] tracking-[0.16em] text-ink-ghost sm:block">
         {dimension.name}
       </span>
 
@@ -85,7 +87,7 @@ function PreferenceSwitch({
           type="button"
           onClick={onToggle}
           aria-label={`${dimension.name}：当前 ${active.type} ${active.name}，切换为 ${other.type} ${other.name}`}
-          className="rams-switch shrink-0 px-1 py-2.5"
+          className="rams-switch shrink-0 px-1 py-1.5 sm:py-2.5"
         >
           <span className="rams-track relative block h-9 w-16 rounded-full">
             <motion.span
@@ -151,14 +153,17 @@ export function TypeStage() {
     >
       <div
         className={cn(
-          "grid gap-10 py-10 sm:gap-14 sm:py-14",
+          "grid gap-8 pb-10 pt-5 sm:gap-14 sm:py-14",
           "lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)_minmax(0,21rem)]",
           "lg:grid-rows-[auto_1fr] lg:min-h-0 lg:items-start",
           "lg:gap-x-16 lg:gap-y-5 lg:py-4"
         )}
       >
+        {/* On a phone the figure and the switches have to share one screen —
+           flipping a switch you cannot see the result of is useless. */}
+        <div className="flex min-h-[calc(100dvh-8rem)] flex-col gap-5 lg:contents">
         {/* ── A · Identity ── */}
-        <div className="lg:col-start-1 lg:row-start-1">
+        <div className="shrink-0 lg:col-start-1 lg:row-start-1">
           <span className="eyebrow">16 种人格 · 更多可能</span>
 
           <AnimatePresence mode="wait">
@@ -170,19 +175,19 @@ export function TypeStage() {
               transition={{ duration: 0.35, ease: easeOut }}
             >
               <h1
-                className="display mt-6 text-ink lg:mt-4"
+                className="display mt-4 text-ink sm:mt-6 lg:mt-4"
                 style={{ fontSize: "clamp(3rem, 11vw, 5.75rem)" }}
               >
                 {type.type}
               </h1>
 
-              <p className="mt-4 text-2xl font-medium tracking-tight text-ink sm:text-3xl lg:mt-3">
+              <p className="mt-3 text-2xl font-medium tracking-tight text-ink sm:mt-4 sm:text-3xl lg:mt-3">
                 {type.title}
               </p>
-              <p className="mt-3 text-[0.9375rem] leading-[1.8] text-ink-soft">
+              <p className="mt-2 text-[0.875rem] leading-[1.7] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
                 {type.traits}
               </p>
-              <div className="mt-5 flex items-center gap-2.5 lg:mt-4">
+              <div className="mt-3 flex items-center gap-2.5 sm:mt-5 lg:mt-4">
                 <span
                   className="h-1.5 w-1.5 rounded-full"
                   style={{ backgroundColor: accent }}
@@ -196,13 +201,13 @@ export function TypeStage() {
         </div>
 
         {/* ── B · The figure. Also the way in. ── */}
-        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:min-h-0 lg:self-stretch">
+        <div className="min-h-0 flex-1 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-stretch">
           <div className="flex h-full flex-col">
             <button
               type="button"
               onClick={() => expandCard(type)}
               aria-label={`查看 ${type.type} ${type.title} 的完整档案`}
-              className="group relative mx-auto flex aspect-[4/5] w-full max-w-[22rem] items-center justify-center sm:max-w-[26rem] lg:aspect-auto lg:min-h-0 lg:max-w-none lg:flex-1"
+              className="group relative mx-auto flex min-h-[9rem] w-full max-w-[22rem] flex-1 items-center justify-center sm:max-w-[26rem] lg:min-h-0 lg:max-w-none"
               style={{
                 background: `radial-gradient(58% 52% at 50% 52%, ${accent}1F 0%, ${accent}0A 45%, transparent 72%)`,
               }}
@@ -233,21 +238,21 @@ export function TypeStage() {
               </span>
             </button>
 
-            <p className="mt-5 text-center text-[0.875rem] italic leading-relaxed text-ink-faint">
+            <p className="mt-3 shrink-0 text-center text-[0.8125rem] italic leading-relaxed text-ink-faint sm:mt-5 sm:text-[0.875rem]">
               {type.slogan}
             </p>
           </div>
         </div>
 
         {/* ── M · The control panel ── */}
-        <div className="lg:col-start-3 lg:row-start-1">
-          <div className="rule-t pt-4">
+        <div className="shrink-0 lg:col-start-3 lg:row-start-1">
+          <div className="rule-t pt-3 sm:pt-4">
             <div className="flex items-baseline justify-between gap-4">
               <span className="eyebrow">四维偏好 Preference</span>
               <span className="text-[0.75rem] text-ink-ghost">拨动切换</span>
             </div>
 
-            <div className="mt-4 space-y-3">
+            <div className="mt-3 space-y-2 sm:mt-4 sm:space-y-3">
               {dimensions.map((dimension, i) => (
                 <PreferenceSwitch
                   key={dimension.name}
@@ -259,6 +264,8 @@ export function TypeStage() {
               ))}
             </div>
           </div>
+        </div>
+
         </div>
 
         {/* ── T · Attributes ── */}
