@@ -1,53 +1,46 @@
 "use client";
 
-import { motion } from "motion/react";
 import { MBTIType } from "@/types/mbti";
 import { mbtiTypes } from "@/data/mbti-data";
+import { accentOf } from "@/styles/mbti-styles";
+import { Section } from "./section";
 
 interface MBTIIntroductionProps {
   type: MBTIType;
 }
 
 export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
-  const mbtiType = type.type;
-  const cogFuncs = mbtiTypes
-    .find((t) => t.type === mbtiType)
+  const accent = accentOf(type.group);
+  const dominant = mbtiTypes
+    .find((t) => t.type === type.type)
     ?.cognitiveFunctions.split(" ")[0];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
-      className="bg-white border-4 border-black rounded-none shadow-[6px_6px_0px_0px_black] overflow-hidden text-[#121212]"
-    >
-      <div className="p-4 border-b-4 border-black bg-[#E0E0E0]">
-        <h3 className="text-sm font-black uppercase tracking-wider text-black">
-          MBTI 性格 vs 认知功能 / CONCEPTS
-        </h3>
-      </div>
-      <div className="p-4 space-y-3 font-sans">
-        <motion.p
-          layout="position"
-          className="text-xs text-gray-800 font-bold leading-relaxed"
+    <Section label="Concepts" title="人设，与底层操作系统">
+      <p
+        className="max-w-[26ch] font-medium leading-[1.45] tracking-tight text-ink"
+        style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}
+      >
+        MBTI 是性格的人设，认知功能是大脑的操作系统。
+      </p>
+
+      <p className="mt-10 max-w-[52ch] text-base leading-[1.9] text-ink-soft sm:mt-12">
+        你是{" "}
+        <span
+          className="border-b pb-0.5 font-medium text-ink"
+          style={{ borderColor: accent }}
         >
-          MBTI 是你性格的“人设”，而认知功能则是你大脑底层的“操作系统”。
-        </motion.p>
-        <motion.p
-          layout="position"
-          className="text-xs text-gray-800 font-medium leading-relaxed"
+          {type.type}
+        </span>
+        ，这是你的表现特征。而你的核心主导功能是{" "}
+        <span
+          className="border-b pb-0.5 font-medium text-ink"
+          style={{ borderColor: accent }}
         >
-          你是{" "}
-          <span className="font-black text-black underline decoration-4 decoration-[#D02020]">
-            {mbtiType}
-          </span>
-          ，这代表着你的表现特征；而你的大脑核心主导功能是{" "}
-          <span className="font-black text-black underline decoration-4 decoration-[#1040C0]">
-            {cogFuncs}
-          </span>
-          ，这解释了你思维的内在运作机制。
-        </motion.p>
-      </div>
-    </motion.div>
+          {dominant}
+        </span>
+        ，它解释了思维的内在运作机制。
+      </p>
+    </Section>
   );
 }

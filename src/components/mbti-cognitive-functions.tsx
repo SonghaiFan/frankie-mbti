@@ -3,513 +3,305 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { MBTIType } from "@/types/mbti";
-import {
-  mbtiCard,
-  mbtiCardHeader,
-  mbtiCardTitle,
-  getMbtiColor,
-  mbtiMotionStyles,
-} from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
 import { cognitiveFunctions } from "@/data/mbti-data";
+import { accentOf } from "@/styles/mbti-styles";
+import { Section } from "./section";
 
 interface MBTICognitiveFunctionsProps {
   type: MBTIType;
 }
 
+type FunctionEntry = {
+  name: string;
+  description: string;
+  definition: string;
+  characteristics: string;
+  training: string;
+  details: string;
+};
+
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
+/** Thin chevron — the only icon in the section. */
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <motion.svg
+      animate={{ rotate: open ? 180 : 0 }}
+      transition={{ duration: 0.4, ease: easeOut }}
+      className="h-4 w-4 shrink-0 text-ink-faint"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </motion.svg>
+  );
+}
+
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="eyebrow">{label}</dt>
+      <dd className="mt-2 text-[0.875rem] leading-[1.8] text-ink-soft">{value}</dd>
+    </div>
+  );
+}
+
 export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
-  const colorStyle = getMbtiColor(type.group);
-  const userFunctions = type.cognitiveFunctions.split(" ");
-  const [expandedFunction, setExpandedFunction] = useState<string | null>(null);
-  const [showInference, setShowInference] = useState(false);
+  const accent = accentOf(type.group);
+  const stack = type.cognitiveFunctions.split(" ");
+  const [openFunction, setOpenFunction] = useState<string | null>(null);
+  const [showDeduction, setShowDeduction] = useState(false);
 
-  // 主导功能推断逻辑
-  const getDominantFunctionInference = () => {
-    const mbtiCode = type.type;
-    const isExtrovert = mbtiCode[0] === "E";
-    const isJudging = mbtiCode[3] === "J";
-    const thinkingFeeling = mbtiCode[2];
-    const sensingIntuition = mbtiCode[1];
-
-    let step1Logic, step2Logic, dominantFunction;
-
-    if (isExtrovert) {
-      if (isJudging) {
-        step1Logic = "外向人(E) + 判断型(J) → 主导是外向的判断功能";
-        step2Logic = `判断功能优先，根据 ${thinkingFeeling} 决定`;
-        dominantFunction = thinkingFeeling === "T" ? "Te" : "Fe";
-      } else {
-        step1Logic = "外向人(E) + 知觉型(P) → 主导是外向的知觉功能";
-        step2Logic = `知觉功能优先，根据 ${sensingIntuition} 决定`;
-        dominantFunction = sensingIntuition === "N" ? "Ne" : "Se";
-      }
-    } else {
-      if (isJudging) {
-        step1Logic = "内向人(I) + 判断型(J) → 主导是内向的知觉功能";
-        step2Logic = `知觉功能优先，根据 ${sensingIntuition} 决定`;
-        dominantFunction = sensingIntuition === "N" ? "Ni" : "Si";
-      } else {
-        step1Logic = "内向人(I) + 知觉型(P) → 主导是内向的判断功能";
-        step2Logic = `判断功能优先，根据 ${thinkingFeeling} 决定`;
-        dominantFunction = thinkingFeeling === "T" ? "Ti" : "Fi";
-      }
-    }
-
-    return { step1Logic, step2Logic, dominantFunction, mbtiCode };
+  const allFunctions: Record<string, FunctionEntry> = {
+    ...cognitiveFunctions.categories.judging.functions,
+    ...cognitiveFunctions.categories.perceiving.functions,
   };
 
-  const inference = getDominantFunctionInference();
+  // 两步推断：E/I + J/P 定朝向，再由 T/F 或 S/N 定功能
+  const deduce = () => {
+    const [e, sn, tf, jp] = type.type.split("");
+    const extrovert = e === "E";
+    const judging = jp === "J";
 
-  // 渲染功能卡片的辅助函数
-  const renderFunctionCard = (
-    code: string,
-    func: {
-      name: string;
-      description: string;
-      icon: string;
-      color: string;
-      definition: string;
-      characteristics: string;
-      training: string;
-      details: string;
+    if (extrovert) {
+      return judging
+        ? {
+            step1: "外向(E) + 判断(J) → 主导是外向的判断功能",
+            step2: `判断功能优先，由 ${tf} 决定`,
+            dominant: tf === "T" ? "Te" : "Fe",
+          }
+        : {
+            step1: "外向(E) + 知觉(P) → 主导是外向的知觉功能",
+            step2: `知觉功能优先，由 ${sn} 决定`,
+            dominant: sn === "N" ? "Ne" : "Se",
+          };
     }
-  ) => {
-    const userIndex = userFunctions.indexOf(code);
-    const isUserFunction = userIndex !== -1;
-    const isExpanded = expandedFunction === code;
-    const level = isUserFunction ? cognitiveFunctions.levels[userIndex] : null;
+    return judging
+      ? {
+          step1: "内向(I) + 判断(J) → 主导是内向的知觉功能",
+          step2: `知觉功能优先，由 ${sn} 决定`,
+          dominant: sn === "N" ? "Ni" : "Si",
+        }
+      : {
+          step1: "内向(I) + 知觉(P) → 主导是内向的判断功能",
+          step2: `判断功能优先，由 ${tf} 决定`,
+          dominant: tf === "T" ? "Ti" : "Fi",
+        };
+  };
+
+  const inference = deduce();
+
+  const letterMeaning = (letter: string, index: number) =>
+    [
+      letter === "E" ? "外向人" : "内向人",
+      letter === "N" ? "直觉型" : "感觉型",
+      letter === "T" ? "思维型" : "情感型",
+      letter === "J" ? "判断型" : "知觉型",
+    ][index];
+
+  const renderFunctionRow = (code: string, func: FunctionEntry) => {
+    const rank = stack.indexOf(code);
+    const isMine = rank !== -1;
+    const isOpen = openFunction === code;
+    const level = isMine ? cognitiveFunctions.levels[rank] : null;
 
     return (
-      <motion.div key={code} layout className="space-y-2">
-        <motion.div
-          layout
-          onClick={() => setExpandedFunction(isExpanded ? null : code)}
-          className={cn(
-            "p-3 rounded-none border-2 border-black transition-all duration-150 relative cursor-pointer shadow-[2px_2px_0px_0px_black] hover:shadow-[4px_4px_0px_0px_black]",
-            isUserFunction
-              ? cn(
-                  userIndex === 0 &&
-                    cn(
-                      colorStyle.border,
-                      colorStyle.bg.split(' ')[0],
-                      "border-2 shadow-[3px_3px_0px_0px_black]"
-                    ),
-                  userIndex === 1 &&
-                    cn(
-                      colorStyle.border,
-                      colorStyle.bg.split(' ')[0],
-                      "border-2 shadow-[2px_2px_0px_0px_black]"
-                    ),
-                  userIndex === 2 &&
-                    cn(
-                      colorStyle.border,
-                      colorStyle.bg.split(' ')[0],
-                      "shadow-[1px_1px_0px_0px_black]"
-                    ),
-                  userIndex === 3 &&
-                    cn(
-                      colorStyle.border,
-                      colorStyle.bg.split(' ')[0],
-                      "border-dashed"
-                    )
-                )
-              : "border-black bg-white hover:bg-gray-100"
-          )}
+      <div key={code} className={cn("rule-t", !isMine && "opacity-45")}>
+        <button
+          type="button"
+          onClick={() => setOpenFunction(isOpen ? null : code)}
+          aria-expanded={isOpen}
+          className="group/row w-full py-5 text-left"
         >
-          {/* 层级指示器 */}
-          {isUserFunction && (
-            <div
-              className={cn(
-                "absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-none border-2 border-black text-xs font-black z-20 shadow-[2px_2px_0px_0px_black]",
-                colorStyle.bgDark
-              )}
-            >
-              <span className="text-sm">{level?.icon}</span>
-              <span className="font-mono text-xs font-black">
-                #{userIndex + 1}
-              </span>
-            </div>
-          )}
-
-          <div className="flex items-start gap-2">
-            <span className={cn("text-lg shrink-0", func.color)}>
-              {func.icon}
-            </span>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span
-                  className={cn(
-                    "font-sans font-black px-2 py-0.5 rounded-none border border-black shadow-[1px_1px_0px_0px_black] shrink-0",
-                    isUserFunction
-                      ? cn(
-                          colorStyle.bg.split(' ')[0],
-                          colorStyle.text,
-                          userIndex === 0 && "text-sm",
-                          userIndex === 1 && "text-xs",
-                          userIndex === 2 && "text-xs",
-                          userIndex === 3 && "text-xs"
-                        )
-                      : "bg-[#E0E0E0] text-gray-700 text-xs"
-                  )}
-                >
-                  {code}
-                </span>
-                <span
-                  className={cn(
-                    "font-black tracking-tighter truncate",
-                    isUserFunction
-                      ? cn(
-                          colorStyle.text,
-                          userIndex === 0 && "text-base font-black",
-                          userIndex === 1 && "text-sm font-extrabold",
-                          userIndex === 2 && "text-sm",
-                          userIndex === 3 && "text-sm"
-                        )
-                      : "text-gray-600 text-sm"
-                  )}
-                >
-                  {func.name}
-                </span>
-              </div>
-
-              <p
-                className={cn(
-                  "text-xs leading-relaxed mb-2 font-bold",
-                  isUserFunction
-                    ? "text-gray-800"
-                    : "text-gray-500"
-                )}
+          <div className="flex items-baseline justify-between gap-4">
+            <div className="flex items-baseline gap-4">
+              <span
+                className="text-2xl font-medium leading-none tracking-tight"
+                style={{ color: isMine ? accent : undefined }}
               >
-                {func.description}
-              </p>
+                {code}
+              </span>
+              <span className="text-[0.9375rem] text-ink">{func.name}</span>
+            </div>
 
-              {/* 层级名称（用户功能） */}
-              {isUserFunction && (
-                <div className="flex items-center gap-2 text-[10px] font-bold border-t border-black/10 pt-1.5">
-                  <span className="text-gray-600">
-                    {level?.name}
-                  </span>
-                  <span className={cn("font-black uppercase tracking-tighter", colorStyle.text)}>
-                    {level?.description}
-                  </span>
-                </div>
-              )}
-
-              {/* 展开指示器 */}
-              <div className="flex items-center justify-between mt-2 pt-1 border-t border-dashed border-black/10">
-                <span className="text-[10px] text-gray-500 font-bold">
-                  {isExpanded ? "点击收起详情 / COLLAPSE" : "点击查看详情 / EXPAND"}
+            <div className="flex shrink-0 items-center gap-4">
+              {level && (
+                <span className="eyebrow hidden sm:inline">
+                  {rank + 1} · {level.name.split(" ")[0]}
                 </span>
-                <motion.span
-                  animate={{ rotate: isExpanded ? 180 : 0 }}
-                  className="text-black text-[10px] font-black"
-                >
-                  ▼
-                </motion.span>
-              </div>
+              )}
+              <Chevron open={isOpen} />
             </div>
           </div>
-        </motion.div>
 
-        {/* 展开的详细信息 */}
-        <AnimatePresence>
-          {isExpanded && (
+          <p className="mt-3 max-w-[54ch] text-[0.875rem] leading-relaxed text-ink-soft">
+            {func.description}
+          </p>
+        </button>
+
+        <AnimatePresence initial={false}>
+          {isOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.45, ease: easeOut }}
               className="overflow-hidden"
             >
-              <div
-                className={cn(
-                  "p-4 rounded-none border-2 border-black space-y-3 shadow-[3px_3px_0px_0px_black] bg-white text-[#121212]"
-                )}
+              <dl className="grid grid-cols-1 gap-x-10 gap-y-6 pb-8 pt-2 sm:grid-cols-2">
+                <Detail label="定义" value={func.definition} />
+                <Detail label="特征" value={func.characteristics} />
+                <Detail label="发展建议" value={func.training} />
+                <Detail label="细节" value={func.details} />
+              </dl>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  };
+
+  return (
+    <Section
+      label="Cognitive Functions"
+      title={cognitiveFunctions.description.title}
+      note="点开任意一项，展开它的定义与发展建议。"
+    >
+      <p className="max-w-[62ch] text-base leading-[1.9] text-ink-soft">
+        {cognitiveFunctions.description.content}
+      </p>
+
+      {/* ── Your stack ── */}
+      <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-8 lg:grid-cols-4">
+        {stack.map((code, index) => {
+          const level = cognitiveFunctions.levels[index];
+          const func = allFunctions[code];
+          return (
+            <div key={code} className="rule-t pt-5">
+              <span className="eyebrow">{level?.name}</span>
+              <p
+                className="mt-4 text-4xl font-medium leading-none tracking-tight sm:text-5xl"
+                style={{ color: index === 0 ? accent : undefined }}
               >
-                {/* 定义 */}
-                <div>
-                  <h5
-                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
-                  >
-                    📖 定义 / DEFINITION
-                  </h5>
-                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
-                    {func.definition}
-                  </p>
+                {code}
+              </p>
+              <p className="mt-3 text-[0.9375rem] text-ink">{func?.name}</p>
+              <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-ghost">
+                {level?.description}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Two-step deduction ── */}
+      <div className="mt-16 rule-t">
+        <button
+          type="button"
+          onClick={() => setShowDeduction(!showDeduction)}
+          aria-expanded={showDeduction}
+          className="flex w-full items-center justify-between gap-6 py-6 text-left"
+        >
+          <div className="min-w-0">
+            <h4 className="text-lg font-medium tracking-tight text-ink">
+              主导功能两步推断法
+            </h4>
+            <p className="mt-1.5 text-[0.875rem] text-ink-faint">
+              从字母代码 {type.type} 反推主导功能 {inference.dominant}
+            </p>
+          </div>
+          <Chevron open={showDeduction} />
+        </button>
+
+        <AnimatePresence initial={false}>
+          {showDeduction && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.5, ease: easeOut }}
+              className="overflow-hidden"
+            >
+              <div className="pb-12">
+                {/* Letters */}
+                <div className="grid grid-cols-4 gap-x-6">
+                  {type.type.split("").map((letter, index) => (
+                    <div key={index} className="rule-t pt-5">
+                      <p className="text-4xl font-medium leading-none tracking-tight text-ink sm:text-5xl">
+                        {letter}
+                      </p>
+                      <p className="mt-3 text-[0.8125rem] text-ink-faint">
+                        {letterMeaning(letter, index)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* 特征 */}
-                <div>
-                  <h5
-                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
-                  >
-                    ✨ 特征 / CHARACTERISTICS
-                  </h5>
-                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
-                    {func.characteristics}
-                  </p>
-                </div>
+                {/* Steps */}
+                <ol className="mt-12">
+                  {[
+                    { title: "看 E/I 与 J/P，确定主导功能的朝向", body: inference.step1 },
+                    { title: "由判断 / 知觉偏好，锁定具体功能", body: inference.step2 },
+                  ].map((step, index) => (
+                    <li key={index} className="rule-t flex gap-6 py-6 sm:gap-10">
+                      <span className="eyebrow shrink-0 pt-1">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[0.9375rem] font-medium text-ink">
+                          {step.title}
+                        </p>
+                        <p className="mt-2 max-w-[54ch] text-[0.875rem] leading-[1.8] text-ink-soft">
+                          {step.body}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
 
-                {/* 培养建议 */}
-                <div>
-                  <h5
-                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
+                {/* Result */}
+                <div className="rule-t flex flex-wrap items-baseline gap-x-6 gap-y-2 pt-8">
+                  <span className="eyebrow">主导认知功能</span>
+                  <span
+                    className="text-4xl font-medium leading-none tracking-tight sm:text-5xl"
+                    style={{ color: accent }}
                   >
-                    💡 发展建议 / GROWTH
-                  </h5>
-                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
-                    {func.training}
-                  </p>
-                </div>
-
-                {/* 详细说明 */}
-                <div>
-                  <h5
-                    className={cn("font-black uppercase tracking-tighter text-xs border-b border-black pb-0.5 mb-1.5", colorStyle.text)}
-                  >
-                    🔍 细节 / DETAILS
-                  </h5>
-                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
-                    {func.details}
-                  </p>
+                    {inference.dominant}
+                  </span>
+                  <span className="text-[0.9375rem] text-ink-soft">
+                    {allFunctions[inference.dominant]?.name}
+                  </span>
                 </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
-    );
-  };
+      </div>
 
-  return (
-    <motion.div
-      {...mbtiMotionStyles}
-      className={cn(mbtiCard, colorStyle.border)}
-    >
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
-      >
-        <motion.h3
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, "!text-black")}
-        >
-          🧠 {cognitiveFunctions.description.title} / COGNITIVE FUNCTIONS
-        </motion.h3>
-      </motion.div>
-
-      <motion.div {...mbtiMotionStyles} className="p-4 space-y-6 bg-[#F0F0F0] dot-grid">
-        {/* 总体说明 */}
-        <div
-          className="p-4 rounded-none border-4 border-black bg-white shadow-[4px_4px_0px_0px_black]"
-        >
-          <p className="text-xs sm:text-sm text-gray-800 font-bold leading-relaxed">
-            {cognitiveFunctions.description.content}
-          </p>
-        </div>
-
-        {/* 主导功能推断层级 */}
-        <motion.div
-          layout
-          className="border-4 border-black rounded-none overflow-hidden shadow-[4px_4px_0px_0px_black]"
-        >
-          <motion.div
-            layout
-            onClick={() => setShowInference(!showInference)}
-            className="p-4 cursor-pointer bg-white transition-colors duration-150 hover:bg-gray-50 border-b-2 border-black"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-xl">🔍</span>
-                <div>
-                  <h4 className="font-black text-sm text-black uppercase tracking-tighter">
-                    主导功能两步推断法 / COGNITIVE DEDUCTION
-                  </h4>
-                  <p className="text-xs text-gray-700 font-bold mt-0.5">
-                    了解如何通过 MBTI 字母代码 {inference.mbtiCode} 逆向推导出主导认知功能 {inference.dominantFunction}
-                  </p>
-                </div>
+      {/* ── All eight ── */}
+      <div className="mt-20 grid grid-cols-1 gap-x-16 gap-y-16 lg:grid-cols-2">
+        {[cognitiveFunctions.categories.judging, cognitiveFunctions.categories.perceiving].map(
+          (category) => (
+            <div key={category.title}>
+              <h4 className="text-lg font-medium tracking-tight text-ink">
+                {category.title}
+              </h4>
+              <p className="mt-2 max-w-[46ch] text-[0.875rem] leading-relaxed text-ink-faint">
+                {category.description}
+              </p>
+              <div className="mt-8">
+                {Object.entries(category.functions).map(([code, func]) =>
+                  renderFunctionRow(code, func)
+                )}
               </div>
-              <motion.div
-                animate={{ rotate: showInference ? 180 : 0 }}
-                className="text-black font-black text-sm"
-              >
-                ▼
-              </motion.div>
             </div>
-          </motion.div>
-
-          <AnimatePresence>
-            {showInference && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden bg-[#F0F0F0]"
-              >
-                <div className="p-4 border-t border-black">
-                  <div className="space-y-4">
-                    {/* MBTI代码分解 */}
-                    <div>
-                      <h5
-                        className="font-black text-xs uppercase tracking-tighter mb-2 text-black"
-                      >
-                        📋 MBTI 维度代码分解 / DECOMPOSITION
-                      </h5>
-                      <div className="grid grid-cols-4 gap-2 text-center">
-                        {inference.mbtiCode.split("").map((letter, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: index * 0.05 }}
-                            className="p-2 rounded-none border-2 border-black font-sans font-black text-lg shadow-[2px_2px_0px_0px_black] bg-white"
-                          >
-                            <div className={cn("text-xl", colorStyle.text)}>
-                              {letter}
-                            </div>
-                            <div className="text-[10px] text-gray-700 font-black mt-1">
-                              {index === 0 && (letter === "E" ? "外向人" : "内向人")}
-                              {index === 1 && (letter === "N" ? "直觉型" : "感觉型")}
-                              {index === 2 && (letter === "T" ? "思维型" : "情感型")}
-                              {index === 3 && (letter === "J" ? "判断型" : "知觉型")}
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* 推断步骤 */}
-                    <div>
-                      <h5
-                        className="font-black text-xs uppercase tracking-tighter mb-2 text-black"
-                      >
-                        🔄 荣格类型两步推断步骤 / DEDUCTION STEPS
-                      </h5>
-
-                      {/* 第一步 */}
-                      <motion.div
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.1 }}
-                        className="p-3 rounded-none mb-3 border-2 border-black shadow-[2px_2px_0px_0px_black] bg-white"
-                      >
-                        <div className="flex items-start gap-2">
-                          <span
-                            className="rounded-full w-6 h-6 flex items-center justify-center text-xs font-black shrink-0 mt-0.5 text-white bg-black border-2 border-black"
-                          >
-                            1
-                          </span>
-                          <div>
-                            <p
-                              className="text-xs font-black mb-1 uppercase tracking-tighter text-black"
-                            >
-                              看 E/I + J/P 组合确定主导功能朝向
-                            </p>
-                            <p className="text-xs text-gray-800 font-bold leading-relaxed">
-                              {inference.step1Logic}
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-
-                      {/* 第二步 */}
-                      <motion.div
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="p-3 rounded-none mb-3 border-2 border-black shadow-[2px_2px_0px_0px_black] bg-white"
-                      >
-                        <div className="flex items-start gap-2">
-                          <span
-                            className="rounded-full w-6 h-6 flex items-center justify-center text-xs font-black shrink-0 mt-0.5 text-white bg-black border-2 border-black"
-                          >
-                            2
-                          </span>
-                          <div>
-                            <p
-                              className="text-xs font-black mb-1 uppercase tracking-tighter text-black"
-                            >
-                              从判断/知觉偏好锁定主导功能类型
-                            </p>
-                            <p className="text-xs text-gray-800 font-bold leading-relaxed">
-                              {inference.step2Logic}
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-
-                      {/* 结果 */}
-                      <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="p-4 rounded-none border-4 border-black text-center shadow-[4px_4px_0px_0px_black] bg-bauhaus-yellow"
-                      >
-                        <div className="flex items-center justify-center gap-3">
-                          <span className="text-2xl">🎯</span>
-                          <div>
-                            <p className="text-[10px] font-black uppercase text-black tracking-wider mb-0.5">
-                              推断结果：主导认知功能为
-                            </p>
-                            <p
-                              className="text-2xl font-black font-mono text-black"
-                            >
-                              {inference.dominantFunction}
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* 按分类显示所有8个认知功能 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 判断功能 */}
-          <div className="space-y-4">
-            <div className="border-b-2 border-black pb-2">
-              <h4
-                className="text-sm font-black uppercase tracking-wider text-black"
-              >
-                {cognitiveFunctions.categories.judging.title} / JUDGING FUNCTIONS
-              </h4>
-              <p className="text-[10px] text-gray-700 font-bold leading-relaxed mt-1">
-                {cognitiveFunctions.categories.judging.description}
-              </p>
-            </div>
-            <div className="space-y-3">
-              {Object.entries(
-                cognitiveFunctions.categories.judging.functions
-              ).map(([code, func]) => renderFunctionCard(code, func))}
-            </div>
-          </div>
-
-          {/* 感知功能 */}
-          <div className="space-y-4">
-            <div className="border-b-2 border-black pb-2">
-              <h4
-                className="text-sm font-black uppercase tracking-wider text-black"
-              >
-                {cognitiveFunctions.categories.perceiving.title} / PERCEIVING FUNCTIONS
-              </h4>
-              <p className="text-[10px] text-gray-700 font-bold leading-relaxed mt-1">
-                {cognitiveFunctions.categories.perceiving.description}
-              </p>
-            </div>
-            <div className="space-y-3">
-              {Object.entries(
-                cognitiveFunctions.categories.perceiving.functions
-              ).map(([code, func]) => renderFunctionCard(code, func))}
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
+          )
+        )}
+      </div>
+    </Section>
   );
 }

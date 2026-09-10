@@ -1,35 +1,21 @@
 import { create } from "zustand";
 import { MBTIType } from "@/types/mbti";
 
-export type GridViewMode =
-  | "groups"
-  | "dominantFunctions"
-  | "matchPairs"
-  | "compact";
-
 export interface MBTIState {
+  /** The code on the stage. Four switches move it; nothing else has to. */
+  featured: string;
   selectedType: MBTIType | null;
-  viewMode: GridViewMode;
+  setFeatured: (code: string) => void;
   setSelectedType: (type: MBTIType | null) => void;
   expandCard: (type: MBTIType) => void;
   collapseCard: () => void;
-  setViewMode: (mode: GridViewMode) => void;
 }
 
 export const useMBTIStore = create<MBTIState>((set) => ({
+  featured: "INFP",
   selectedType: null,
-  viewMode: "groups",
+  setFeatured: (code) => set({ featured: code }),
   setSelectedType: (type) => set({ selectedType: type }),
-  expandCard: (type) => {
-    set({ selectedType: type });
-    // 滚动到对应的卡片位置
-    setTimeout(() => {
-      const element = document.getElementById(`mbti-card-${type.type}`);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 100);
-  },
+  expandCard: (type) => set({ selectedType: type }),
   collapseCard: () => set({ selectedType: null }),
-  setViewMode: (mode) => set({ viewMode: mode, selectedType: null }),
 }));

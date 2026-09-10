@@ -1,348 +1,172 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F0F0F0; /* Off-white paper canvas */
-  --foreground: #121212; /* Stark Black */
-  
-  --bauhaus-red: #D02020;
-  --bauhaus-blue: #1040C0;
-  --bauhaus-yellow: #F0C020;
-  --color-border: #121212;
-  --color-muted: #E0E0E0;
+  /* Ink & paper */
+  --paper: #ffffff;
+  --ink: #111111;
+  --ink-soft: #6b6b6b;
+  --ink-faint: #a3a3a3;
+  --ink-ghost: #cfcfcf;
 
-  --mbti-nt: #7B2CBF;
-  --mbti-nf: #107C41;
-  --mbti-sj: #1040C0;
-  --mbti-sp: #F0C020;
+  /* The only stroke in the system: one hairline */
+  --rule: #e8e8e6;
+  --rule-strong: #d6d6d3;
+
+  /* Group accents — used as marks, never as fills */
+  --nt: #6b3fa0;
+  --nf: #2f7d52;
+  --sj: #2b56a8;
+  --sp: #b58121;
 }
 
 @theme {
-  --font-sans: var(--font-outfit), "Noto Sans SC", sans-serif;
-  --font-outfit: var(--font-outfit);
-  
-  --color-bauhaus-red: var(--bauhaus-red);
-  --color-bauhaus-blue: var(--bauhaus-blue);
-  --color-bauhaus-yellow: var(--bauhaus-yellow);
-  --color-border: var(--color-border);
-  --color-muted: var(--color-muted);
+  --font-sans: var(--font-outfit), var(--font-noto-sc), -apple-system, sans-serif;
 
-  --color-mbti-nt: var(--mbti-nt);
-  --color-mbti-nf: var(--mbti-nf);
-  --color-mbti-sj: var(--mbti-sj);
-  --color-mbti-sp: var(--mbti-sp);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-ink-ghost: var(--ink-ghost);
+
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+
+  --color-nt: var(--nt);
+  --color-nf: var(--nf);
+  --color-sj: var(--sj);
+  --color-sp: var(--sp);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #F0F0F0;
-  color: #121212;
+  background: var(--paper);
+  color: var(--ink);
   min-height: 100vh;
-  font-family: var(--font-outfit), "Noto Sans SC", sans-serif;
+  font-family: var(--font-outfit), var(--font-noto-sc), -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* Stark Bauhaus Dot Grid Pattern */
-.dot-grid {
-  background-color: #F0F0F0;
-  background-image: radial-gradient(#121212 1px, transparent 1.2px);
-  background-size: 20px 20px;
+::selection {
+  background: var(--ink);
+  color: var(--paper);
 }
 
+/* Every rule in the site is one hairline. Sub-pixel on retina. */
+.rule-t { border-top: 1px solid var(--rule); }
+.rule-b { border-bottom: 1px solid var(--rule); }
+.rule-l { border-left: 1px solid var(--rule); }
+.rule-r { border-right: 1px solid var(--rule); }
 
-/* 移动端滚动优化 */
+@media (min-resolution: 2dppx) {
+  .rule-t { border-top-width: 0.5px; }
+  .rule-b { border-bottom-width: 0.5px; }
+  .rule-l { border-left-width: 0.5px; }
+  .rule-r { border-right-width: 0.5px; }
+}
+
+/* Small caps eyebrow — the one repeating typographic device */
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Display type: tight, large, optically balanced for mixed CJK/Latin */
+.display {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+
+/* Quiet scrollbars for horizontal panes */
+.scroll-quiet {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+}
+.scroll-quiet::-webkit-scrollbar { height: 2px; width: 2px; }
+.scroll-quiet::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+.scroll-quiet::-webkit-scrollbar-track { background: transparent; }
+
 @media (max-width: 768px) {
-  * {
-    -webkit-tap-highlight-color: transparent;
+  * { -webkit-tap-highlight-color: transparent; }
+  .scroll-quiet::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-
-  html {
-    -webkit-text-size-adjust: 100%;
-  }
-
-  /* 优化触摸滚动 */
-  .overflow-x-auto {
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .overflow-x-auto::-webkit-scrollbar {
-    display: none;
-  }
+  html { scroll-behavior: auto; }
 }
 
-/* Google Fonts CSS Classes - Official Implementation */
+/* Caption rule that answers to its card's hover — no border on the card itself */
+.card-rule {
+  border-top: 1px solid var(--rule);
+  transition: border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.group:hover .card-rule { border-top-color: var(--ink); }
 
-/* Noto Sans SC: CSS classes for variable weights */
-.noto-sans-sc-thin {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 100;
-  font-style: normal;
+@media (min-resolution: 2dppx) {
+  .card-rule { border-top-width: 0.5px; }
 }
 
-.noto-sans-sc-extralight {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 200;
-  font-style: normal;
+/* ── Rams-style control surfaces ──────────────────────────────
+   One tactile island in an otherwise flat page: the preference panel.
+   Soft grey shells, a white knob, and a single coloured indicator. */
+.rams-track {
+  background: linear-gradient(180deg, #e3e3e1 0%, #d9d9d6 100%);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.09),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.6);
 }
 
-.noto-sans-sc-light {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
+/* The knob rides inside the rail, lifted off it by shadow alone. */
+.rams-knob {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f4f2 100%);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.16),
+    0 1px 2px rgba(0, 0, 0, 0.12),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.noto-sans-sc-regular {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+.rams-switch:hover .rams-knob {
+  box-shadow:
+    0 5px 12px rgba(0, 0, 0, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.13),
+    0 0 0 0.5px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-.noto-sans-sc-medium {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
+.rams-switch:active .rams-knob {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.16),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-.noto-sans-sc-semibold {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
+/* Indicator lamp — Braun's panel tell. One lit, one dark. */
+.rams-lamp {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  flex: none;
+  transition: background-color 0.4s ease;
 }
 
-.noto-sans-sc-bold {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.noto-sans-sc-extrabold {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.noto-sans-sc-black {
-  font-family: "Noto Sans SC", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 900;
-  font-style: normal;
-}
-
-/* Noto Serif SC: CSS classes for variable weights */
-.noto-serif-sc-extralight {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 200;
-  font-style: normal;
-}
-
-.noto-serif-sc-light {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.noto-serif-sc-regular {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.noto-serif-sc-medium {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.noto-serif-sc-semibold {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.noto-serif-sc-bold {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.noto-serif-sc-extrabold {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.noto-serif-sc-black {
-  font-family: "Noto Serif SC", serif;
-  font-optical-sizing: auto;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.flip-card {
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-}
-
-.flip-card.flipped {
-  transform: rotateY(180deg);
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-.flip-card-front,
-.flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 1rem;
-  overflow: hidden;
-}
-
-.flip-card-back {
-  transform: rotateY(180deg);
-}
-
-.fade-enter {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.fade-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.slide-up {
-  animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
-}
-
-.mbti-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center;
-  will-change: transform, box-shadow;
-}
-
-.mbti-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  z-index: 10;
-}
-
-.modal {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, opacity;
-}
-
-.modal-content {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: scale(0.7);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.modal.active .modal-content {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.group-hover-trigger:hover .group-hover-target {
-  opacity: 1;
-  transform: translateY(-2px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.loading-shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
-  background-size: 1000px 100%;
-}
-
-.page-transition {
-  animation: pageTransition 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes pageTransition {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Focus is visible but never decorative */
+:where(button, a, input, [tabindex]):focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
 }

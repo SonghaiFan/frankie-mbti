@@ -1,18 +1,18 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import Image from "next/image";
+import { FrankMark } from "@/components/frank-mark";
 
 export function Footer() {
   const [clickCount, setClickCount] = useState(0);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
 
   const handleClick = () => {
-    const newCount = clickCount + 1;
-    setClickCount(newCount);
-
-    if (newCount >= 2) {
+    const next = clickCount + 1;
+    setClickCount(next);
+    if (next >= 2) {
       setShowEasterEgg(true);
       setClickCount(0);
     }
@@ -20,78 +20,81 @@ export function Footer() {
 
   return (
     <>
-      <motion.footer
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed bottom-0 left-0 right-0 w-full py-4 bg-white border-t-4 border-[#121212] shadow-[0_-4px_0px_0px_rgba(18,18,18,1)] z-40"
-        onClick={handleClick}
-      >
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-3.5 h-3.5 rounded-full bg-[#D02020] border border-black" />
-              <p className="text-xs sm:text-sm font-bold tracking-wider text-[#121212] uppercase">
-                MBTI × JUNG SPECIFICATION
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-4 text-xs text-gray-700">
-              <p>
-                Created by{" "}
-                <a
-                  href="https://github.com/songhaifan2025"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-bold hover:text-[#D02020] border-b-2 border-transparent hover:border-[#D02020] transition-all"
-                >
-                  @范松海Frank
-                </a>
-              </p>
-              <p className="font-mono opacity-60">
-                © {new Date().getFullYear()} Bauhaus Modernism.
-              </p>
+      <footer onClick={handleClick} className="select-none">
+        <div className="mx-auto w-full max-w-[1560px] px-6 sm:px-10 lg:px-16">
+          <div className="rule-t flex flex-wrap items-baseline justify-between gap-6 py-10 sm:py-14">
+            <span className="flex items-center gap-2.5">
+              <FrankMark className="h-6 w-auto text-ink-faint" />
+              <span className="eyebrow">MBTI</span>
+            </span>
+            <div className="flex items-baseline gap-8">
+              <a
+                href="https://github.com/songhaifan2025"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-[0.8125rem] text-ink-faint transition-colors hover:text-ink"
+              >
+                @范松海Frank
+              </a>
+              <span className="text-[0.8125rem] text-ink-ghost">
+                © {new Date().getFullYear()}
+              </span>
             </div>
           </div>
         </div>
-      </motion.footer>
+      </footer>
 
-      {showEasterEgg && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
-          onClick={() => setShowEasterEgg(false)}
-        >
+      <AnimatePresence>
+        {showEasterEgg && (
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white p-4 max-w-4xl w-full mx-4 border-4 border-black shadow-[8px_8px_0px_0px_black] rounded-none relative"
-            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/15 p-6 backdrop-blur-md"
+            onClick={() => setShowEasterEgg(false)}
           >
-            <button
-              onClick={() => setShowEasterEgg(false)}
-              className="absolute top-3 right-3 text-black font-black text-lg hover:text-[#D02020] border-2 border-black w-8 h-8 flex items-center justify-center bg-white shadow-[2px_2px_0px_0px_black] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-5xl bg-paper p-6 shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] sm:p-10"
+              onClick={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
-            <div className="relative w-full aspect-[16/9] border-2 border-black">
-              <Image
-                src="/match.png"
-                alt="MBTI Matches"
-                fill
-                className="object-contain bg-white"
-                priority
-              />
-            </div>
-            <p className="text-center mt-4 text-sm font-bold tracking-widest text-[#121212] uppercase">
-              🎉 EGG DETECTED: MBTI MATCH CHART
-            </p>
+              <button
+                onClick={() => setShowEasterEgg(false)}
+                aria-label="关闭"
+                className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center text-ink-faint transition-colors hover:text-ink"
+              >
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                >
+                  <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <span className="eyebrow">Match Chart</span>
+              <div className="relative mt-6 aspect-[16/9] w-full">
+                <Image
+                  src="/match.png"
+                  alt="MBTI 配对总表"
+                  fill
+                  sizes="90vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 }
-

@@ -1,169 +1,107 @@
 "use client";
 
-import { motion } from "motion/react";
 import { MBTIType } from "@/types/mbti";
 import { cn } from "@/lib/utils";
-import {
-  mbtiCard,
-  mbtiCardHeader,
-  mbtiCardTitle,
-  mbtiCardDescription,
-  getMbtiColor,
-  mbtiMotionStyles,
-} from "@/styles/mbti-styles";
 import { dimensions } from "@/data/mbti-data";
+import { accentOf } from "@/styles/mbti-styles";
+import { Section } from "./section";
 import { MBTIOfficialMatches } from "./mbti-matches";
 
 interface MBTIDimensionsProps {
   type: MBTIType;
 }
 
-export function MBTIDimensions({ type }: MBTIDimensionsProps) {
-  const colorStyle = getMbtiColor(type.group);
-  const mbtiType = type.type.split("");
-
-  const renderTraitList = (title: string, items: string[]) => (
-    <motion.div {...mbtiMotionStyles} className="space-y-2">
-      <h3 className={cn(mbtiCardTitle, "!text-black", "text-xs uppercase tracking-wide")}>
-        {title}
-      </h3>
-      <div className="flex flex-wrap gap-2">
-        {items.map((item, index) => (
-          <motion.span
-            key={index}
-            {...mbtiMotionStyles}
-            className={cn(
-              "px-2 py-1 rounded-none border-2 border-black text-xs font-black shadow-[2px_2px_0px_0px_black]",
-              colorStyle.bg.split(' ')[0],
-              colorStyle.text
-            )}
+function TraitList({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div>
+      <h4 className="eyebrow">{title}</h4>
+      <ul className="mt-4">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="rule-t py-3 text-[0.9375rem] leading-relaxed text-ink-soft"
           >
             {item}
-          </motion.span>
+          </li>
         ))}
-      </div>
-    </motion.div>
+      </ul>
+    </div>
   );
+}
+
+export function MBTIDimensions({ type }: MBTIDimensionsProps) {
+  const accent = accentOf(type.group);
+  const letters = type.type.split("");
 
   return (
-    <div className="space-y-3">
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCard, colorStyle.border)}
+    <>
+      <Section
+        label="Four Dimensions"
+        title="四维解析"
+        note="加深的一项，是你的偏好所在。"
       >
-        <motion.div
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
-        >
-          <motion.h3
-            {...mbtiMotionStyles}
-            className={cn(mbtiCardTitle, "!text-black")}
-          >
-            🌟 MBTI 四维解析 / FOUR DIMENSIONS
-          </motion.h3>
-        </motion.div>
+        <div className="grid grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          {dimensions.map((dimension, index) => {
+            const selected = letters[index];
 
-        <motion.div {...mbtiMotionStyles} className="p-4 bg-[#F0F0F0] dot-grid">
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-            {dimensions.map((dimension, index) => {
-              const selectedType = mbtiType[index];
-              return (
-                <motion.div
-                  key={dimension.name}
-                  {...mbtiMotionStyles}
-                  className="space-y-3"
-                >
-                  <h3 className="font-black text-xs uppercase tracking-wider text-black border-b border-black pb-1">
-                    {dimension.name}
-                  </h3>
-                  <div className="grid gap-3">
-                    {dimension.options.map((option) => {
-                      const isSelected = option.type === selectedType;
-                      return (
-                        <motion.div
-                          key={option.type}
-                          {...mbtiMotionStyles}
-                          className={cn(
-                            "p-3 rounded-none border-2 border-black transition-all duration-150 shadow-[2px_2px_0px_0px_black]",
-                            isSelected
-                              ? `${colorStyle.bg.split(' ')[0]} font-black scale-102`
-                              : "bg-white text-gray-500",
-                            colorStyle.border
-                          )}
-                        >
-                          <div className="flex items-center gap-1.5 mb-1.5">
-                            <span className="text-lg">{option.icon}</span>
-                            <span
-                              className={cn(
-                                "font-black text-xs uppercase tracking-tight",
-                                isSelected
-                                  ? "text-black"
-                                  : "text-gray-500"
-                              )}
-                            >
-                              {option.type} - {option.name}
-                            </span>
-                          </div>
-                          <p
+            return (
+              <div key={dimension.name}>
+                <h4 className="eyebrow">{dimension.name}</h4>
+
+                <div className="mt-4">
+                  {dimension.options.map((option) => {
+                    const isSelected = option.type === selected;
+                    return (
+                      <div
+                        key={option.type}
+                        className={cn(
+                          "rule-t py-5 transition-opacity duration-300",
+                          isSelected ? "opacity-100" : "opacity-45"
+                        )}
+                      >
+                        <div className="flex items-baseline gap-3">
+                          <span
+                            className="text-3xl font-medium leading-none tracking-tight"
+                            style={{ color: isSelected ? accent : undefined }}
+                          >
+                            {option.type}
+                          </span>
+                          <span
                             className={cn(
-                              mbtiCardDescription,
-                              "text-[10px] leading-normal font-bold",
-                              isSelected ? "text-gray-800" : "text-gray-400"
+                              "text-[0.9375rem]",
+                              isSelected ? "text-ink" : "text-ink-soft"
                             )}
                           >
-                            {option.description}
-                          </p>
-                          <p
-                            className={cn(
-                              mbtiCardDescription,
-                              "text-[9px] mt-1 font-mono font-bold leading-normal",
-                              isSelected ? colorStyle.text : "text-gray-400"
-                            )}
-                          >
-                            {option.mnemonic}
-                          </p>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-      </motion.div>
+                            {option.name}
+                          </span>
+                        </div>
 
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCard, colorStyle.border)}
-      >
-        <motion.div
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
-        >
-          <motion.h3
-            {...mbtiMotionStyles}
-            className={cn(mbtiCardTitle, "!text-black")}
-          >
-            💫 性格特点 / TRAITS
-          </motion.h3>
-        </motion.div>
+                        <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-soft">
+                          {option.description}
+                        </p>
+                        <p className="mt-1.5 text-[0.8125rem] text-ink-ghost">
+                          {option.mnemonic}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
 
-        <motion.div {...mbtiMotionStyles} className="p-4 bg-white">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-4">
-              {renderTraitList("优点 / STRENGTHS", type.strengths)}
-              {renderTraitList("缺点 / WEAKNESSES", type.weaknesses)}
-            </div>
-            <div className="space-y-4">
-              {renderTraitList("表面特征 / SURFACE TRAITS", type.surfaceTraits)}
-              {renderTraitList("实际特征 / ACTUAL TRAITS", type.actualTraits)}
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      <Section label="Traits" title="性格特点">
+        <div className="grid grid-cols-1 gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          <TraitList title="优点 Strengths" items={type.strengths} />
+          <TraitList title="缺点 Weaknesses" items={type.weaknesses} />
+          <TraitList title="表面特征 Surface" items={type.surfaceTraits} />
+          <TraitList title="实际特征 Actual" items={type.actualTraits} />
+        </div>
+      </Section>
 
-      {MBTIOfficialMatches(colorStyle, type)}
-    </div>
+      <MBTIOfficialMatches type={type} />
+    </>
   );
 }

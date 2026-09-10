@@ -1,232 +1,177 @@
 "use client";
 
-import { motion } from "motion/react";
-import { MBTIType } from "@/types/mbti";
-import { cn } from "@/lib/utils";
-import {
-  mbtiCard,
-  mbtiCardHeader,
-  mbtiCardTitle,
-  getMbtiColor,
-  mbtiMotionStyles,
-} from "@/styles/mbti-styles";
-import { mbtiMatches, mbtiTypes } from "@/data/mbti-data";
 import Image from "next/image";
+import { MBTIType } from "@/types/mbti";
+import { mbtiMatches, mbtiTypes } from "@/data/mbti-data";
+import { accentOf, accentWash } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
+import { Section } from "./section";
 
 interface MBTIMatchesProps {
   type: MBTIType;
 }
 
-export function MBTIMatches({ type }: MBTIMatchesProps) {
-  const colorStyle = getMbtiColor(type.group);
-  const { setSelectedType } = useMBTIStore();
-
-  // 找到当前类型相关的所有配对
-  const relevantMatches = mbtiMatches.filter((match) =>
-    match.pair.includes(type.type)
-  );
-
-  const getMatchPartner = (match: (typeof mbtiMatches)[0]) => {
-    const partnerId =
-      match.pair[0] === type.type ? match.pair[1] : match.pair[0];
-    return mbtiTypes.find((t) => t.type === partnerId);
-  };
-
-  // 合并相似的匹配模式
-  const combinedMatches = relevantMatches.reduce(
-    (acc, match) => {
-      const partner = getMatchPartner(match);
-      if (!partner) return acc;
-
-      const key = `${type.cognitiveFunctions}-${partner.cognitiveFunctions}`;
-      if (!acc[key]) {
-        acc[key] = {
-          partner,
-          matches: [],
-          uniqueNames: new Set<string>(),
-        };
-      }
-      acc[key].matches.push(match);
-      acc[key].uniqueNames.add(match.name);
-      return acc;
-    },
-    {} as Record<
-      string,
-      {
-        partner: (typeof mbtiTypes)[0];
-        matches: typeof mbtiMatches;
-        uniqueNames: Set<string>;
-      }
-    >
-  );
-
+/** Small portrait + code, borderless — used on both sides of a pairing. */
+function TypeChip({
+  type,
+  onClick,
+  align = "left",
+}: {
+  type: MBTIType;
+  onClick: () => void;
+  align?: "left" | "right";
+}) {
   return (
-    <motion.div
-      {...mbtiMotionStyles}
-      className={cn(mbtiCard, colorStyle.border)}
+    <button
+      type="button"
+      onClick={onClick}
+      className={`group/chip flex min-w-0 items-center gap-3 text-left transition-opacity hover:opacity-60 ${
+        align === "right" ? "sm:flex-row-reverse sm:text-right" : ""
+      }`}
     >
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
+      <span
+        className="relative h-14 w-14 shrink-0 overflow-hidden"
+        style={{ backgroundColor: accentWash(type.group) }}
       >
-        <motion.h3
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, "!text-black")}
-        >
-          🤗 认知功能拍档 / COGNITIVE PARTNERS
-        </motion.h3>
-      </motion.div>
-
-      <motion.div {...mbtiMotionStyles} className="p-4 bg-[#F0F0F0]">
-        <div className="space-y-4">
-          {Object.values(combinedMatches).map(
-            ({ partner, matches, uniqueNames }, index) => (
-              <motion.div
-                key={index}
-                {...mbtiMotionStyles}
-                className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-none border-4 border-black bg-white shadow-[4px_4px_0px_0px_black]"
-              >
-                <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-                  {/* Left Partner */}
-                  <div
-                    className="flex flex-row md:flex-col items-center gap-3 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => setSelectedType(type)}
-                  >
-                    <div className="relative w-12 h-12 rounded-none overflow-hidden border-2 border-black shadow-[2px_2px_0px_0px_black] flex-none">
-                      <Image
-                        src={`/mbti_img/${type.image}`}
-                        alt={type.title}
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-black uppercase tracking-tighter truncate">
-                        {type.type}
-                      </span>
-                      <span className="text-[10px] text-gray-600 font-bold font-mono truncate">
-                        {type.cognitiveFunctions}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Matching Info Badge */}
-                  <div className="flex flex-col items-center w-full md:w-[160px] py-2 px-3 border-2 border-dashed border-black bg-gray-50">
-                    <span className="text-xs font-black text-[#D02020] text-center line-clamp-1 uppercase tracking-tight">
-                      {Array.from(uniqueNames).join("；")}
-                    </span>
-                    <span className="text-[10px] text-black font-extrabold text-center mt-1 uppercase tracking-tighter">
-                      {matches.map((m) => m.matchType).join("；")}
-                    </span>
-                  </div>
-
-                  {/* Right Partner */}
-                  <div
-                    className="flex flex-row md:flex-col items-center gap-3 w-full md:w-[120px] cursor-pointer hover:opacity-80 transition-opacity"
-                    onClick={() => setSelectedType(partner)}
-                  >
-                    <div className="relative w-12 h-12 rounded-none overflow-hidden border-2 border-black shadow-[2px_2px_0px_0px_black] flex-none">
-                      <Image
-                        src={`/mbti_img/${partner.image}`}
-                        alt={partner.title}
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-black uppercase tracking-tighter truncate">
-                        {partner.type}
-                      </span>
-                      <span className="text-[10px] text-gray-600 font-bold font-mono truncate">
-                        {partner.cognitiveFunctions}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="w-full md:flex-1 mt-3 md:mt-0 md:pl-4 md:border-l-4 md:border-black">
-                  <p className="text-xs text-gray-800 leading-relaxed font-bold">
-                    {matches.map((m) => m.description).join("；")}
-                  </p>
-                </div>
-              </motion.div>
-            )
-          )}
-        </div>
-      </motion.div>
-    </motion.div>
+        <Image
+          src={`/mbti_img/${type.image}`}
+          alt={type.type}
+          fill
+          sizes="56px"
+          className="object-contain object-bottom"
+        />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-lg font-medium leading-none tracking-tight text-ink">
+          {type.type}
+        </span>
+        <span className="mt-1.5 block truncate text-[0.75rem] tracking-tight text-ink-ghost">
+          {type.cognitiveFunctions}
+        </span>
+      </span>
+    </button>
   );
 }
 
-export function MBTIOfficialMatches(
-  colorStyle: {
-    bg: string;
-    bgDark: string;
-    text: string;
-    border: string;
-    hover: string;
-  },
-  type: MBTIType
-) {
-  const { setSelectedType } = useMBTIStore();
+export function MBTIMatches({ type }: MBTIMatchesProps) {
+  const setSelectedType = useMBTIStore((s) => s.setSelectedType);
+  const accent = accentOf(type.group);
+
+  const relevant = mbtiMatches.filter((match) => match.pair.includes(type.type));
+
+  const partnerOf = (match: (typeof mbtiMatches)[0]) => {
+    const partnerId = match.pair[0] === type.type ? match.pair[1] : match.pair[0];
+    return mbtiTypes.find((t) => t.type === partnerId);
+  };
+
+  const combined = relevant.reduce((acc, match) => {
+    const partner = partnerOf(match);
+    if (!partner) return acc;
+    const key = partner.type;
+    if (!acc[key]) {
+      acc[key] = { partner, matches: [], names: new Set<string>() };
+    }
+    acc[key].matches.push(match);
+    acc[key].names.add(match.name);
+    return acc;
+  }, {} as Record<string, { partner: MBTIType; matches: typeof mbtiMatches; names: Set<string> }>);
+
+  const pairs = Object.values(combined);
+  if (pairs.length === 0) return null;
 
   return (
-    <motion.div
-      {...mbtiMotionStyles}
-      className={cn(mbtiCard, colorStyle.border)}
+    <Section
+      label="Cognitive Partners"
+      title="认知功能拍档"
+      note="按功能栈的结构关系配对，而非印象。"
     >
-      <motion.div
-        {...mbtiMotionStyles}
-        className={cn(mbtiCardHeader, "py-3 bg-[#E0E0E0] border-b-4 border-black")}
-      >
-        <motion.h3
-          {...mbtiMotionStyles}
-          className={cn(mbtiCardTitle, "!text-black")}
-        >
-          🥰 官方最佳拍档 / MBTI OFFICIAL MATCHES
-        </motion.h3>
-      </motion.div>
+      <div>
+        {pairs.map(({ partner, matches, names }) => (
+          <div
+            key={partner.type}
+            className="rule-t grid grid-cols-1 gap-6 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16"
+          >
+            {/* The pairing */}
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
+              <TypeChip type={type} onClick={() => setSelectedType(type)} />
 
-      <motion.div {...mbtiMotionStyles} className="p-4 bg-white">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {type.bestPartners.map((partnerType, index) => {
-            const partner = mbtiTypes.find((t) => t.type === partnerType);
-            if (!partner) return null;
+              <span
+                className="hidden h-px flex-1 sm:block"
+                style={{ backgroundColor: accent, opacity: 0.35 }}
+              />
 
-            return (
-              <motion.div
-                key={index}
-                {...mbtiMotionStyles}
-                className="flex items-center gap-3 cursor-pointer p-2 border-2 border-black rounded-none shadow-[2px_2px_0px_0px_black] hover:bg-gray-50 transition-colors"
+              <TypeChip
+                type={partner}
+                align="right"
                 onClick={() => setSelectedType(partner)}
+              />
+            </div>
+
+            {/* The reading */}
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span
+                  className="text-[0.9375rem] font-medium tracking-tight"
+                  style={{ color: accent }}
+                >
+                  {Array.from(names).join(" · ")}
+                </span>
+                <span className="eyebrow">
+                  {matches.map((m) => m.matchType).join(" / ")}
+                </span>
+              </div>
+              <p className="mt-3 text-[0.9375rem] leading-[1.8] text-ink-soft">
+                {matches.map((m) => m.description).join("；")}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+export function MBTIOfficialMatches({ type }: MBTIMatchesProps) {
+  const setSelectedType = useMBTIStore((s) => s.setSelectedType);
+
+  return (
+    <Section label="Official Matches" title="官方最佳拍档">
+      <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3 lg:grid-cols-4">
+        {type.bestPartners.map((code) => {
+          const partner = mbtiTypes.find((t) => t.type === code);
+          if (!partner) return null;
+
+          return (
+            <button
+              key={code}
+              type="button"
+              onClick={() => setSelectedType(partner)}
+              className="rule-t flex items-center gap-4 py-4 text-left transition-opacity hover:opacity-60"
+            >
+              <span
+                className="relative h-14 w-14 shrink-0 overflow-hidden"
+                style={{ backgroundColor: accentWash(partner.group) }}
               >
-                <div className="relative w-12 h-12 rounded-none overflow-hidden border border-black shadow-[1px_1px_0px_0px_black] flex-none">
-                  <Image
-                    src={`/mbti_img/${partner.image}`}
-                    alt={partner.title}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <span
-                    className={cn("text-xs font-black uppercase tracking-tighter block", colorStyle.text)}
-                  >
-                    {partner.type}
-                  </span>
-                  <span className="text-[10px] text-gray-700 font-bold block truncate">
-                    {partner.title}
-                  </span>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
-    </motion.div>
+                <Image
+                  src={`/mbti_img/${partner.image}`}
+                  alt={partner.type}
+                  fill
+                  sizes="56px"
+                  className="object-contain object-bottom"
+                />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-lg font-medium leading-none tracking-tight text-ink">
+                  {partner.type}
+                </span>
+                <span className="mt-1.5 block truncate text-[0.8125rem] text-ink-faint">
+                  {partner.title}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </Section>
   );
 }

@@ -1,17 +1,29 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Outfit, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
+import { SiteHeader } from "@/components/site-header";
+import { Footer } from "@/components/footer";
+import { TypeDetail } from "@/components/type-detail";
 
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
-  weight: ["400", "500", "700", "900"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+});
+
+// Latin comes from Outfit; this carries the Chinese, at matching weights.
+const notoSansSC = Noto_Sans_SC({
+  subsets: ["latin"],
+  variable: "--font-noto-sc",
+  weight: ["300", "400", "500", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "MBTI 功能推导器 (逻辑解释版)",
+  title: "Frank MBTI · 从 MBTI 到荣格八维",
   description:
-    "通过 MBTI 代码逐步推导出认知功能栈，了解你的性格类型和认知功能。",
+    "通过 MBTI 代码逐步推导认知功能栈，理解性格类型背后的思维运作机制。",
 };
 
 export default function RootLayout({
@@ -21,10 +33,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh">
-      <body className={`${outfit.variable} font-sans antialiased`}>
-        {children}
+      <body className={`${outfit.variable} ${notoSansSC.variable} font-sans antialiased`}>
+        <div className="flex min-h-screen flex-col bg-paper">
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+
+        {/* One detail surface for the whole site */}
+        <TypeDetail />
       </body>
     </html>
   );
 }
-
