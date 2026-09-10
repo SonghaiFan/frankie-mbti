@@ -21,9 +21,9 @@ function Block({
   className?: string;
 }) {
   return (
-    <div className={cn("rule-t pt-4", className)}>
+    <div className={cn("rule-t pt-4 lg:pt-3.5", className)}>
       <span className="eyebrow">{label}</span>
-      <div className="mt-3">{children}</div>
+      <div className="mt-3 lg:mt-2.5">{children}</div>
     </div>
   );
 }
@@ -133,14 +133,15 @@ export function TypeStage() {
     <section
       className={cn(
         "mx-auto w-full max-w-[1560px] px-6 sm:px-10 lg:px-16",
-        "lg:flex lg:min-h-[calc(100vh-5rem)] lg:flex-col lg:justify-center"
+        "lg:flex lg:min-h-full lg:flex-col lg:justify-center"
       )}
     >
       <div
         className={cn(
           "grid gap-10 py-10 sm:gap-14 sm:py-14",
           "lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)_minmax(0,21rem)]",
-          "lg:grid-rows-[auto_1fr] lg:items-start lg:gap-x-16 lg:gap-y-10"
+          "lg:grid-rows-[auto_1fr] lg:min-h-0 lg:items-start",
+          "lg:gap-x-16 lg:gap-y-5 lg:py-4"
         )}
       >
         {/* ── A · Identity ── */}
@@ -156,19 +157,19 @@ export function TypeStage() {
               transition={{ duration: 0.35, ease: easeOut }}
             >
               <h1
-                className="display mt-6 text-ink"
-                style={{ fontSize: "clamp(3.5rem, 15vw, 7rem)" }}
+                className="display mt-6 text-ink lg:mt-4"
+                style={{ fontSize: "clamp(3rem, 11vw, 5.75rem)" }}
               >
                 {type.type}
               </h1>
 
-              <p className="mt-4 text-2xl font-medium tracking-tight text-ink sm:text-3xl">
+              <p className="mt-4 text-2xl font-medium tracking-tight text-ink sm:text-3xl lg:mt-3">
                 {type.title}
               </p>
               <p className="mt-3 text-[0.9375rem] leading-[1.8] text-ink-soft">
                 {type.traits}
               </p>
-              <div className="mt-5 flex items-center gap-2.5">
+              <div className="mt-5 flex items-center gap-2.5 lg:mt-4">
                 <span
                   className="h-1.5 w-1.5 rounded-full"
                   style={{ backgroundColor: accent }}
@@ -226,19 +227,13 @@ export function TypeStage() {
 
         {/* ── M · The control panel ── */}
         <div className="lg:col-start-3 lg:row-start-1">
-          <p className="mb-10 hidden text-right text-[0.8125rem] italic leading-[1.8] text-ink-faint lg:block">
-            在有限颗粒度下，
-            <br />
-            这似乎是最好的谈论性格的方法。
-          </p>
-
           <div className="rule-t pt-4">
             <div className="flex items-baseline justify-between gap-4">
               <span className="eyebrow">四维偏好 Preference</span>
               <span className="text-[0.75rem] text-ink-ghost">拨动切换</span>
             </div>
 
-            <div className="mt-6 space-y-5">
+            <div className="mt-4 space-y-3">
               {dimensions.map((dimension, i) => (
                 <PreferenceSwitch
                   key={dimension.name}
@@ -253,20 +248,20 @@ export function TypeStage() {
         </div>
 
         {/* ── T · Attributes ── */}
-        <div className="space-y-8 lg:col-start-1 lg:row-start-2">
+        <div className="space-y-7 lg:col-start-1 lg:row-start-2 lg:space-y-4">
           <Block label="关键特征 Key Traits">
-            <Terms items={type.actualTraits} limit={6} />
+            <Terms items={type.actualTraits} limit={4} />
           </Block>
           <Block label="优势 Strengths">
-            <Terms items={type.strengths} />
+            <Terms items={type.strengths} limit={3} />
           </Block>
           <Block label="盲点 Blind Spots">
-            <Terms items={type.weaknesses} />
+            <Terms items={type.weaknesses} limit={3} />
           </Block>
         </div>
 
         {/* ── R · Relations & stack ── */}
-        <div className="space-y-8 lg:col-start-3 lg:row-start-2">
+        <div className="space-y-7 lg:col-start-3 lg:row-start-2 lg:space-y-4">
           <Block label="契合类型 Compatible">
             <div className="flex flex-wrap gap-x-5 gap-y-2">
               {type.bestPartners.map((partner) => (

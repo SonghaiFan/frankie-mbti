@@ -92,8 +92,8 @@ export function MBTICompactTable() {
   const colWidths = ["w-16", ...columns.map((c) => c.width)];
 
   return (
-    <section>
-      <header className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
+    <section className="flex flex-col lg:h-full lg:min-h-0">
+      <header className="mb-8 flex shrink-0 flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
         <div>
           <span className="eyebrow">Index</span>
           <h2 className="mt-3 text-2xl font-medium tracking-tight text-ink sm:text-[1.75rem]">
@@ -112,7 +112,7 @@ export function MBTICompactTable() {
         </div>
       </header>
 
-      <div className="scroll-quiet overflow-x-auto">
+      <div className="scroll-quiet overflow-x-auto lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
         <table className="w-full table-fixed text-left text-[0.8125rem]">
           <colgroup>
             {colWidths.map((w, i) => (
@@ -120,11 +120,11 @@ export function MBTICompactTable() {
             ))}
           </colgroup>
 
-          <thead>
+          <thead className="sticky top-0 z-10 bg-paper">
             <tr className="rule-b">
               <th className="pb-4" />
               {columns.map((c) => (
-                <th key={c.key} className="pb-4 pr-6 font-normal">
+                <th key={c.key} className="pb-4 pr-6 text-left font-normal">
                   <span className="eyebrow">{c.label}</span>
                 </th>
               ))}
@@ -191,7 +191,7 @@ export function MBTICompactTable() {
         </table>
       </div>
 
-      <p className="rule-t mt-2 pt-6 text-[0.8125rem] leading-relaxed text-ink-ghost">
+      <p className="rule-t mt-2 shrink-0 pt-5 text-[0.8125rem] leading-relaxed text-ink-ghost">
         点击类型代码展开详情。特征列自动轮播，鼠标悬停可暂停。
       </p>
     </section>

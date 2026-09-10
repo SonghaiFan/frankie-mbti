@@ -170,3 +170,13 @@ body {
   outline: 1px solid var(--ink);
   outline-offset: 3px;
 }
+
+/* Picker reel: native scroll + snap, no visible scrollbar */
+.reel-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+.reel-scroll::-webkit-scrollbar {
+  display: none;
+}

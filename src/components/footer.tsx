@@ -22,11 +22,15 @@ export function Footer() {
     <>
       <footer onClick={handleClick} className="select-none">
         <div className="mx-auto w-full max-w-[1560px] px-6 sm:px-10 lg:px-16">
-          <div className="rule-t flex flex-wrap items-baseline justify-between gap-6 py-10 sm:py-14">
+          <div className="rule-t flex flex-wrap items-baseline justify-between gap-6 py-8 sm:py-10 lg:py-4">
             <span className="flex items-center gap-2.5">
               <FrankMark className="h-6 w-auto text-ink-faint" />
               <span className="eyebrow">MBTI</span>
             </span>
+            <p className="hidden max-w-[38ch] text-[0.8125rem] italic leading-relaxed text-ink-ghost lg:block">
+              在有限颗粒度下，这似乎是最好的谈论性格的方法。
+            </p>
+
             <div className="flex items-baseline gap-8">
               <a
                 href="https://github.com/songhaifan2025"

@@ -34,14 +34,16 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <body className={`${outfit.variable} ${notoSansSC.variable} font-sans antialiased`}>
-        <div className="flex min-h-screen flex-col bg-paper">
+        {/* Below lg the page scrolls normally; from lg up the app is a
+            fixed frame and any overflow is handled inside a view. */}
+        <div className="flex min-h-screen flex-col bg-paper lg:h-[100dvh] lg:min-h-0 lg:overflow-hidden">
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 lg:min-h-0 lg:overflow-y-auto">{children}</main>
           <Footer />
-        </div>
 
-        {/* One detail surface for the whole site */}
-        <TypeDetail />
+          {/* One detail surface for the whole site; it portals to <body> */}
+          <TypeDetail />
+        </div>
       </body>
     </html>
   );

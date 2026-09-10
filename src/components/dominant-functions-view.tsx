@@ -21,21 +21,25 @@ export function DominantFunctionsView() {
   const expandCard = useMBTIStore((state) => state.expandCard);
 
   return (
-    <section>
-      <header className="rule-b mb-14 pb-8 sm:mb-20 sm:pb-10">
-        <span className="eyebrow">Function Analysis</span>
-        <h2
-          className="display mt-5 text-ink"
-          style={{ fontSize: "clamp(1.875rem, 4.2vw, 3.25rem)" }}
-        >
-          按主导功能分组
-        </h2>
-        <p className="mt-6 max-w-[46ch] text-[0.9375rem] leading-[1.8] text-ink-soft">
-          每两个类型共享同一个主导功能——他们看世界的第一反应是同一种。
-        </p>
+    <section className="flex flex-col lg:h-full lg:min-h-0">
+      <header className="rule-b mb-12 shrink-0 pb-6 sm:mb-16 sm:pb-8 lg:mb-8 lg:pb-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+          <div>
+            <span className="eyebrow">Function Analysis</span>
+            <h2
+              className="display mt-4 text-ink lg:mt-3"
+              style={{ fontSize: "clamp(1.75rem, 3.4vw, 2.75rem)" }}
+            >
+              按主导功能分组
+            </h2>
+          </div>
+          <p className="max-w-[42ch] text-[0.875rem] leading-[1.8] text-ink-soft lg:text-right">
+            每两个类型共享同一个主导功能——他们看世界的第一反应是同一种。
+          </p>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 gap-x-12 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="scroll-quiet grid grid-cols-1 gap-x-12 gap-y-14 sm:grid-cols-2 lg:min-h-0 lg:flex-1 lg:grid-cols-4 lg:gap-y-5 lg:overflow-y-auto">
         {dominantGroups.map((group, index) => {
           const groupTypes = mbtiTypes.filter((t) => group.types.includes(t.type));
           const accent = accentOf(groupTypes[0]?.group);
@@ -52,9 +56,9 @@ export function DominantFunctionsView() {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <div className="rule-t pt-5">
+              <div className="rule-t pt-4">
                 <span
-                  className="text-4xl font-medium leading-none tracking-tight"
+                  className="text-3xl font-medium leading-none tracking-tight lg:text-4xl"
                   style={{ color: accent }}
                 >
                   {group.code}
@@ -65,13 +69,13 @@ export function DominantFunctionsView() {
                 </p>
               </div>
 
-              <div className="mt-6">
+              <div className="mt-3">
                 {groupTypes.map((type) => (
                   <button
                     key={type.type}
                     type="button"
                     onClick={() => expandCard(type)}
-                    className="rule-t flex w-full items-center gap-4 py-4 text-left transition-opacity hover:opacity-60"
+                    className="rule-t flex w-full items-center gap-4 py-2.5 text-left transition-opacity hover:opacity-60"
                   >
                     <span
                       className="relative h-12 w-12 shrink-0 overflow-hidden"

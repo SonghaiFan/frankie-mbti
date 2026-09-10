@@ -12,7 +12,7 @@ const SHELL = "mx-auto w-full max-w-[1560px] px-6 sm:px-10 lg:px-16";
 const views = [
   { href: "/", name: "类型", nameEn: "Types" },
   { href: "/functions", name: "主导功能", nameEn: "Functions" },
-  { href: "/matrix", name: "配对矩阵", nameEn: "Matrix" },
+  { href: "/pairing", name: "配对", nameEn: "Pairing" },
   { href: "/compact", name: "一览表", nameEn: "Index" },
 ];
 
