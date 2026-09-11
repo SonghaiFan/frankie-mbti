@@ -5,7 +5,7 @@ export interface MBTIType {
   slogan: string;
   color: string;
   group: string;
-  traits: string;
+  group_des: string;
   image: string;
   strengths: string[];
   weaknesses: string[];
@@ -18,7 +18,7 @@ export interface MBTIType {
 export interface MBTIDimension {
   name: string;
   description: string;
-  traits: string[];
+  group_des: string[];
 }
 
 export interface MBTIGroup {
@@ -56,7 +56,7 @@ export interface CognitiveFunction {
 export type MBTIDimensionInfo = {
   name: string;
   description: string;
-  traits: string[];
+  group_des: string[];
 };
 
 export interface MBTIGroupInfo {

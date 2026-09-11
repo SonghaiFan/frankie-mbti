@@ -8,7 +8,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NT 冷静规划王，拒绝废话和小情绪",
     color: "purple",
     group: "分析师",
-    traits: "N直觉 + T理性 = 紫色脑力派",
+    group_des: "N直觉 + T理性 = 紫色脑力派",
     image: "Architect.svg",
     strengths: ["擅于解决问题", "对理念非常坚定", "善于吸收知识", "洞察力精准"],
     weaknesses: [
@@ -58,7 +58,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NT 怪咖逻辑脑，想法一堆动手零分",
     color: "purple",
     group: "分析师",
-    traits: "N直觉 + T理性 = 紫色脑力派",
+    group_des: "N直觉 + T理性 = 紫色脑力派",
     image: "Logician.svg",
     strengths: [
       "天资聪颖反应快",
@@ -102,7 +102,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NT 霸总执行力，不服就干",
     color: "purple",
     group: "分析师",
-    traits: "N直觉 + T理性 = 紫色脑力派",
+    group_des: "N直觉 + T理性 = 紫色脑力派",
     image: "Commander.svg",
     strengths: [
       "擅于决策有领导力",
@@ -152,7 +152,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NT 辩论狂人，歪理满天飞但有创意",
     color: "purple",
     group: "分析师",
-    traits: "N直觉 + T理性 = 紫色脑力派",
+    group_des: "N直觉 + T理性 = 紫色脑力派",
     image: "Debater.svg",
     strengths: [
       "拥有领袖气质",
@@ -200,7 +200,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NF 心灵导师型，情感细腻爱隐忍",
     color: "green",
     group: "外交官",
-    traits: "N直觉 + F情感 = 绿色理想派",
+    group_des: "N直觉 + F情感 = 绿色理想派",
     image: "Advocate.svg",
     strengths: ["为人处世圆融", "擅长聆听", "具备正义感", "学习能力强"],
     weaknesses: [
@@ -240,7 +240,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NF emo梦幻王，内耗艺术家",
     color: "green",
     group: "外交官",
-    traits: "N直觉 + F情感 = 绿色理想派",
+    group_des: "N直觉 + F情感 = 绿色理想派",
     image: "Mediator.svg",
     strengths: ["平易近人", "喜欢挑战新事物", "表达能力强", "非常了解自己目标"],
     weaknesses: [
@@ -287,7 +287,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NF 社交大哥大，做事热心肠",
     color: "green",
     group: "外交官",
-    traits: "N直觉 + F情感 = 绿色理想派",
+    group_des: "N直觉 + F情感 = 绿色理想派",
     image: "Protagonist.svg",
     strengths: ["外向活泼", "富有同情心", "领导能力出色", "乐观开朗"],
     weaknesses: [
@@ -329,7 +329,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "NF 热情小太阳，创意多、坐不住",
     color: "green",
     group: "外交官",
-    traits: "N直觉 + F情感 = 绿色理想派",
+    group_des: "N直觉 + F情感 = 绿色理想派",
     image: "Campaigner.svg",
     strengths: [
       "个性乐观开朗",
@@ -370,7 +370,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SJ 最强打工人，务实守规矩",
     color: "blue",
     group: "守护者",
-    traits: "S实感 + J判断 = 蓝色传统派",
+    group_des: "S实感 + J判断 = 蓝色传统派",
     image: "Logistician.svg",
     strengths: [
       "内敛稳重",
@@ -423,7 +423,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SJ 安静照顾型，操心大师",
     color: "blue",
     group: "守护者",
-    traits: "S实感 + J判断 = 蓝色传统派",
+    group_des: "S实感 + J判断 = 蓝色传统派",
     image: "Defender.svg",
     strengths: [
       "具有同理心",
@@ -473,7 +473,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SJ 管理框架狂，做事必须有规有矩",
     color: "blue",
     group: "守护者",
-    traits: "S实感 + J判断 = 蓝色传统派",
+    group_des: "S实感 + J判断 = 蓝色传统派",
     image: "Executive.svg",
     strengths: [
       "优秀的管理能力",
@@ -521,7 +521,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SJ 社交维稳王，好人脸但容易内伤",
     color: "blue",
     group: "守护者",
-    traits: "S实感 + J判断 = 蓝色传统派",
+    group_des: "S实感 + J判断 = 蓝色传统派",
     image: "Consul.svg",
     strengths: [
       "活泼外向乐于助人",
@@ -568,7 +568,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SP 修理达人，能动手绝不瞎叨叨",
     color: "yellow",
     group: "探险家",
-    traits: "S实感 + P感知 = 黄色体验派",
+    group_des: "S实感 + P感知 = 黄色体验派",
     image: "Virtuoso.svg",
     strengths: [
       "喜欢在实践中学习",
@@ -616,7 +616,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SP 文艺敏感挂，躲在角落创世界",
     color: "yellow",
     group: "探险家",
-    traits: "S实感 + P感知 = 黄色体验派",
+    group_des: "S实感 + P感知 = 黄色体验派",
     image: "Adventurer.svg",
     strengths: [
       "温柔",
@@ -660,7 +660,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SP 社交打野，爱冒险爱搞事",
     color: "yellow",
     group: "探险家",
-    traits: "S实感 + P感知 = 黄色体验派",
+    group_des: "S实感 + P感知 = 黄色体验派",
     image: "Entrepreneur.svg",
     strengths: [
       "行动派不拖泥带水",
@@ -707,7 +707,7 @@ export const mbtiTypes: MBTIType[] = [
     slogan: "SP 快乐星球王，颜控+冲动合体",
     color: "yellow",
     group: "探险家",
-    traits: "S实感 + P感知 = 黄色体验派",
+    group_des: "S实感 + P感知 = 黄色体验派",
     image: "Entertainer.svg",
     strengths: ["专注于当下", "乐观开朗", "大胆", "勇于尝试", "优秀的社交能力"],
     weaknesses: [
@@ -748,42 +748,42 @@ export const mbtiDimensions: Record<string, MBTIDimension> = {
   E: {
     name: "外向 Extraversion",
     description: "从外界吸能🔥 - 像太阳能板一样从外部世界获取能量",
-    traits: ["喜欢社交互动", "通过交谈思考", "寻求外部刺激", "精力充沛外放"],
+    group_des: ["喜欢社交互动", "通过交谈思考", "寻求外部刺激", "精力充沛外放"],
   },
   I: {
     name: "内向 Introversion",
     description: "从独处回血🧘 - 像充电宝一样需要独处时间恢复能量",
-    traits: ["享受独处时光", "深度思考内省", "内在世界丰富", "能量需要内敛"],
+    group_des: ["享受独处时光", "深度思考内省", "内在世界丰富", "能量需要内敛"],
   },
   S: {
     name: "感知 Sensing",
     description: "靠五官，脚踏实地🧠 - 实干家，关注现实具体的细节",
-    traits: ["重视实际经验", "注重具体细节", "相信眼见为实", "脚踏实地"],
+    group_des: ["重视实际经验", "注重具体细节", "相信眼见为实", "脚踏实地"],
   },
   N: {
     name: "直觉 iNtuition",
     description: "靠脑补，爱想未来💭 - 幻想王，关注可能性和未来",
-    traits: ["重视创意灵感", "关注未来发展", "寻找深层联系", "想象力丰富"],
+    group_des: ["重视创意灵感", "关注未来发展", "寻找深层联系", "想象力丰富"],
   },
   T: {
     name: "思维 Thinking",
     description: "看逻辑📊 - 像机器人一样用逻辑和理性做决定",
-    traits: ["追求逻辑自洽", "重视客观事实", "决策讲求效率", "以真理为标准"],
+    group_des: ["追求逻辑自洽", "重视客观事实", "决策讲求效率", "以真理为标准"],
   },
   F: {
     name: "情感 Feeling",
     description: "看感受❤️ - 像恋爱脑一样重视情感和价值观",
-    traits: ["重视人际和谐", "强调同理心", "以价值观为准", "关注他人感受"],
+    group_des: ["重视人际和谐", "强调同理心", "以价值观为准", "关注他人感受"],
   },
   J: {
     name: "判断 Judging",
     description: "有计划爱掌控📅 - 计划狂，喜欢确定性和秩序",
-    traits: ["规划未来行动", "追求秩序条理", "喜欢做决定", "及时完成任务"],
+    group_des: ["规划未来行动", "追求秩序条理", "喜欢做决定", "及时完成任务"],
   },
   P: {
     name: "感知 Perceiving",
     description: "随性自由派🎈 - 自由魂，保持开放和适应性",
-    traits: ["保持选项开放", "灵活应对变化", "享受探索过程", "随机应变"],
+    group_des: ["保持选项开放", "灵活应对变化", "享受探索过程", "随机应变"],
   },
 };
 

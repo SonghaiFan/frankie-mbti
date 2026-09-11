@@ -106,7 +106,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 <div>
                   <dt className="eyebrow">特征</dt>
                   <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
-                    {type.traits}
+                    {type.group_des}
                   </dd>
                 </div>
                 <div>
@@ -126,7 +126,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 <div>
                   <dt className="eyebrow text-[0.625rem]">特征</dt>
                   <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
-                    {type.traits}
+                    {type.group_des}
                   </dd>
                 </div>
                 <div>
