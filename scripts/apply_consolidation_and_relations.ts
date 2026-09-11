@@ -128,7 +128,7 @@ async function applyConsolidationAndRelations() {
     const delRes = await session.run(`
       MATCH (s:Series)
       WHERE NOT (s)<-[:BELONGS_TO_SERIES]-()
-      DELETE s
+      DETACH DELETE s
       RETURN count(s) AS deletedCount
     `);
     console.log(`Consolidated series. Removed ${delRes.records[0].get("deletedCount").toNumber()} empty Series nodes.`);

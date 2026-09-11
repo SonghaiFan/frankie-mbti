@@ -17,6 +17,8 @@ export interface MBTIType {
   coreParadox?: string;
   vividAnalogy?: string;
   energyModel?: string;
+  dualType?: string;
+  shadowType?: string;
 }
 
 export interface MBTIDimension {
