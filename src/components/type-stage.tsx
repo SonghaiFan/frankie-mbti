@@ -255,7 +255,7 @@ export function TypeStage() {
                   />
 
                   <span className="pointer-events-none absolute inset-x-0 bottom-1 text-center text-[0.6875rem] text-ink-ghost opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100 sm:bottom-0 sm:text-[0.8125rem]">
-                    查看完整档案 →
+                    查看档案 →
                   </span>
                 </button>
 
