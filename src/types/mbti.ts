@@ -28,6 +28,18 @@ export interface MBTIGroup {
   keywords: string;
 }
 
+export interface ColorGroupData {
+  code: string;
+  name: string;
+  color: string;
+  nickname: string;
+  formula: string;
+  trait: string;
+  keywords: string;
+  description: string;
+  types: string[];
+}
+
 export interface MBTIMatch {
   pair: [string, string];
   name: string;

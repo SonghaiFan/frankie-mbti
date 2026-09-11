@@ -206,7 +206,7 @@ export function TypeStage() {
                     {type.title}
                   </p>
                   <p className="mt-0.5 truncate text-[0.6875rem] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
-                    {type.traits}
+                    {type.nickname}
                   </p>
                   <div className="mt-1 flex items-center gap-1.5 sm:mt-5 lg:mt-4">
                     <span

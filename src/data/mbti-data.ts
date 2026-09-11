@@ -1,4 +1,4 @@
-import { MBTIType, MBTIDimension, MBTIGroup } from "@/types/mbti";
+import { MBTIType, MBTIDimension, MBTIGroup, ColorGroupData } from "@/types/mbti";
 
 export const mbtiTypes: MBTIType[] = [
   {
@@ -813,6 +813,53 @@ export const mbtiGroups: Record<string, MBTIGroup> = {
     keywords: "行动、自由、玩乐",
   },
 };
+
+export const colorGroups: ColorGroupData[] = [
+  {
+    code: "NT",
+    name: "分析师",
+    color: "purple",
+    nickname: "紫色脑力派",
+    formula: "N直觉 + T理性",
+    trait: "N直觉 + T理性 = 紫色脑力派",
+    keywords: "聪明 · 逻辑 · 战略",
+    description: "追求理性与知识体系，具备敏锐的前瞻洞察与战略规划力。",
+    types: ["INTJ", "INTP", "ENTJ", "ENTP"],
+  },
+  {
+    code: "NF",
+    name: "外交官",
+    color: "green",
+    nickname: "绿色理想派",
+    formula: "N直觉 + F情感",
+    trait: "N直觉 + F情感 = 绿色理想派",
+    keywords: "情感 · 梦想 · 沟通",
+    description: "重视人文关怀与深度连接，以理想主义热情赋能他人。",
+    types: ["INFJ", "INFP", "ENFJ", "ENFP"],
+  },
+  {
+    code: "SJ",
+    name: "守护者",
+    color: "blue",
+    nickname: "蓝色传统派",
+    formula: "S实感 + J判断",
+    trait: "S实感 + J判断 = 蓝色传统派",
+    keywords: "责任 · 稳定 · 传统",
+    description: "务实严谨、条理分明，是维系社会与组织秩序的中流砥柱。",
+    types: ["ISTJ", "ISFJ", "ESTJ", "ESFJ"],
+  },
+  {
+    code: "SP",
+    name: "探险家",
+    color: "yellow",
+    nickname: "黄色体验派",
+    formula: "S实感 + P感知",
+    trait: "S实感 + P感知 = 黄色体验派",
+    keywords: "行动 · 自由 · 玩乐",
+    description: "活在当下、身手敏捷，擅长随机应变并在现实中探索可能性。",
+    types: ["ISTP", "ISFP", "ESTP", "ESFP"],
+  },
+];
 
 export const cognitiveFunctions = {
   levels: [

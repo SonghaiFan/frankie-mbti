@@ -11,6 +11,7 @@ const SHELL = "mx-auto w-full max-w-[1560px] px-4 sm:px-10 lg:px-16";
 
 const views = [
   { href: "/", name: "类型", nameEn: "Types" },
+  { href: "/groups", name: "四大组别", nameEn: "Groups" },
   { href: "/functions", name: "主导功能", nameEn: "Functions" },
   { href: "/pairing", name: "配对", nameEn: "Pairing" },
   { href: "/compact", name: "一览表", nameEn: "Index" },
