@@ -13,6 +13,10 @@ export interface MBTIType {
   actualTraits: string[];
   bestPartners: string[];
   cognitiveFunctions: string;
+  archetype?: string;
+  coreParadox?: string;
+  vividAnalogy?: string;
+  energyModel?: string;
 }
 
 export interface MBTIDimension {

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { MBTITest } from "@/components/mbti-test";
 import { FrankMark } from "@/components/frank-mark";
+import { useMBTIStore } from "@/store/mbti-store";
 
 const SHELL = "mx-auto w-full max-w-[1560px] px-4 sm:px-10 lg:px-16";
 
@@ -20,6 +21,13 @@ const views = [
 export function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const fetchData = useMBTIStore((s) => s.fetchData);
+  const dataSource = useMBTIStore((s) => s.dataSource);
+  const dbStats = useMBTIStore((s) => s.dbStats);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -36,14 +44,25 @@ export function SiteHeader() {
       )}
     >
       <div className={cn(SHELL, "flex h-13 items-center justify-between gap-4 sm:h-20 sm:gap-8")}>
-        <Link
-          href="/"
-          aria-label="Frank MBTI · 首页"
-          className="group flex shrink-0 items-center gap-2 sm:gap-2.5 transition-opacity hover:opacity-60"
-        >
-          <FrankMark className="h-6 w-auto text-ink sm:h-8" />
-          <span className="eyebrow !text-ink text-[0.625rem] sm:text-[0.6875rem]">MBTI</span>
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            aria-label="Frank MBTI · 首页"
+            className="group flex shrink-0 items-center gap-2 sm:gap-2.5 transition-opacity hover:opacity-60"
+          >
+            <FrankMark className="h-6 w-auto text-ink sm:h-8" />
+            <span className="eyebrow !text-ink text-[0.625rem] sm:text-[0.6875rem]">MBTI</span>
+          </Link>
+          {dataSource === "neo4j" && (
+            <span
+              title={`Connected to Neo4j AuraDB (${dbStats?.nodes ?? 0} nodes, ${dbStats?.relationships ?? 0} rels)`}
+              className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-[0.625rem] text-emerald-700 bg-emerald-500/10 rounded-full border border-emerald-500/20 font-mono"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Graph {dbStats?.nodes ?? ""}
+            </span>
+          )}
+        </div>
 
         {/* Desktop: the views live here, not stacked down the page */}
         <nav className="hidden flex-1 items-center gap-10 md:flex">

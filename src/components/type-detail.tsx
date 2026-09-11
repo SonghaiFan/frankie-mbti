@@ -96,7 +96,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                   {type.type}
                 </h2>
                 <p className="mt-0.5 text-[0.8125rem] text-ink-soft sm:mt-3 sm:text-lg">
-                  {type.title} · {type.nickname}
+                  {type.title} · {type.nickname}{type.archetype ? ` · ${type.archetype}` : ""}
                 </p>
               </div>
 
@@ -115,6 +115,22 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                     {type.slogan}
                   </dd>
                 </div>
+                {type.vividAnalogy && (
+                  <div>
+                    <dt className="eyebrow">灵魂隐喻 / 拟人</dt>
+                    <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                      {type.vividAnalogy}
+                    </dd>
+                  </div>
+                )}
+                {type.coreParadox && (
+                  <div>
+                    <dt className="eyebrow">核心矛盾与内耗</dt>
+                    <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                      {type.coreParadox}
+                    </dd>
+                  </div>
+                )}
               </dl>
             </div>
           </div>
@@ -135,6 +151,22 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                     {type.slogan}
                   </dd>
                 </div>
+                {type.vividAnalogy && (
+                  <div>
+                    <dt className="eyebrow text-[0.625rem]">灵魂隐喻 / 拟人</dt>
+                    <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
+                      {type.vividAnalogy}
+                    </dd>
+                  </div>
+                )}
+                {type.coreParadox && (
+                  <div>
+                    <dt className="eyebrow text-[0.625rem]">核心矛盾与内耗</dt>
+                    <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
+                      {type.coreParadox}
+                    </dd>
+                  </div>
+                )}
               </dl>
 
               <MBTIIntroduction type={type} />

@@ -41,6 +41,15 @@ export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
         </span>
         ，它解释了思维的内在运作机制。
       </p>
+
+      {type.energyModel && (
+        <div className="mt-6 max-w-[52ch] rounded-xl bg-ink/5 p-4 sm:p-5 border border-rule">
+          <span className="eyebrow text-[0.6875rem] text-ink-soft">底层能量运转机制</span>
+          <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-ink font-medium">
+            {type.energyModel}
+          </p>
+        </div>
+      )}
     </Section>
   );
 }
