@@ -11,21 +11,27 @@ interface SectionProps {
   note?: string;
   children: ReactNode;
   className?: string;
+  noteClassName?: string;
 }
 
 /** The one section shape used everywhere: eyebrow, title, hairline, content. */
-export function Section({ label, title, note, children, className }: SectionProps) {
+export function Section({ label, title, note, children, className, noteClassName }: SectionProps) {
   return (
     <motion.section {...rise} className={cn(className)}>
-      <header className="rule-b mb-10 flex flex-col gap-4 pb-6 sm:mb-12 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
+      <header className="rule-b mb-4 flex flex-col gap-2 pb-3 sm:mb-12 sm:flex-row sm:items-end sm:justify-between sm:gap-12 sm:pb-6">
         <div className="min-w-0">
-          <span className="eyebrow">{label}</span>
-          <h3 className="mt-3 text-2xl font-medium leading-tight tracking-tight text-ink sm:text-[1.75rem]">
+          <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{label}</span>
+          <h3 className="mt-1.5 text-xl font-medium leading-tight tracking-tight text-ink sm:mt-3 sm:text-[1.75rem]">
             {title}
           </h3>
         </div>
         {note && (
-          <p className="max-w-[38ch] shrink-0 text-[0.8125rem] leading-relaxed text-ink-ghost sm:text-right">
+          <p
+            className={cn(
+              "max-w-[38ch] shrink-0 text-[0.75rem] leading-relaxed text-ink-ghost sm:text-[0.8125rem] sm:text-right",
+              noteClassName
+            )}
+          >
             {note}
           </p>
         )}
@@ -43,5 +49,5 @@ export function RuleRow({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={cn("rule-t py-4", className)}>{children}</div>;
+  return <div className={cn("rule-t py-2.5 sm:py-4", className)}>{children}</div>;
 }

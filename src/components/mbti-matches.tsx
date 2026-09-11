@@ -25,27 +25,27 @@ function TypeChip({
     <button
       type="button"
       onClick={onClick}
-      className={`group/chip flex min-w-0 items-center gap-3 text-left transition-opacity hover:opacity-60 ${
+      className={`group/chip flex min-w-0 items-center gap-2.5 text-left transition-opacity hover:opacity-60 sm:gap-3 ${
         align === "right" ? "sm:flex-row-reverse sm:text-right" : ""
       }`}
     >
       <span
-        className="relative h-14 w-14 shrink-0 overflow-hidden"
+        className="relative h-10 w-10 shrink-0 overflow-hidden sm:h-14 sm:w-14"
         style={{ backgroundColor: accentWash(type.group) }}
       >
         <Image
           src={`/mbti_img/${type.image}`}
           alt={type.type}
           fill
-          sizes="56px"
+          sizes="(max-width: 640px) 40px, 56px"
           className="object-contain object-bottom"
         />
       </span>
       <span className="min-w-0">
-        <span className="block text-lg font-medium leading-none tracking-tight text-ink">
+        <span className="block text-base font-medium leading-none tracking-tight text-ink sm:text-lg">
           {type.type}
         </span>
-        <span className="mt-1.5 block truncate text-[0.75rem] tracking-tight text-ink-ghost">
+        <span className="mt-1 block truncate text-[0.6875rem] tracking-tight text-ink-ghost sm:mt-1.5 sm:text-[0.75rem]">
           {type.cognitiveFunctions}
         </span>
       </span>
@@ -89,10 +89,10 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
         {pairs.map(({ partner, matches, names }) => (
           <div
             key={partner.type}
-            className="rule-t grid grid-cols-1 gap-6 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16"
+            className="rule-t grid grid-cols-1 gap-4 py-4 sm:gap-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16"
           >
             {/* The pairing */}
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
               <TypeChip type={type} onClick={() => setSelectedType(type)} />
 
               <span
@@ -111,16 +111,16 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
             <div>
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span
-                  className="text-[0.9375rem] font-medium tracking-tight"
+                  className="text-[0.875rem] font-medium tracking-tight sm:text-[0.9375rem]"
                   style={{ color: accent }}
                 >
                   {Array.from(names).join(" · ")}
                 </span>
-                <span className="eyebrow">
+                <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">
                   {matches.map((m) => m.matchType).join(" / ")}
                 </span>
               </div>
-              <p className="mt-3 text-[0.9375rem] leading-[1.8] text-ink-soft">
+              <p className="mt-1.5 text-[0.8125rem] leading-[1.7] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
                 {matches.map((m) => m.description).join("；")}
               </p>
             </div>
@@ -136,7 +136,7 @@ export function MBTIOfficialMatches({ type }: MBTIMatchesProps) {
 
   return (
     <Section label="Official Matches" title="官方最佳拍档">
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 sm:gap-x-8 sm:gap-y-2 sm:grid-cols-3 lg:grid-cols-4">
         {type.bestPartners.map((code) => {
           const partner = mbtiTypes.find((t) => t.type === code);
           if (!partner) return null;
@@ -146,25 +146,25 @@ export function MBTIOfficialMatches({ type }: MBTIMatchesProps) {
               key={code}
               type="button"
               onClick={() => setSelectedType(partner)}
-              className="rule-t flex items-center gap-4 py-4 text-left transition-opacity hover:opacity-60"
+              className="rule-t flex items-center gap-3 py-2 text-left transition-opacity hover:opacity-60 sm:gap-4 sm:py-4"
             >
               <span
-                className="relative h-14 w-14 shrink-0 overflow-hidden"
+                className="relative h-10 w-10 shrink-0 overflow-hidden sm:h-14 sm:w-14"
                 style={{ backgroundColor: accentWash(partner.group) }}
               >
                 <Image
                   src={`/mbti_img/${partner.image}`}
                   alt={partner.type}
                   fill
-                  sizes="56px"
+                  sizes="(max-width: 640px) 40px, 56px"
                   className="object-contain object-bottom"
                 />
               </span>
               <span className="min-w-0">
-                <span className="block text-lg font-medium leading-none tracking-tight text-ink">
+                <span className="block text-base font-medium leading-none tracking-tight text-ink sm:text-lg">
                   {partner.type}
                 </span>
-                <span className="mt-1.5 block truncate text-[0.8125rem] text-ink-faint">
+                <span className="mt-1 block truncate text-[0.75rem] text-ink-faint sm:mt-1.5 sm:text-[0.8125rem]">
                   {partner.title}
                 </span>
               </span>

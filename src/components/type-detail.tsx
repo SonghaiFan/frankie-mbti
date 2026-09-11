@@ -5,8 +5,9 @@ import Image from "next/image";
 import { useEffect } from "react";
 import Portal from "./portal";
 import { MBTIType } from "@/types/mbti";
-import { accentOf, accentWash, groupCode } from "@/styles/mbti-styles";
+import { accentOf, groupCode } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
+import { CharacterGlow } from "./character-glow";
 import { MBTIIntroduction } from "./mbti-introduction";
 import { MBTIDimensions } from "./mbti-dimensions";
 import { MBTICognitiveFunctions } from "./mbti-cognitive-functions";
@@ -49,7 +50,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
             onClick={onClose}
             type="button"
             aria-label="关闭"
-            className="absolute right-3 top-3 z-[100] flex h-10 w-10 items-center justify-center text-ink-faint transition-colors hover:text-ink sm:right-5 sm:top-5"
+            className="absolute right-2.5 top-2.5 z-[100] flex h-8 w-8 items-center justify-center text-ink-faint transition-colors hover:text-ink sm:right-5 sm:top-5 sm:h-10 sm:w-10"
           >
             <svg
               className="h-5 w-5"
@@ -64,39 +65,37 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
           </button>
 
           {/* Masthead */}
-          <div className="rule-b flex shrink-0 flex-row items-stretch">
-            <div
-              className="relative w-24 shrink-0 overflow-hidden sm:h-auto sm:min-h-[220px] sm:w-[34%] sm:max-w-[280px]"
-              style={{ backgroundColor: accentWash(type.group) }}
-            >
+          <div className="rule-b relative flex shrink-0 flex-row items-stretch overflow-hidden">
+            <div className="relative w-20 shrink-0 sm:h-auto sm:min-h-[220px] sm:w-[34%] sm:max-w-[280px]">
+              <CharacterGlow activeColor={type.color} />
               <Image
                 src={`/mbti_img/${type.image}`}
                 alt={type.type}
                 fill
-                sizes="(max-width: 640px) 96px, 300px"
-                className="object-contain object-bottom"
+                sizes="(max-width: 640px) 80px, 300px"
+                className="relative z-10 object-contain object-bottom"
               />
             </div>
 
-            <div className="flex flex-1 flex-col justify-between gap-8 p-4 pr-14 sm:p-10">
+            <div className="relative z-10 flex flex-1 flex-col justify-between gap-4 p-3 pr-10 sm:gap-8 sm:p-10">
               <div>
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <span
                     className="h-1.5 w-1.5 rounded-full"
                     style={{ backgroundColor: accent }}
                   />
-                  <span className="eyebrow" style={{ color: accent }}>
+                  <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]" style={{ color: accent }}>
                     {groupCode[type.group]} · {type.group}
                   </span>
                 </div>
 
                 <h2
-                  className="display mt-2 text-ink sm:mt-5"
-                  style={{ fontSize: "clamp(2rem, 6vw, 4.5rem)" }}
+                  className="display mt-1 text-ink sm:mt-5"
+                  style={{ fontSize: "clamp(1.75rem, 6vw, 4.5rem)" }}
                 >
                   {type.type}
                 </h2>
-                <p className="mt-1.5 text-[0.9375rem] text-ink-soft sm:mt-3 sm:text-lg">
+                <p className="mt-0.5 text-[0.8125rem] text-ink-soft sm:mt-3 sm:text-lg">
                   {type.title} · {type.nickname}
                 </p>
               </div>
@@ -121,18 +120,18 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
           </div>
 
           {/* Body */}
-          <div className="scroll-quiet flex-1 overflow-y-auto bg-paper px-6 py-10 sm:px-10 sm:py-16">
-            <div className="space-y-16 sm:space-y-28">
-              <dl className="grid grid-cols-1 gap-5 sm:hidden">
+          <div className="scroll-quiet flex-1 overflow-y-auto bg-paper px-4 py-6 sm:px-10 sm:py-16">
+            <div className="space-y-8 sm:space-y-28">
+              <dl className="grid grid-cols-1 gap-3 sm:hidden">
                 <div>
-                  <dt className="eyebrow">特征</dt>
-                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                  <dt className="eyebrow text-[0.625rem]">特征</dt>
+                  <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
                     {type.traits}
                   </dd>
                 </div>
                 <div>
-                  <dt className="eyebrow">宣告</dt>
-                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                  <dt className="eyebrow text-[0.625rem]">宣告</dt>
+                  <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
                     {type.slogan}
                   </dd>
                 </div>

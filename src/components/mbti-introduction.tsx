@@ -18,13 +18,13 @@ export function MBTIIntroduction({ type }: MBTIIntroductionProps) {
   return (
     <Section label="Concepts" title="人设，与底层操作系统">
       <p
-        className="max-w-[26ch] font-medium leading-[1.45] tracking-tight text-ink"
-        style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}
+        className="max-w-[26ch] font-medium leading-[1.4] tracking-tight text-ink sm:leading-[1.45]"
+        style={{ fontSize: "clamp(1.25rem, 3vw, 2.5rem)" }}
       >
         MBTI 是性格的人设，认知功能是大脑的操作系统。
       </p>
 
-      <p className="mt-10 max-w-[52ch] text-base leading-[1.9] text-ink-soft sm:mt-12">
+      <p className="mt-4 max-w-[52ch] text-[0.875rem] leading-[1.7] text-ink-soft sm:mt-12 sm:text-base sm:leading-[1.9]">
         你是{" "}
         <span
           className="border-b pb-0.5 font-medium text-ink"

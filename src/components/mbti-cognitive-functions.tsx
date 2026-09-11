@@ -44,8 +44,8 @@ function Chevron({ open }: { open: boolean }) {
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="eyebrow">{label}</dt>
-      <dd className="mt-2 text-[0.875rem] leading-[1.8] text-ink-soft">{value}</dd>
+      <dt className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{label}</dt>
+      <dd className="mt-1 text-[0.8125rem] leading-[1.7] text-ink-soft sm:mt-2 sm:text-[0.875rem] sm:leading-[1.8]">{value}</dd>
     </div>
   );
 }
@@ -115,22 +115,22 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
           type="button"
           onClick={() => setOpenFunction(isOpen ? null : code)}
           aria-expanded={isOpen}
-          className="group/row w-full py-5 text-left"
+          className="group/row w-full py-3 text-left sm:py-5"
         >
           <div className="flex items-baseline justify-between gap-4">
-            <div className="flex items-baseline gap-4">
+            <div className="flex items-baseline gap-3 sm:gap-4">
               <span
-                className="text-2xl font-medium leading-none tracking-tight"
+                className="text-xl font-medium leading-none tracking-tight sm:text-2xl"
                 style={{ color: isMine ? accent : undefined }}
               >
                 {code}
               </span>
-              <span className="text-[0.9375rem] text-ink">{func.name}</span>
+              <span className="text-[0.875rem] text-ink sm:text-[0.9375rem]">{func.name}</span>
             </div>
 
             <div className="flex shrink-0 items-center gap-4">
               {level && (
-                <span className="eyebrow hidden sm:inline">
+                <span className="eyebrow text-[0.625rem] hidden sm:inline sm:text-[0.6875rem]">
                   {rank + 1} · {level.name.split(" ")[0]}
                 </span>
               )}
@@ -138,7 +138,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             </div>
           </div>
 
-          <p className="mt-3 max-w-[54ch] text-[0.875rem] leading-relaxed text-ink-soft">
+          <p className="mt-1.5 max-w-[54ch] text-[0.8125rem] leading-relaxed text-ink-soft sm:mt-3 sm:text-[0.875rem]">
             {func.description}
           </p>
         </button>
@@ -152,7 +152,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               transition={{ duration: 0.45, ease: easeOut }}
               className="overflow-hidden"
             >
-              <dl className="grid grid-cols-1 gap-x-10 gap-y-6 pb-8 pt-2 sm:grid-cols-2">
+              <dl className="grid grid-cols-1 gap-x-10 gap-y-3 pb-4 pt-1 sm:grid-cols-2 sm:gap-y-6 sm:pb-8 sm:pt-2">
                 <Detail label="定义" value={func.definition} />
                 <Detail label="特征" value={func.characteristics} />
                 <Detail label="发展建议" value={func.training} />
@@ -171,26 +171,26 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
       title={cognitiveFunctions.description.title}
       note="点开任意一项，展开它的定义与发展建议。"
     >
-      <p className="max-w-[62ch] text-base leading-[1.9] text-ink-soft">
+      <p className="max-w-[62ch] text-[0.875rem] leading-[1.7] text-ink-soft sm:text-base sm:leading-[1.9]">
         {cognitiveFunctions.description.content}
       </p>
 
       {/* ── Your stack ── */}
-      <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-8 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 sm:mt-14 sm:gap-x-8 sm:gap-y-8 lg:grid-cols-4">
         {stack.map((code, index) => {
           const level = cognitiveFunctions.levels[index];
           const func = allFunctions[code];
           return (
-            <div key={code} className="rule-t pt-5">
-              <span className="eyebrow">{level?.name}</span>
+            <div key={code} className="rule-t pt-2.5 sm:pt-5">
+              <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{level?.name}</span>
               <p
-                className="mt-4 text-4xl font-medium leading-none tracking-tight sm:text-5xl"
+                className="mt-2 text-3xl font-medium leading-none tracking-tight sm:mt-4 sm:text-5xl"
                 style={{ color: index === 0 ? accent : undefined }}
               >
                 {code}
               </p>
-              <p className="mt-3 text-[0.9375rem] text-ink">{func?.name}</p>
-              <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-ghost">
+              <p className="mt-1 text-[0.8125rem] text-ink sm:mt-3 sm:text-[0.9375rem]">{func?.name}</p>
+              <p className="mt-1 text-[0.75rem] leading-relaxed text-ink-ghost sm:mt-2 sm:text-[0.8125rem]">
                 {level?.description}
               </p>
             </div>
@@ -199,18 +199,18 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
       </div>
 
       {/* ── Two-step deduction ── */}
-      <div className="mt-16 rule-t">
+      <div className="mt-8 rule-t sm:mt-16">
         <button
           type="button"
           onClick={() => setShowDeduction(!showDeduction)}
           aria-expanded={showDeduction}
-          className="flex w-full items-center justify-between gap-6 py-6 text-left"
+          className="flex w-full items-center justify-between gap-4 py-3 text-left sm:gap-6 sm:py-6"
         >
           <div className="min-w-0">
-            <h4 className="text-lg font-medium tracking-tight text-ink">
+            <h4 className="text-base font-medium tracking-tight text-ink sm:text-lg">
               主导功能两步推断法
             </h4>
-            <p className="mt-1.5 text-[0.875rem] text-ink-faint">
+            <p className="mt-1 text-[0.8125rem] text-ink-faint sm:mt-1.5 sm:text-[0.875rem]">
               从字母代码 {type.type} 反推主导功能 {inference.dominant}
             </p>
           </div>
@@ -226,15 +226,15 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               transition={{ duration: 0.5, ease: easeOut }}
               className="overflow-hidden"
             >
-              <div className="pb-12">
+              <div className="pb-6 sm:pb-12">
                 {/* Letters */}
-                <div className="grid grid-cols-4 gap-x-6">
+                <div className="grid grid-cols-4 gap-x-3 sm:gap-x-6">
                   {type.type.split("").map((letter, index) => (
-                    <div key={index} className="rule-t pt-5">
-                      <p className="text-4xl font-medium leading-none tracking-tight text-ink sm:text-5xl">
+                    <div key={index} className="rule-t pt-2.5 sm:pt-5">
+                      <p className="text-3xl font-medium leading-none tracking-tight text-ink sm:text-5xl">
                         {letter}
                       </p>
-                      <p className="mt-3 text-[0.8125rem] text-ink-faint">
+                      <p className="mt-1 text-[0.75rem] text-ink-faint sm:mt-3 sm:text-[0.8125rem]">
                         {letterMeaning(letter, index)}
                       </p>
                     </div>
@@ -242,20 +242,20 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 </div>
 
                 {/* Steps */}
-                <ol className="mt-12">
+                <ol className="mt-6 sm:mt-12">
                   {[
                     { title: "看 E/I 与 J/P，确定主导功能的朝向", body: inference.step1 },
                     { title: "由判断 / 知觉偏好，锁定具体功能", body: inference.step2 },
                   ].map((step, index) => (
-                    <li key={index} className="rule-t flex gap-6 py-6 sm:gap-10">
-                      <span className="eyebrow shrink-0 pt-1">
+                    <li key={index} className="rule-t flex gap-4 py-3 sm:gap-10 sm:py-6">
+                      <span className="eyebrow shrink-0 pt-0.5 sm:pt-1">
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <div className="min-w-0">
-                        <p className="text-[0.9375rem] font-medium text-ink">
+                        <p className="text-[0.875rem] font-medium text-ink sm:text-[0.9375rem]">
                           {step.title}
                         </p>
-                        <p className="mt-2 max-w-[54ch] text-[0.875rem] leading-[1.8] text-ink-soft">
+                        <p className="mt-1 max-w-[54ch] text-[0.8125rem] leading-[1.7] text-ink-soft sm:mt-2 sm:text-[0.875rem] sm:leading-[1.8]">
                           {step.body}
                         </p>
                       </div>
@@ -264,15 +264,15 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
                 </ol>
 
                 {/* Result */}
-                <div className="rule-t flex flex-wrap items-baseline gap-x-6 gap-y-2 pt-8">
-                  <span className="eyebrow">主导认知功能</span>
+                <div className="rule-t flex flex-wrap items-baseline gap-x-4 gap-y-1.5 pt-4 sm:gap-x-6 sm:gap-y-2 sm:pt-8">
+                  <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">主导认知功能</span>
                   <span
-                    className="text-4xl font-medium leading-none tracking-tight sm:text-5xl"
+                    className="text-3xl font-medium leading-none tracking-tight sm:text-5xl"
                     style={{ color: accent }}
                   >
                     {inference.dominant}
                   </span>
-                  <span className="text-[0.9375rem] text-ink-soft">
+                  <span className="text-[0.875rem] text-ink-soft sm:text-[0.9375rem]">
                     {allFunctions[inference.dominant]?.name}
                   </span>
                 </div>
@@ -283,17 +283,17 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
       </div>
 
       {/* ── All eight ── */}
-      <div className="mt-20 grid grid-cols-1 gap-x-16 gap-y-16 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-x-16 gap-y-8 sm:mt-20 sm:gap-y-16 lg:grid-cols-2">
         {[cognitiveFunctions.categories.judging, cognitiveFunctions.categories.perceiving].map(
           (category) => (
             <div key={category.title}>
-              <h4 className="text-lg font-medium tracking-tight text-ink">
+              <h4 className="text-base font-medium tracking-tight text-ink sm:text-lg">
                 {category.title}
               </h4>
-              <p className="mt-2 max-w-[46ch] text-[0.875rem] leading-relaxed text-ink-faint">
+              <p className="mt-1.5 max-w-[46ch] text-[0.8125rem] leading-relaxed text-ink-faint sm:mt-2 sm:text-[0.875rem]">
                 {category.description}
               </p>
-              <div className="mt-8">
+              <div className="mt-4 sm:mt-8">
                 {Object.entries(category.functions).map(([code, func]) =>
                   renderFunctionRow(code, func)
                 )}

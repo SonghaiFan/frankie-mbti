@@ -93,10 +93,10 @@ export function MBTICompactTable() {
 
   return (
     <section className="flex flex-col lg:h-full lg:min-h-0">
-      <header className="mb-8 flex shrink-0 flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
+      <header className="mb-3 flex shrink-0 flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-12">
         <div>
-          <span className="eyebrow">Index</span>
-          <h2 className="mt-3 text-2xl font-medium tracking-tight text-ink sm:text-[1.75rem]">
+          <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">Index</span>
+          <h2 className="mt-1 text-xl font-medium tracking-tight text-ink sm:mt-3 sm:text-[1.75rem]">
             十六型一览
           </h2>
         </div>
@@ -107,7 +107,7 @@ export function MBTICompactTable() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="搜索类型 / 功能 / 特征"
             aria-label="搜索"
-            className="w-full border-0 border-b border-rule bg-transparent pb-3 text-[0.9375rem] text-ink placeholder:text-ink-ghost focus:border-ink focus:outline-none focus:ring-0 transition-colors"
+            className="w-full border-0 border-b border-rule bg-transparent pb-1.5 text-[0.875rem] text-ink placeholder:text-ink-ghost focus:border-ink focus:outline-none focus:ring-0 transition-colors sm:pb-3 sm:text-[0.9375rem]"
           />
         </div>
       </header>
@@ -122,10 +122,10 @@ export function MBTICompactTable() {
 
           <thead className="sticky top-0 z-10 bg-paper">
             <tr className="rule-b">
-              <th className="pb-4" />
+              <th className="pb-2 sm:pb-4" />
               {columns.map((c) => (
-                <th key={c.key} className="pb-4 pr-6 text-left font-normal">
-                  <span className="eyebrow">{c.label}</span>
+                <th key={c.key} className="pb-2 pr-4 text-left font-normal sm:pb-4 sm:pr-6">
+                  <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{c.label}</span>
                 </th>
               ))}
             </tr>
@@ -134,9 +134,9 @@ export function MBTICompactTable() {
           <tbody>
             {filtered.map((t) => (
               <tr key={t.type} className="rule-t group transition-colors">
-                <td className="py-4">
+                <td className="py-2 sm:py-4">
                   <span
-                    className="relative block h-11 w-11 overflow-hidden"
+                    className="relative block h-8 w-8 overflow-hidden sm:h-11 sm:w-11"
                     style={{ backgroundColor: accentWash(t.group) }}
                   >
                     <Image
@@ -149,38 +149,38 @@ export function MBTICompactTable() {
                   </span>
                 </td>
 
-                <td className="py-4 pr-6 align-middle">
+                <td className="py-2 pr-4 align-middle sm:py-4 sm:pr-6">
                   <button
                     type="button"
                     onClick={() => expandCard(t)}
-                    className="text-lg font-medium tracking-tight text-ink transition-opacity hover:opacity-50"
+                    className="text-base font-medium tracking-tight text-ink transition-opacity hover:opacity-50 sm:text-lg"
                   >
                     {t.type}
                   </button>
                 </td>
 
                 <td
-                  className="truncate py-4 pr-6 align-middle text-ink-soft"
+                  className="truncate py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6"
                   title={t.nickname}
                 >
                   {t.nickname}
                 </td>
-                <td className="truncate py-4 pr-6 align-middle tracking-tight text-ink-soft">
+                <td className="truncate py-2 pr-4 align-middle tracking-tight text-ink-soft sm:py-4 sm:pr-6">
                   {t.cognitiveFunctions}
                 </td>
-                <td className="py-4 pr-6 align-middle text-ink-soft">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
                   <CarouselCell items={t.surfaceTraits || []} />
                 </td>
-                <td className="py-4 pr-6 align-middle text-ink-soft">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
                   <CarouselCell items={t.actualTraits || []} />
                 </td>
-                <td className="py-4 pr-6 align-middle text-ink-soft">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
                   <CarouselCell items={t.strengths || []} />
                 </td>
-                <td className="py-4 pr-6 align-middle text-ink-soft">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
                   <CarouselCell items={t.weaknesses || []} />
                 </td>
-                <td className="truncate py-4 align-middle text-ink-soft">
+                <td className="truncate py-2 align-middle text-ink-soft sm:py-4">
                   {(t.bestPartners || []).length > 0
                     ? t.bestPartners.join(" · ")
                     : "—"}
@@ -191,7 +191,7 @@ export function MBTICompactTable() {
         </table>
       </div>
 
-      <p className="rule-t mt-2 shrink-0 pt-5 text-[0.8125rem] leading-relaxed text-ink-ghost">
+      <p className="rule-t mt-2 shrink-0 pt-2 text-[0.75rem] leading-relaxed text-ink-ghost sm:pt-5 sm:text-[0.8125rem]">
         点击类型代码展开详情。特征列自动轮播，鼠标悬停可暂停。
       </p>
     </section>

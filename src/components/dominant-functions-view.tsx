@@ -22,24 +22,24 @@ export function DominantFunctionsView() {
 
   return (
     <section className="flex flex-col lg:h-full lg:min-h-0">
-      <header className="rule-b mb-12 shrink-0 pb-6 sm:mb-16 sm:pb-8 lg:mb-8 lg:pb-5">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+      <header className="rule-b mb-3 shrink-0 pb-3 sm:mb-16 sm:pb-8 lg:mb-8 lg:pb-5">
+        <div className="flex flex-col gap-2 sm:gap-3 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
           <div>
-            <span className="eyebrow">Function Analysis</span>
+            <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">Function Analysis</span>
             <h2
-              className="display mt-4 text-ink lg:mt-3"
-              style={{ fontSize: "clamp(1.75rem, 3.4vw, 2.75rem)" }}
+              className="display mt-2 text-ink sm:mt-4 lg:mt-3"
+              style={{ fontSize: "clamp(1.5rem, 3.4vw, 2.75rem)" }}
             >
               按主导功能分组
             </h2>
           </div>
-          <p className="max-w-[42ch] text-[0.875rem] leading-[1.8] text-ink-soft lg:text-right">
+          <p className="max-w-[42ch] text-[0.8125rem] leading-relaxed text-ink-soft sm:text-[0.875rem] sm:leading-[1.8] lg:text-right">
             每两个类型共享同一个主导功能——他们看世界的第一反应是同一种。
           </p>
         </div>
       </header>
 
-      <div className="scroll-quiet grid grid-cols-1 gap-x-12 gap-y-14 sm:grid-cols-2 lg:min-h-0 lg:flex-1 lg:grid-cols-4 lg:gap-y-5 lg:overflow-y-auto">
+      <div className="scroll-quiet grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-14 lg:min-h-0 lg:flex-1 lg:grid-cols-4 lg:gap-y-5 lg:overflow-y-auto">
         {dominantGroups.map((group, index) => {
           const groupTypes = mbtiTypes.filter((t) => group.types.includes(t.type));
           const accent = accentOf(groupTypes[0]?.group);
@@ -56,44 +56,44 @@ export function DominantFunctionsView() {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <div className="rule-t pt-4">
+              <div className="rule-t pt-2.5 sm:pt-4">
                 <span
-                  className="text-3xl font-medium leading-none tracking-tight lg:text-4xl"
+                  className="text-2xl font-medium leading-none tracking-tight sm:text-3xl lg:text-4xl"
                   style={{ color: accent }}
                 >
                   {group.code}
                 </span>
-                <p className="mt-3 text-[0.9375rem] text-ink">{group.name}</p>
-                <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-ink-ghost">
+                <p className="mt-1 text-[0.8125rem] font-medium text-ink sm:mt-3 sm:text-[0.9375rem]">{group.name}</p>
+                <p className="mt-0.5 line-clamp-1 text-[0.6875rem] leading-relaxed text-ink-ghost sm:line-clamp-none sm:mt-1.5 sm:text-[0.8125rem]">
                   {group.description}
                 </p>
               </div>
 
-              <div className="mt-3">
+              <div className="mt-2 sm:mt-3">
                 {groupTypes.map((type) => (
                   <button
                     key={type.type}
                     type="button"
                     onClick={() => expandCard(type)}
-                    className="rule-t flex w-full items-center gap-4 py-2.5 text-left transition-opacity hover:opacity-60"
+                    className="rule-t flex w-full items-center gap-2 py-1.5 text-left transition-opacity hover:opacity-60 sm:gap-4 sm:py-2.5"
                   >
                     <span
-                      className="relative h-12 w-12 shrink-0 overflow-hidden"
+                      className="relative h-8 w-8 shrink-0 overflow-hidden sm:h-12 sm:w-12"
                       style={{ backgroundColor: accentWash(type.group) }}
                     >
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.type}
                         fill
-                        sizes="48px"
+                        sizes="(max-width: 640px) 32px, 48px"
                         className="object-contain object-bottom"
                       />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-lg font-medium leading-none tracking-tight text-ink">
+                      <span className="block text-sm font-medium leading-none tracking-tight text-ink sm:text-lg">
                         {type.type}
                       </span>
-                      <span className="mt-1.5 block truncate text-[0.8125rem] text-ink-faint">
+                      <span className="mt-0.5 block truncate text-[0.6875rem] text-ink-faint sm:mt-1.5 sm:text-[0.8125rem]">
                         {type.title}
                       </span>
                     </span>

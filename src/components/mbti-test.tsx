@@ -133,7 +133,7 @@ export function MBTITest() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="group shrink-0 border-b border-rule pb-1 text-[0.8125rem] text-ink-soft transition-colors hover:border-ink hover:text-ink sm:text-sm"
+        className="group shrink-0 border-b border-rule pb-0.5 text-[0.75rem] text-ink-soft transition-colors hover:border-ink hover:text-ink sm:pb-1 sm:text-sm"
       >
         <span className="hidden sm:inline">不知道自己的类型？</span>
         <span className="text-ink">一分钟自测</span>
@@ -158,19 +158,19 @@ export function MBTITest() {
                 role="dialog"
                 aria-modal
                 aria-label="一分钟自测"
-                className="fixed left-1/2 top-1/2 z-[200] max-h-[90dvh] w-[92%] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto bg-paper p-6 shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] scroll-quiet sm:p-12"
+                className="fixed left-1/2 top-1/2 z-[200] max-h-[90dvh] w-[92%] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto bg-paper p-5 shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] scroll-quiet sm:p-12"
               >
-                <div className="mb-6 flex items-start justify-between gap-6 sm:mb-10">
+                <div className="mb-4 flex items-start justify-between gap-4 sm:mb-10 sm:gap-6">
                   <div>
-                    <span className="eyebrow">Quick Test</span>
-                    <h2 className="mt-2 text-2xl font-medium tracking-tight text-ink sm:mt-3">
+                    <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">Quick Test</span>
+                    <h2 className="mt-1 text-xl font-medium tracking-tight text-ink sm:mt-3 sm:text-2xl">
                       四个问题
                     </h2>
                   </div>
                   <button
                     onClick={closeModal}
                     aria-label="关闭"
-                    className="-mr-2 -mt-2 flex h-10 w-10 shrink-0 items-center justify-center text-ink-faint transition-colors hover:text-ink"
+                    className="-mr-2 -mt-2 flex h-9 w-9 shrink-0 items-center justify-center text-ink-faint transition-colors hover:text-ink sm:h-10 sm:w-10"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -192,15 +192,15 @@ export function MBTITest() {
                 {!testResult ? (
                   <div>
                     <div>
-                      <h3 className="text-xl font-medium leading-relaxed tracking-tight text-ink">
+                      <h3 className="text-lg font-medium leading-relaxed tracking-tight text-ink sm:text-xl">
                         {questions[currentQuestion].question}
                       </h3>
-                      <div className="mt-5 sm:mt-8">
+                      <div className="mt-3 sm:mt-8">
                         {questions[currentQuestion].options.map((option) => (
                           <motion.button
                             key={option.type}
                             className={cn(
-                              "rule-t w-full py-4 text-left text-[0.9375rem] leading-relaxed sm:py-5",
+                              "rule-t w-full py-3 text-left text-[0.875rem] leading-relaxed sm:py-5 sm:text-[0.9375rem]",
                               "text-ink-soft transition-colors hover:text-ink"
                             )}
                             onClick={() =>
@@ -215,16 +215,16 @@ export function MBTITest() {
                         ))}
                       </div>
                     </div>
-                    <div className="rule-t mt-2 flex items-center justify-between pt-5 sm:pt-6">
+                    <div className="rule-t mt-2 flex items-center justify-between pt-3 sm:pt-6">
                       <button
                         type="button"
                         onClick={resetTest}
                         disabled={currentQuestion === 0}
-                        className="text-[0.8125rem] text-ink-faint transition-colors hover:text-ink disabled:opacity-30 disabled:hover:text-ink-faint"
+                        className="text-[0.75rem] text-ink-faint transition-colors hover:text-ink disabled:opacity-30 disabled:hover:text-ink-faint sm:text-[0.8125rem]"
                       >
                         重新开始
                       </button>
-                      <span className="eyebrow tabular-nums">
+                      <span className="eyebrow text-[0.625rem] tabular-nums sm:text-[0.6875rem]">
                         {String(currentQuestion + 1).padStart(2, "0")} / {String(questions.length).padStart(2, "0")}
                       </span>
                     </div>
@@ -233,29 +233,29 @@ export function MBTITest() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="space-y-6"
+                    className="space-y-4 sm:space-y-6"
                   >
                     <div>
-                      <span className="eyebrow">Result</span>
-                      <p className="mt-3 text-xl font-medium tracking-tight text-ink">
+                      <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">Result</span>
+                      <p className="mt-1.5 text-lg font-medium tracking-tight text-ink sm:mt-3 sm:text-xl">
                         你的类型
                       </p>
                     </div>
                     <div className="mx-auto max-w-[220px]">
                       <TypeCard type={testResult} onOpen={handleCardClick} />
                     </div>
-                    <div className="rule-t flex items-center justify-between pt-6">
+                    <div className="rule-t flex items-center justify-between pt-4 sm:pt-6">
                       <button
                         type="button"
                         onClick={resetTest}
-                        className="text-[0.8125rem] text-ink-faint transition-colors hover:text-ink"
+                        className="text-[0.75rem] text-ink-faint transition-colors hover:text-ink sm:text-[0.8125rem]"
                       >
                         再测一次
                       </button>
                       <button
                         type="button"
                         onClick={closeModal}
-                        className="border-b border-ink pb-1 text-[0.9375rem] font-medium text-ink transition-opacity hover:opacity-50"
+                        className="border-b border-ink pb-0.5 text-[0.875rem] font-medium text-ink transition-opacity hover:opacity-50 sm:pb-1 sm:text-[0.9375rem]"
                       >
                         在首页查看 →
                       </button>

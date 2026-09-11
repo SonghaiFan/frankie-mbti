@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { MBTITest } from "@/components/mbti-test";
 import { FrankMark } from "@/components/frank-mark";
 
-const SHELL = "mx-auto w-full max-w-[1560px] px-6 sm:px-10 lg:px-16";
+const SHELL = "mx-auto w-full max-w-[1560px] px-4 sm:px-10 lg:px-16";
 
 const views = [
   { href: "/", name: "类型", nameEn: "Types" },
@@ -34,14 +34,14 @@ export function SiteHeader() {
         scrolled ? "border-rule" : "border-transparent"
       )}
     >
-      <div className={cn(SHELL, "flex h-16 items-center justify-between gap-8 sm:h-20")}>
+      <div className={cn(SHELL, "flex h-13 items-center justify-between gap-4 sm:h-20 sm:gap-8")}>
         <Link
           href="/"
           aria-label="Frank MBTI · 首页"
-          className="group flex shrink-0 items-center gap-2.5 transition-opacity hover:opacity-60"
+          className="group flex shrink-0 items-center gap-2 sm:gap-2.5 transition-opacity hover:opacity-60"
         >
-          <FrankMark className="h-7 w-auto text-ink sm:h-8" />
-          <span className="eyebrow !text-ink">MBTI</span>
+          <FrankMark className="h-6 w-auto text-ink sm:h-8" />
+          <span className="eyebrow !text-ink text-[0.625rem] sm:text-[0.6875rem]">MBTI</span>
         </Link>
 
         {/* Desktop: the views live here, not stacked down the page */}
@@ -72,7 +72,7 @@ export function SiteHeader() {
 
       {/* Mobile: same views, one scrollable strip */}
       <div className={cn(SHELL, "md:hidden")}>
-        <nav className="scroll-quiet -mx-1 flex gap-7 overflow-x-auto px-1 pb-3">
+        <nav className="scroll-quiet -mx-1 flex gap-5 overflow-x-auto px-1 pb-2 pt-0.5 sm:gap-7 sm:pb-3">
           {views.map((view) => {
             const isActive = pathname === view.href;
             return (
@@ -81,7 +81,7 @@ export function SiteHeader() {
                 href={view.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "relative shrink-0 whitespace-nowrap py-1 text-[0.9375rem] transition-colors",
+                  "relative shrink-0 whitespace-nowrap py-0.5 text-[0.8125rem] transition-colors sm:py-1 sm:text-[0.9375rem]",
                   isActive ? "text-ink" : "text-ink-ghost"
                 )}
               >

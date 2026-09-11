@@ -6,7 +6,7 @@ import { ReactNode } from "react";
  */
 export function ViewShell({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto flex w-full max-w-[1560px] flex-col px-6 py-6 sm:px-10 sm:py-20 lg:h-full lg:min-h-0 lg:px-16 lg:py-8">
+    <div className="mx-auto flex w-full max-w-[1560px] flex-col px-4 py-3 sm:px-10 sm:py-20 lg:h-full lg:min-h-0 lg:px-16 lg:py-8">
       {children}
     </div>
   );
