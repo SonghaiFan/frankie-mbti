@@ -67,20 +67,16 @@ npm run dev
 npm run build
 ```
 
-## 知识图谱 (Neo4j)
+## 数据与知识图谱
 
-图谱完全由仓库内的数据文件生成，一条命令即可重建：
+仓库里有两套数据，职能分开：
 
-| 数据源 | 生成的图谱内容 |
-| --- | --- |
-| `src/data/mbti-data.ts` | 16 个 `Type`、`Trait`、8 个 `Function`、荣格配对规则 |
-| `src/data/graph/ontology.json` | `Dimension`、`Letter`、32 个 `Group`、类型间关系（对偶/阴影/同主导/半同构/作者组合）、Beebe 八功能角色 |
-| `src/data/graph/series.json` | 12 个 `Series` 专题 |
-| `src/data/graph/insights.json` | 540 条精读 `Insight`（`sourceIndex` 对应 `catalogue.csv` 行号） |
-| `src/data/catalogue.csv` | 540 条原始视频文稿 → `Source` 节点（溯源） |
-| `src/data/graph/claims/batch-*.json` | 1251 条原子观点 `Claim`（每条视频拆成若干条可独立引用的观点）+ `Context`、`Nickname` |
-| `src/data/graph/vocab.json` | 观点类型（trait/behavior/mechanism/value/relationship/mistype/advice/metaphor）与 13 个情境词表 |
-| `public/mbti_pairing_labels_matrix_flat.json` | 16×16 `COMPATIBLE_WITH` 配对矩阵 |
+| 目录 | 内容 | 谁来读 |
+| --- | --- | --- |
+| `src/data/core/` | **非观点数据**：`mbti-data.ts`（16 型的昵称、口号、特征、四维、认知功能、配对读法）、`ontology.json`（维度 / 字母 / 32 个组别 / 类型关系 / Beebe 角色）、`series.json`（12 个专题）、`insights.json`（540 条视频精读，`sourceIndex` 即视频编号） | 页面直接本地读取，**不访问数据库**；同时作为图谱非观点层的种子 |
+| `src/data/claims/` | **观点数据**：`batch-*.json`（1251 条原子观点 `Claim`，扁平列表，每条带 `sourceIndex`）、`vocab.json`（观点类型与 13 个情境） | 只有「观点」页（`/claims`）读取，来自 Neo4j；本地文件是种子，Neo4j 不可用时作回退 |
+
+两套数据合起来就是云端 AuraDB 里的完整图谱；`core` 里的文案均由观点层归纳润色而来，与视频保持同一种语言风格（第三人称统一用 ta）。
 
 ```bash
 cp .env.example .env.local   # 填入 NEO4J_URI / NEO4J_USERNAME / NEO4J_PASSWORD
@@ -90,18 +86,20 @@ npm run graph:migrate        # 幂等增量更新：MERGE 节点/关系，并清
 npm run graph:verify         # 打印节点/关系统计与完整性检查
 ```
 
-主要关系：`Type-[:HAS_INSIGHT {scope, weight}]->Insight`（`scope` 为 direct / group / pattern / all，
+非观点层关系：`Type-[:HAS_INSIGHT {scope, weight}]->Insight`（`scope` 为 direct / group / pattern / all，
 组级内容会展开到组内每个类型）、`Insight-[:BELONGS_TO_SERIES]->Series`、`Insight-[:DERIVED_FROM]->Source`、
 `Type-[:HAS_FUNCTION_SLOT {slot 1-8}]->Function`、`Type-[:BELONGS_TO_GROUP]->Group`、`Type-[:COMPOSED_OF]->Letter`。
+`Source` 节点只保留编号、标题与标签（转录文本不入图）。
 
-观点层：`Claim-[:ABOUT]->Type|Group`、`Claim-[:GROUNDED_IN {evidence}]->Function`、`Claim-[:SHOWS_TRAIT]->Trait`、
+观点层关系：`Claim-[:ABOUT]->Type|Group`、`Claim-[:GROUNDED_IN {evidence}]->Function`、`Claim-[:SHOWS_TRAIT]->Trait`、
 `Claim-[:IN_CONTEXT]->Context`、`Claim-[:FROM_SOURCE]->Source`、`Type-[:NICKNAMED {count}]->Nickname`。
-`Claim` 节点保留 `statement`（三起口吻的完整观点）、`originalVoice`（原话金句）、`kind`、`advice`、`boundary` 等属性。
+每条 `Claim` 的字段：`statement`、`kind`、`subjects`、`functions`、`traits`、`contexts`，可选 `advice` / `boundary` / `aliases`。
 
-`src/data/mbti-data.ts` 中 16 个类型的昵称、口号、特征等文案均由观点层归纳而来，保持与视频同一种语言风格。
+脚本：
+- `node --no-warnings scripts/graph/claims-next.mts --size 25` 列出尚未拆解的视频（若存在 `src/data/catalogue.csv` 会打印原始转录，否则打印精读文本）。
+- `node --no-warnings scripts/graph/claims-lint.mts [--fix]` 检查 statement 里明确提到的类型码 / 认知功能是否都在 `subjects` / `functions` 里。
 
-新增内容时只需在 `insights.json` 追加一条记录（`targets` 可以是类型码、组别码如 `NF`/`TJ`，或 `ALL`），
-并在 `claims/` 下新增或追加一个批次文件（`node --no-warnings scripts/graph/claims-next.mts --size 25` 会列出尚未拆解的视频），再运行 `npm run graph:migrate`。
+「观点」页的数据接口：`GET /api/mbti/claims?type=INTJ&context=分手&kind=advice&function=Ni&q=断崖&limit=10&offset=0`。
 
 ## 贡献指南
 

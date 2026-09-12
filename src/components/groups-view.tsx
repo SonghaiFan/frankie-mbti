@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
-import { mbtiTypes, colorGroups } from "@/data/mbti-data";
+import { mbtiTypes, colorGroups } from "@/data/core/mbti-data";
 import { useMBTIStore } from "@/store/mbti-store";
 import { accentOf, accentWash } from "@/styles/mbti-styles";
 

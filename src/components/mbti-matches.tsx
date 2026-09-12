@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { MBTIType } from "@/types/mbti";
-import { mbtiMatches, mbtiTypes } from "@/data/mbti-data";
+import { mbtiMatches, mbtiTypes } from "@/data/core/mbti-data";
 import { accentOf, accentWash } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
 import { Section } from "./section";

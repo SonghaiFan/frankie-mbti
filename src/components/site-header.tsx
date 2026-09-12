@@ -16,18 +16,18 @@ const views = [
   { href: "/functions", name: "主导功能", nameEn: "Functions" },
   { href: "/pairing", name: "配对", nameEn: "Pairing" },
   { href: "/compact", name: "一览表", nameEn: "Index" },
+  { href: "/claims", name: "观点", nameEn: "Claims" },
 ];
 
 export function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const fetchData = useMBTIStore((s) => s.fetchData);
-  const dataSource = useMBTIStore((s) => s.dataSource);
+  const fetchStatus = useMBTIStore((s) => s.fetchStatus);
   const dbStats = useMBTIStore((s) => s.dbStats);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    fetchStatus();
+  }, [fetchStatus]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -53,7 +53,7 @@ export function SiteHeader() {
             <FrankMark className="h-6 w-auto text-ink sm:h-8" />
             <span className="eyebrow !text-ink text-[0.625rem] sm:text-[0.6875rem]">MBTI</span>
           </Link>
-          {dataSource === "neo4j" && (
+          {dbStats?.connected && (
             <span
               title={`Connected to Neo4j AuraDB (${dbStats?.nodes ?? 0} nodes, ${dbStats?.relationships ?? 0} rels)`}
               className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 text-[0.625rem] text-emerald-700 bg-emerald-500/10 rounded-full border border-emerald-500/20 font-mono"

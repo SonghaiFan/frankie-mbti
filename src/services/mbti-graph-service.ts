@@ -1,6 +1,5 @@
 import { withNeo4jSession, getNeo4jDriver } from "@/lib/neo4j";
-import { mbtiTypes, colorGroups } from "@/data/mbti-data";
-import type { MBTIType } from "@/types/mbti";
+import { mbtiTypes, colorGroups } from "@/data/core/mbti-data";
 
 export interface GraphNodePayload {
   id: string;
@@ -580,100 +579,6 @@ export async function getCognitiveFunctionsOverview(): Promise<CognitiveFunction
   });
 
   return result || [];
-}
-
-export interface TypesResponse {
-  data: MBTIType[];
-  source: "neo4j" | "local_fallback";
-  total: number;
-}
-
-export async function getAllTypesFromGraph(): Promise<TypesResponse> {
-  const dbResult = await withNeo4jSession(async (session) => {
-    const result = await session.run(`
-      MATCH (t:Type)
-      OPTIONAL MATCH (t)-[rf:HAS_FUNCTION_SLOT]->(f:Function)
-      WHERE rf.slot <= 4
-      OPTIONAL MATCH (t)-[rt:HAS_TRAIT]->(tr:Trait)
-      OPTIONAL MATCH (t)-[rc:COMPATIBLE_WITH]->(partner:Type)
-      WHERE rc.score IS NULL OR rc.score >= 85
-      OPTIONAL MATCH (t)-[:DUAL_COMPLEMENT]->(dual:Type)
-      OPTIONAL MATCH (t)-[:SHADOW_MIRROR]->(shadow:Type)
-      RETURN t,
-             dual.code AS dualType,
-             shadow.code AS shadowType,
-             collect(DISTINCT {slot: rf.slot, code: f.code}) AS functions,
-             collect(DISTINCT {category: rt.category, name: tr.name}) AS traits,
-             collect(DISTINCT partner.code) AS bestPartners
-      ORDER BY t.code
-    `);
-
-    if (!result.records.length) return null;
-
-    const types: MBTIType[] = result.records.map((rec) => {
-      const p = rec.get("t").properties;
-      const rawFuncs = (rec.get("functions") || []) as Array<{ slot?: number; code?: string }>;
-      const rawTraits = (rec.get("traits") || []) as Array<{ category?: string; name?: string }>;
-      const rawPartners = (rec.get("bestPartners") || []) as string[];
-      const dualType = rec.get("dualType") as string | null;
-      const shadowType = rec.get("shadowType") as string | null;
-
-      const validFuncs = rawFuncs.filter((item) => item && item.code);
-      validFuncs.sort((a, b) => (Number(a.slot) || 0) - (Number(b.slot) || 0));
-      const cogFunctions =
-        validFuncs.length > 0
-          ? validFuncs.map((f) => f.code).join(" ")
-          : String(p.cognitiveFunctions || "");
-
-      const getTraits = (cat: string) =>
-        rawTraits.filter((tr) => tr && tr.category === cat && tr.name).map((tr) => String(tr.name));
-
-      const strengths = getTraits("strength");
-      const weaknesses = getTraits("weakness");
-      const actualTraits = getTraits("actual");
-      const surfaceTraits = getTraits("surface");
-      const bestPartners = rawPartners.filter(Boolean);
-
-      return {
-        type: String(p.code || p.type || ""),
-        title: String(p.title || ""),
-        nickname: String(p.nickname || ""),
-        archetype: p.archetype ? String(p.archetype) : undefined,
-        coreParadox: p.coreParadox ? String(p.coreParadox) : undefined,
-        vividAnalogy: p.vividAnalogy ? String(p.vividAnalogy) : undefined,
-        energyModel: p.energyModel ? String(p.energyModel) : undefined,
-        dualType: dualType || undefined,
-        shadowType: shadowType || undefined,
-        slogan: String(p.slogan || ""),
-        color: String(p.color || "purple"),
-        group: String(p.group || ""),
-        group_des: String(p.traits || p.group_des || ""),
-        image: String(p.image || `${p.code}.svg`),
-        strengths: strengths.length > 0 ? strengths : (Array.isArray(p.strengths) ? p.strengths.map(String) : []),
-        weaknesses: weaknesses.length > 0 ? weaknesses : (Array.isArray(p.weaknesses) ? p.weaknesses.map(String) : []),
-        surfaceTraits: surfaceTraits.length > 0 ? surfaceTraits : (Array.isArray(p.surfaceTraits) ? p.surfaceTraits.map(String) : []),
-        actualTraits: actualTraits.length > 0 ? actualTraits : (Array.isArray(p.actualTraits) ? p.actualTraits.map(String) : []),
-        bestPartners: bestPartners.length > 0 ? bestPartners : (Array.isArray(p.bestPartners) ? p.bestPartners.map(String) : []),
-        cognitiveFunctions: cogFunctions,
-      };
-    });
-
-    return {
-      data: types,
-      source: "neo4j" as const,
-      total: types.length,
-    };
-  });
-
-  if (dbResult && dbResult.data.length > 0) {
-    return dbResult;
-  }
-
-  return {
-    data: mbtiTypes,
-    source: "local_fallback",
-    total: mbtiTypes.length,
-  };
 }
 
 export interface GraphStatsResponse {

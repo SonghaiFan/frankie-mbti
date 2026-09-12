@@ -6,15 +6,18 @@
  *   node scripts/graph/migrate.mts --dry-run  # validate the data files, touch nothing
  *   node scripts/graph/migrate.mts --verify   # only print the graph report / integrity checks
  *
- * Sources of truth (nothing else writes to the graph):
- *   src/data/mbti-data.ts            16 Types, traits, cognitive functions, Jung match rules
- *   src/data/graph/ontology.json     dimensions, letters, groups, type<->type relations, Beebe roles
- *   src/data/graph/series.json       canonical Series list
- *   src/data/graph/insights.json     540 curated Insights, one per CSV row (sourceIndex)
- *   src/data/graph/vocab.json        claim kinds + context vocabulary
- *   src/data/graph/claims/*.json     atomic Claims extracted from each source (the knowledge layer)
- *   src/data/catalogue.csv           raw transcripts -> :Source nodes (provenance)
- *   public/mbti_pairing_labels_matrix_flat.json   16x16 pairing labels -> COMPATIBLE_WITH
+ * Sources of truth (nothing else writes to the graph). Two sets of files:
+ *
+ *   core/  — everything the UI renders locally; also seeds the non-claim layer of the graph
+ *     src/data/core/mbti-data.ts     16 Types, traits, cognitive functions, Jung match rules
+ *     src/data/core/ontology.json    dimensions, letters, groups, type<->type relations, Beebe roles
+ *     src/data/core/series.json      canonical Series list
+ *     src/data/core/insights.json    540 curated Insights, one per video (sourceIndex) -> also :Source nodes
+ *     public/mbti_pairing_labels_matrix_flat.json   16x16 pairing labels -> COMPATIBLE_WITH
+ *
+ *   claims/ — the knowledge layer; the UI reads it from the graph (local files are seed + fallback)
+ *     src/data/claims/vocab.json     claim kinds + context vocabulary
+ *     src/data/claims/batch-*.json   atomic Claims extracted from each source
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -22,7 +25,7 @@ import { parseArgs } from "node:util";
 import type { Session } from "neo4j-driver";
 
 import { createDriver, readJson, rootDir } from "./env.mts";
-import { mbtiTypes, colorGroups, cognitiveFunctions, mbtiMatches } from "../../src/data/mbti-data.ts";
+import { mbtiTypes, colorGroups, cognitiveFunctions, mbtiMatches } from "../../src/data/core/mbti-data.ts";
 
 // ---------------------------------------------------------------------------
 // Data shapes
@@ -58,13 +61,11 @@ interface InsightDef {
   actionableAdvice?: string;
 }
 
+/** A video, as far as the graph needs to know it: its row number, title and tags. */
 interface SourceRow {
   index: number;
-  title: string | null;
+  title: string;
   categories: string[];
-  video: string;
-  transcript: string;
-  text: string;
 }
 
 interface Vocab {
@@ -74,9 +75,9 @@ interface Vocab {
 
 interface ClaimDef {
   id: string;
+  sourceIndex: number;
   kind: string;
   statement: string;
-  originalVoice?: string;
   subjects: Array<{ kind: "Type" | "Group"; key: string }>;
   functions?: Array<{ code: string; evidence: "explicit" | "contextual" | "inferred" }>;
   traits?: string[];
@@ -84,18 +85,13 @@ interface ClaimDef {
   example?: string;
   advice?: string;
   boundary?: string;
-}
-
-interface ClaimSource {
-  sourceIndex: number;
-  portrait?: string;
+  /** Nicknames the author uses for a type in this claim (小狗, 紫老头, 药水...). */
   aliases?: Array<{ type: string; name: string }>;
-  claims: ClaimDef[];
 }
 
 interface ClaimBatch {
   batchId: string;
-  sources: ClaimSource[];
+  claims: ClaimDef[];
 }
 
 interface PairingCell {
@@ -109,77 +105,24 @@ const TYPE_CODES = mbtiTypes.map((t) => t.type);
 const LETTERS = ["E", "I", "S", "N", "T", "F", "J", "P"];
 
 // ---------------------------------------------------------------------------
-// CSV
+// Sources
 // ---------------------------------------------------------------------------
 
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let cell = "";
-  let quoted = false;
-  const src = text.replace(/^﻿/, "");
-
-  for (let i = 0; i < src.length; i++) {
-    const ch = src[i];
-    if (quoted) {
-      if (ch === '"') {
-        if (src[i + 1] === '"') {
-          cell += '"';
-          i++;
-        } else {
-          quoted = false;
-        }
-      } else {
-        cell += ch;
-      }
-      continue;
-    }
-    if (ch === '"') quoted = true;
-    else if (ch === ",") {
-      row.push(cell);
-      cell = "";
-    } else if (ch === "\n" || ch === "\r") {
-      if (ch === "\r" && src[i + 1] === "\n") i++;
-      row.push(cell);
-      rows.push(row);
-      row = [];
-      cell = "";
-    } else cell += ch;
-  }
-  if (cell.length || row.length) {
-    row.push(cell);
-    rows.push(row);
-  }
-  return rows.filter((r) => r.some((c) => c.trim() !== ""));
+/** One :Source per insight; the transcripts themselves are not part of the graph. */
+function sourcesFromInsights(insights: InsightDef[]): SourceRow[] {
+  return insights
+    .map((i) => ({ index: i.sourceIndex, title: i.title, categories: i.targets }))
+    .sort((a, b) => a.index - b.index);
 }
 
-function loadCatalogue(): SourceRow[] {
-  const [header, ...rows] = parseCsv(fs.readFileSync(path.join(rootDir, "src/data/catalogue.csv"), "utf-8"));
-  const col = (name: string) => {
-    const idx = header.indexOf(name);
-    if (idx < 0) throw new Error(`catalogue.csv is missing column "${name}"`);
-    return idx;
-  };
-  const cTitle = col("title"), cCat = col("categories"), cVideo = col("video"), cTranscript = col("transcript"), cText = col("text");
-
-  return rows.map((r, i) => ({
-    index: i + 1,
-    title: r[cTitle].trim() === "Untitled" ? null : r[cTitle].trim(),
-    categories: r[cCat].split("|").map((s) => s.trim()).filter((s) => s && s !== "uncategorised"),
-    video: r[cVideo].trim(),
-    transcript: r[cTranscript].trim(),
-    text: r[cText].trim(),
-  }));
-}
-
-function loadClaimBatches(): ClaimSource[] {
-  const dir = path.join(rootDir, "src/data/graph/claims");
+function loadClaimBatches(): ClaimDef[] {
+  const dir = path.join(rootDir, "src/data/claims");
   if (!fs.existsSync(dir)) return [];
   return fs
     .readdirSync(dir)
-    .filter((f) => f.endsWith(".json"))
+    .filter((f) => /^batch-\d{3}\.json$/.test(f))
     .sort()
-    .flatMap((f) => (JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8")) as ClaimBatch).sources);
+    .flatMap((f) => (JSON.parse(fs.readFileSync(path.join(dir, f), "utf-8")) as ClaimBatch).claims);
 }
 
 // ---------------------------------------------------------------------------
@@ -210,7 +153,7 @@ function resolveTarget(tag: string, groupCodes: Set<string>): { scope: Scope; ty
 // Validation (runs before any write)
 // ---------------------------------------------------------------------------
 
-function validate(ontology: Ontology, series: SeriesDef[], insights: InsightDef[], sources: SourceRow[], vocab: Vocab, claimSources: ClaimSource[]) {
+function validate(ontology: Ontology, series: SeriesDef[], insights: InsightDef[], sources: SourceRow[], vocab: Vocab, claims: ClaimDef[]) {
   const problems: string[] = [];
   const seriesNames = new Set(series.map((s) => s.name));
   const groupCodes = new Set(ontology.groups.map((g) => g.code));
@@ -222,7 +165,7 @@ function validate(ontology: Ontology, series: SeriesDef[], insights: InsightDef[
     ids.add(ins.id);
     if (sourceIdx.has(ins.sourceIndex)) problems.push(`${ins.id}: duplicate sourceIndex ${ins.sourceIndex}`);
     sourceIdx.add(ins.sourceIndex);
-    if (ins.sourceIndex < 1 || ins.sourceIndex > sources.length) problems.push(`${ins.id}: sourceIndex ${ins.sourceIndex} outside catalogue.csv (${sources.length} rows)`);
+    if (ins.sourceIndex < 1 || ins.sourceIndex > sources.length) problems.push(`${ins.id}: sourceIndex ${ins.sourceIndex} outside insights.json (${sources.length} sources)`);
     if (!seriesNames.has(ins.series)) problems.push(`${ins.id}: unknown series "${ins.series}"`);
     if (!ins.title) problems.push(`${ins.id}: missing title`);
     if (!ins.targets?.length) problems.push(`${ins.id}: no targets`);
@@ -257,28 +200,22 @@ function validate(ontology: Ontology, series: SeriesDef[], insights: InsightDef[
   const kinds = new Set(vocab.kinds.map((k) => k.code));
   const contexts = new Set(vocab.contexts.map((c) => c.name));
   const claimIds = new Set<string>();
-  const claimedSources = new Set<number>();
-  for (const cs of claimSources) {
-    if (claimedSources.has(cs.sourceIndex)) problems.push(`claims: sourceIndex ${cs.sourceIndex} appears in more than one batch`);
-    claimedSources.add(cs.sourceIndex);
-    if (cs.sourceIndex < 1 || cs.sourceIndex > sources.length) problems.push(`claims: sourceIndex ${cs.sourceIndex} outside catalogue.csv`);
-    if (!cs.claims?.length) problems.push(`claims: source ${cs.sourceIndex} has no claims`);
-    for (const alias of cs.aliases ?? []) {
-      if (!TYPE_CODES.includes(alias.type)) problems.push(`claims: source ${cs.sourceIndex} alias for unknown type ${alias.type}`);
+  for (const c of claims) {
+    if (claimIds.has(c.id)) problems.push(`duplicate claim id ${c.id}`);
+    claimIds.add(c.id);
+    if (!Number.isInteger(c.sourceIndex) || c.sourceIndex < 1 || c.sourceIndex > sources.length) {
+      problems.push(`${c.id}: sourceIndex ${c.sourceIndex} outside insights.json`);
     }
-    for (const c of cs.claims ?? []) {
-      if (claimIds.has(c.id)) problems.push(`duplicate claim id ${c.id}`);
-      claimIds.add(c.id);
-      if (!kinds.has(c.kind)) problems.push(`${c.id}: unknown kind "${c.kind}"`);
-      if (!c.statement) problems.push(`${c.id}: missing statement`);
-      if (!c.subjects?.length) problems.push(`${c.id}: no subjects`);
-      for (const sub of c.subjects ?? []) {
-        const ok = sub.kind === "Type" ? TYPE_CODES.includes(sub.key) : sub.kind === "Group" && groupCodes.has(sub.key);
-        if (!ok) problems.push(`${c.id}: invalid subject ${sub.kind}:${sub.key}`);
-      }
-      for (const fn of c.functions ?? []) if (!funcCodes.has(fn.code)) problems.push(`${c.id}: unknown function ${fn.code}`);
-      for (const ctx of c.contexts ?? []) if (!contexts.has(ctx)) problems.push(`${c.id}: unknown context "${ctx}"`);
+    if (!kinds.has(c.kind)) problems.push(`${c.id}: unknown kind "${c.kind}"`);
+    if (!c.statement) problems.push(`${c.id}: missing statement`);
+    if (!c.subjects?.length) problems.push(`${c.id}: no subjects`);
+    for (const sub of c.subjects ?? []) {
+      const ok = sub.kind === "Type" ? TYPE_CODES.includes(sub.key) : sub.kind === "Group" && groupCodes.has(sub.key);
+      if (!ok) problems.push(`${c.id}: invalid subject ${sub.kind}:${sub.key}`);
     }
+    for (const fn of c.functions ?? []) if (!funcCodes.has(fn.code)) problems.push(`${c.id}: unknown function ${fn.code}`);
+    for (const ctx of c.contexts ?? []) if (!contexts.has(ctx)) problems.push(`${c.id}: unknown context "${ctx}"`);
+    for (const alias of c.aliases ?? []) if (!TYPE_CODES.includes(alias.type)) problems.push(`${c.id}: alias for unknown type ${alias.type}`);
   }
 
   if (problems.length) {
@@ -556,9 +493,8 @@ async function loadContent(session: Session, ontology: Ontology, series: SeriesD
     session,
     `UNWIND $rows AS row
      MERGE (s:Source {index: row.index})
-     SET s += row`,
-    sources,
-    50
+     SET s = row`,
+    sources
   );
 
   await writeRows(
@@ -640,7 +576,7 @@ async function loadContent(session: Session, ontology: Ontology, series: SeriesD
 // Knowledge layer: atomic claims extracted from each source
 // ---------------------------------------------------------------------------
 
-async function loadClaims(session: Session, vocab: Vocab, claimSources: ClaimSource[]) {
+async function loadClaims(session: Session, vocab: Vocab, claims: ClaimDef[]) {
   await writeRows(
     session,
     `UNWIND $rows AS row
@@ -649,16 +585,7 @@ async function loadClaims(session: Session, vocab: Vocab, claimSources: ClaimSou
     vocab.contexts
   );
 
-  await writeRows(
-    session,
-    `UNWIND $rows AS row
-     MATCH (s:Source {index: row.sourceIndex})
-     SET s.portrait = row.portrait`,
-    claimSources.map((cs) => ({ sourceIndex: cs.sourceIndex, portrait: cs.portrait ?? null }))
-  );
-
   const kindName = new Map(vocab.kinds.map((k) => [k.code, k.name]));
-  const claims = claimSources.flatMap((cs) => cs.claims.map((c) => ({ ...c, sourceIndex: cs.sourceIndex })));
 
   await writeRows(
     session,
@@ -666,7 +593,7 @@ async function loadClaims(session: Session, vocab: Vocab, claimSources: ClaimSou
      MATCH (s:Source {index: row.sourceIndex})
      MERGE (c:Claim {id: row.id})
      SET c.kind = row.kind, c.kindName = row.kindName, c.statement = row.statement,
-         c.originalVoice = row.originalVoice, c.example = row.example, c.advice = row.advice,
+         c.example = row.example, c.advice = row.advice,
          c.boundary = row.boundary, c.sourceIndex = row.sourceIndex
      MERGE (c)-[:FROM_SOURCE]->(s)`,
     claims.map((c) => ({
@@ -674,7 +601,6 @@ async function loadClaims(session: Session, vocab: Vocab, claimSources: ClaimSou
       kind: c.kind,
       kindName: kindName.get(c.kind) ?? c.kind,
       statement: c.statement,
-      originalVoice: c.originalVoice ?? null,
       example: c.example ?? null,
       advice: c.advice ?? null,
       boundary: c.boundary ?? null,
@@ -725,10 +651,10 @@ async function loadClaims(session: Session, vocab: Vocab, claimSources: ClaimSou
     500
   );
 
-  // Nicknames the author uses for a type (小狗, 紫老头, 药水...). Count = how many sources use it.
+  // Nicknames the author uses for a type (小狗, 紫老头, 药水...). Count = how many claims use it.
   const aliasCount = new Map<string, { type: string; name: string; count: number }>();
-  for (const cs of claimSources) {
-    for (const a of cs.aliases ?? []) {
+  for (const c of claims) {
+    for (const a of c.aliases ?? []) {
       const key = `${a.type}|${a.name}`;
       const cur = aliasCount.get(key) ?? { type: a.type, name: a.name, count: 0 };
       cur.count += 1;
@@ -803,16 +729,16 @@ async function main() {
     },
   });
 
-  const ontology = readJson<Ontology>("src/data/graph/ontology.json");
-  const series = readJson<SeriesDef[]>("src/data/graph/series.json");
-  const insights = readJson<InsightDef[]>("src/data/graph/insights.json");
-  const sources = loadCatalogue();
-  const vocab = readJson<Vocab>("src/data/graph/vocab.json");
-  const claimSources = loadClaimBatches();
+  const ontology = readJson<Ontology>("src/data/core/ontology.json");
+  const series = readJson<SeriesDef[]>("src/data/core/series.json");
+  const insights = readJson<InsightDef[]>("src/data/core/insights.json");
+  const sources = sourcesFromInsights(insights);
+  const vocab = readJson<Vocab>("src/data/claims/vocab.json");
+  const claims = loadClaimBatches();
 
-  validate(ontology, series, insights, sources, vocab, claimSources);
-  const claimCount = claimSources.reduce((n, cs) => n + cs.claims.length, 0);
-  console.log(`Data ok: ${sources.length} sources, ${insights.length} insights, ${series.length} series, ${ontology.groups.length} groups, ${TYPE_CODES.length} types, ${claimCount} claims over ${claimSources.length} sources`);
+  validate(ontology, series, insights, sources, vocab, claims);
+  const claimedSources = new Set(claims.map((c) => c.sourceIndex)).size;
+  console.log(`Data ok: ${sources.length} sources, ${insights.length} insights, ${series.length} series, ${ontology.groups.length} groups, ${TYPE_CODES.length} types, ${claims.length} claims over ${claimedSources} sources`);
   if (args["dry-run"]) return;
 
   const { driver, database } = createDriver();
@@ -837,7 +763,7 @@ async function main() {
     console.log("Loading content layer...");
     await loadContent(session, ontology, series, insights, sources);
     console.log("Loading claim layer...");
-    await loadClaims(session, vocab, claimSources);
+    await loadClaims(session, vocab, claims);
 
     const ok = await report(session);
     if (!ok) {
@@ -851,6 +777,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
+  console.error(err instanceof Error ? err.stack : err);
   process.exit(1);
 });

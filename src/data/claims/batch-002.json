@@ -1,0 +1,2301 @@
+{
+  "batchId": "batch-002",
+  "claims": [
+    {
+      "id": "c021-01",
+      "sourceIndex": 21,
+      "kind": "mechanism",
+      "statement": "ISTP 遇到新东西不是先分析理论，而是先拿在手上把玩，看性质温度外形；和他聊理论他会觉得不如直接上手干。四个字母组合成内倾、实感、理性、随机，是一个很全面又让人摸不着头脑的人格。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Se",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Ti",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "动手派",
+        "务实",
+        "拥抱变化"
+      ],
+      "contexts": [
+        "日常"
+      ],
+      "aliases": [
+        {
+          "type": "ISTP",
+          "name": "电钻"
+        }
+      ]
+    },
+    {
+      "id": "c021-02",
+      "sourceIndex": 21,
+      "kind": "trait",
+      "statement": "TP 人都带着反骨——你要束缚我我就敢掀桌子；ST 又很直接、没情调；ISTP 还混进了爱睡觉的 IP 阵营。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "TP"
+        },
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "traits": [
+        "反骨",
+        "直接",
+        "没情调"
+      ]
+    },
+    {
+      "id": "c021-03",
+      "sourceIndex": 21,
+      "kind": "mechanism",
+      "statement": "Ti 在第一位的只有 ISTP 和 INTP：INTP 追求真理，ISTP 追求真相——真相更看得见摸得着；因为辅助功能是 Se，ISTP 的分析和想法比 INTP 更实际，形象就是身上挂满钻头扳手防护镜的装备。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        },
+        {
+          "kind": "Type",
+          "key": "INTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ti",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Se",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "求真相",
+        "实际"
+      ],
+      "aliases": [
+        {
+          "type": "ISTP",
+          "name": "钻头"
+        }
+      ]
+    },
+    {
+      "id": "c021-04",
+      "sourceIndex": 21,
+      "kind": "value",
+      "statement": "平衡状态的 ISTP 喜欢拥抱很多不同的小众爱好（手碟、吉他、户外、锻铁），像鉴赏家一个人在家欣赏宝贝就能进入心流，从内部获得满足；结婚、对象、社会地位这些外界价值观他都不在乎，幸福由自己定义，他说自己开心那就一定是真的。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "traits": [
+        "小众爱好",
+        "心流",
+        "自定义幸福",
+        "不在乎世俗标准"
+      ],
+      "contexts": [
+        "日常"
+      ],
+      "aliases": [
+        {
+          "type": "ISTP",
+          "name": "鉴赏家"
+        }
+      ]
+    },
+    {
+      "id": "c021-05",
+      "sourceIndex": 21,
+      "kind": "mechanism",
+      "statement": "第三功能 Ni 是看趋势的大局观；当 ISTP 没有目标方向、无法享受一亩三分地时，可能盲目相信直觉变得特别倔，或压根不用 Ni、过一天是一天不想长远。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ni",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "倔",
+        "不想长远"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c021-06",
+      "sourceIndex": 21,
+      "kind": "mechanism",
+      "statement": "第四功能 Fe 是考虑他人感受、成就对方来成就自己；ISTP 不认同这种价值观，觉得每个人做好自己的事就行，都去迁就别人世界还要不要转。他把自己摘得很干净，任何环境下该吃吃该睡睡，离内耗和庸人自扰最远。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Fe",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "不内耗",
+        "为自己负责",
+        "沉重的自由"
+      ],
+      "contexts": [
+        "情绪"
+      ]
+    },
+    {
+      "id": "c021-07",
+      "sourceIndex": 21,
+      "kind": "advice",
+      "statement": "和 ENFJ 谈能得到满满的爱，和 ISTP 谈情绪价值得零分：不要反复确认他爱不爱你、不要查岗，那是最踩雷的。他是行动派，该做的绝不会差；脑袋里想什么说出来就是什么，没有话里有话。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        },
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "情感需求低",
+        "直来直去",
+        "行动派"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "别天天问电钻爱不爱你，也别查岗；他情感需求低，也希望你的稍微低一些，一直要他会转身就跑。"
+    },
+    {
+      "id": "c021-08",
+      "sourceIndex": 21,
+      "kind": "metaphor",
+      "statement": "ISTP 对情绪的策略是当作心里的垃圾，用一把大扫帚全扫到一块堆成小山，积攒过多受不了时一把火把整座垃圾山烧掉。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "traits": [
+        "情绪堆积再爆发"
+      ],
+      "contexts": [
+        "情绪"
+      ]
+    },
+    {
+      "id": "c021-09",
+      "sourceIndex": 21,
+      "kind": "behavior",
+      "statement": "工作中的 ISTP 享受事业、精益求精又能随机应变，适合消防员、外科医生、修复顶级钟表包包的匠人这类需要现场即时判断的工作；但他不刻意搞人际关系也不放大功绩，往往离职时领导才发现他干了那么多年的成绩，甚至被群体孤立多年自己都不知道，因为很享受独来独往。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "traits": [
+        "会做不会说",
+        "精益求精",
+        "随机应变",
+        "独来独往"
+      ],
+      "contexts": [
+        "职场"
+      ],
+      "advice": "在工作中适当融入人群、去邀功讨喜，赚钱嘛不寒碜。"
+    },
+    {
+      "id": "c021-10",
+      "sourceIndex": 21,
+      "kind": "value",
+      "statement": "ISTP 情绪通常很稳定，找他作、吵架都没有大反应；他的爱不是每天腻歪或情绪价值，而是「你若安好便是晴天」——只要他还在为你付出、没闹幺蛾子，平平淡淡就是还在爱你。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "traits": [
+        "情绪稳定",
+        "用行动爱人"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c021-11",
+      "sourceIndex": 21,
+      "kind": "advice",
+      "statement": "很多 ISTP 有寡王体质：十有八九察觉不到异性的喜欢，把小示好当朋友之间的正常互动。追他就私底下直接大声说出来，反应好就成了，反应不好追再久也没用——他和 INTP 一样是很佛系的恋爱存在。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        },
+        {
+          "kind": "Type",
+          "key": "INTP"
+        }
+      ],
+      "traits": [
+        "寡王体质",
+        "察觉不到示好",
+        "佛系恋爱"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "追钻头别暗示，私下直说，看反应定去留。"
+    },
+    {
+      "id": "c021-12",
+      "sourceIndex": 21,
+      "kind": "advice",
+      "statement": "ISTP 理解不了人类情感时，可以把对方当成一个物体或程序：记下哪句话对象会开心就多说，对象爱吃什么就默默记下去做——输入对应指令对方就开心；前期照做，后面会量变到质变修复短板。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Fe",
+          "evidence": "contextual"
+        }
+      ],
+      "contexts": [
+        "恋爱",
+        "成长"
+      ],
+      "advice": "不懂情感就先按程序做，先量变再质变。"
+    },
+    {
+      "id": "c021-13",
+      "sourceIndex": 21,
+      "kind": "trait",
+      "statement": "ISTP 非常稀少，除了人群占比少，最大的特点是不爱交很多朋友，随缘且有主观能动性；身边有钻头好友，他绝对是认可并喜欢你才把精力放在你身上，没有哪个 TP 愿意和蠢货待一块。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISTP"
+        },
+        {
+          "kind": "Group",
+          "key": "TP"
+        }
+      ],
+      "traits": [
+        "朋友少",
+        "随缘",
+        "认可才投入"
+      ],
+      "contexts": [
+        "友情"
+      ]
+    },
+    {
+      "id": "c022-01",
+      "sourceIndex": 22,
+      "kind": "metaphor",
+      "statement": "紫人（NT）的故事是《三国演义》：最讲谋略和现实价值，群雄逐鹿各得一席之地，哪个紫人不想攻城掠地或跟随明主实现远大理想；INTJ 到三国可当诸葛亮，ENTP 可当曹操。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        },
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        }
+      ],
+      "traits": [
+        "讲谋略",
+        "重现实价值",
+        "有抱负"
+      ]
+    },
+    {
+      "id": "c022-02",
+      "sourceIndex": 22,
+      "kind": "metaphor",
+      "statement": "蓝人（SJ）的故事是《西游记》：给他们一个目标就能一路西天，再漫长无聊、知道结果也义无反顾；喜欢严格的等级和权威，希望世界有迹可循，在磨难中修成正果。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "SJ"
+        }
+      ],
+      "traits": [
+        "目标坚定",
+        "尊重权威",
+        "有迹可循"
+      ]
+    },
+    {
+      "id": "c022-03",
+      "sourceIndex": 22,
+      "kind": "metaphor",
+      "statement": "黄人（SP）的故事是《水浒传》：一百单八将个个有拿手本领，快意恩仇，路见不平拔刀相助，不爽就拳打镇关西直接掀桌子。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "SP"
+        }
+      ],
+      "traits": [
+        "各有本领",
+        "快意恩仇",
+        "掀桌子"
+      ]
+    },
+    {
+      "id": "c022-04",
+      "sourceIndex": 22,
+      "kind": "metaphor",
+      "statement": "绿人（NF）的故事是《红楼梦》：没看过的人不知道在讲什么，就像绿人的感情和心理活动看不见摸不着；四大名著唯一以女人为主角的，也是名著之首。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NF"
+        }
+      ],
+      "traits": [
+        "心理活动隐秘",
+        "细腻"
+      ]
+    },
+    {
+      "id": "c023-01",
+      "sourceIndex": 23,
+      "kind": "relationship",
+      "statement": "FJ 适合兜底：天然知道你需要什么，你成功时不邀功只在旁边微笑，你不如意时不落井下石，还能用最柔软的方式为你回血陪你度过低谷。需要后盾就找 FJ。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "FJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Fe",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "兜底",
+        "回血",
+        "不邀功"
+      ],
+      "contexts": [
+        "友情",
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c023-02",
+      "sourceIndex": 23,
+      "kind": "relationship",
+      "statement": "TJ 适合冲锋：你干不了的事他来干，你下不了的决心他替你下，攻击性和执行力拉满，先斩后奏。需要将军就去 TJ 的怀里。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "TJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Te",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "冲锋",
+        "执行力强",
+        "攻击性强",
+        "先斩后奏"
+      ],
+      "contexts": [
+        "友情",
+        "职场"
+      ]
+    },
+    {
+      "id": "c023-03",
+      "sourceIndex": 23,
+      "kind": "advice",
+      "statement": "FJ 一直照顾别人，但不希望你命令他照顾——他是自愿自发的，被要求就会厌恶；过于吸血谁都不干，你要懂他的好、回馈他的好，他才继续陪你玩。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "FJ"
+        }
+      ],
+      "traits": [
+        "自愿付出",
+        "厌恶被索取"
+      ],
+      "contexts": [
+        "友情",
+        "恋爱"
+      ],
+      "advice": "别命令 FJ 照顾你，回馈他的好。"
+    },
+    {
+      "id": "c023-04",
+      "sourceIndex": 23,
+      "kind": "advice",
+      "statement": "TJ 一直攻击性很强不代表永远是强的；你要能看到 TJ 的弱，允许他偶尔失控并稳稳接住他。没有人是纯无私或纯强大的，真相是奉献且自私、强大且弱小；只看到一面，另一面就会来攻击你。允许 FJ 无理取闹、允许 TJ 弱小，才算刚走进他们的内心。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "TJ"
+        },
+        {
+          "kind": "Group",
+          "key": "FJ"
+        }
+      ],
+      "traits": [
+        "铠甲下有软肋"
+      ],
+      "contexts": [
+        "恋爱",
+        "友情"
+      ],
+      "advice": "看到强者的弱和奉献者的自私，接住它。"
+    },
+    {
+      "id": "c024-01",
+      "sourceIndex": 24,
+      "kind": "relationship",
+      "statement": "喜欢 FP 的情绪价值和心思细腻，就要接受他的情绪偶尔深陷；享受 FJ 的温和包容，就要接受他有时忽视你、决策模糊。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "FP"
+        },
+        {
+          "kind": "Group",
+          "key": "FJ"
+        }
+      ],
+      "traits": [
+        "情绪深陷",
+        "决策模糊"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c024-02",
+      "sourceIndex": 24,
+      "kind": "relationship",
+      "statement": "享受踏实可靠的蓝人（SJ），长期相处就会少些刺激、略显平淡；喜欢自由洒脱开朗的黄人（SP），他往往过于钝感、后知后觉、不喜欢被约束。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "SJ"
+        },
+        {
+          "kind": "Group",
+          "key": "SP"
+        }
+      ],
+      "traits": [
+        "平淡",
+        "钝感",
+        "不受约束"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c024-03",
+      "sourceIndex": 24,
+      "kind": "relationship",
+      "statement": "享受 TJ 的强大有力，就要承受他对自己和对你的高要求以及情感回避；爱上 EJ 大哥大姐的安全感，就要接受他们的忙碌和掌控欲。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "TJ"
+        },
+        {
+          "kind": "Group",
+          "key": "EJ"
+        }
+      ],
+      "traits": [
+        "高要求",
+        "情感回避",
+        "忙碌",
+        "掌控欲"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c024-04",
+      "sourceIndex": 24,
+      "kind": "relationship",
+      "statement": "被老头（INTJ/INFJ）的神秘稳重吸引，就要接受他们的固执和难懂；享受 EP 小疯子的感染力和生命力，面对的也许是不着调和三分钟热度。在感情中要学会知足，慢慢接受优点带来的缺点。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Group",
+          "key": "EP"
+        }
+      ],
+      "traits": [
+        "固执难懂",
+        "三分钟热度"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "接受你的不完美恋人，优点和缺点是一体两面。",
+      "aliases": [
+        {
+          "type": "INTJ",
+          "name": "老头"
+        }
+      ]
+    },
+    {
+      "id": "c025-01",
+      "sourceIndex": 25,
+      "kind": "mechanism",
+      "statement": "NJ 心中永远有一个模糊但正确的方向，说不清是什么场景、没有路线图和时刻表，只有轮廓，像地平线那边蒙着薄雾的太阳，但一定要走到那儿；指引他的是终极的意义感，只要愿景还在就能一次次跌倒爬起换条路继续走。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NFJ"
+        },
+        {
+          "kind": "Group",
+          "key": "NTJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ni",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "活在未来",
+        "愿景驱动",
+        "坚定",
+        "一条路走到黑"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c025-02",
+      "sourceIndex": 25,
+      "kind": "mechanism",
+      "statement": "NP 追求的是满天繁星，一个一个都想去点亮，每颗星都在招手都可能通向新世界；今天往东明天往西，看起来三分钟热度，但至少有三分钟收获。NP 不是没方向而是方向太多，不是不专注而是专注的东西一直在换，是想用一生的不确定性兑换所有可能性。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NFP"
+        },
+        {
+          "kind": "Group",
+          "key": "NTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ne",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "方向太多",
+        "三分钟热度",
+        "体验至上",
+        "爱折腾"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c025-03",
+      "sourceIndex": 25,
+      "kind": "relationship",
+      "statement": "NJ 和 NP 是同一棵树上的两朵果实：NJ 把众多可能性压缩成一个原子（愿景），NP 看到所有可能性都想尝尝咸淡；NJ 的信条是找到对的那一个、成功一次就够，NP 的信条是全部体验过才不枉此生。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NFJ"
+        },
+        {
+          "kind": "Group",
+          "key": "NTJ"
+        },
+        {
+          "kind": "Group",
+          "key": "NFP"
+        },
+        {
+          "kind": "Group",
+          "key": "NTP"
+        }
+      ],
+      "traits": [
+        "大减法",
+        "大加法"
+      ],
+      "example": "NJ 问 NP：你不是要做咖啡吗怎么写起小说了？NP 眨着眼说：我就是做咖啡时想到一个很棒的故事。"
+    },
+    {
+      "id": "c025-04",
+      "sourceIndex": 25,
+      "kind": "relationship",
+      "statement": "两者的消极剧本：NJ 走到目的地发现要的东西是海市蜃楼；NP 忙活一辈子发现自己不属于任何一颗星星。所以 NJ 需要 NP 告诉他世界不止一条路，NP 需要 NJ 叮嘱他给自己找一块栖息地——世界既需要深度也需要宽度。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NFJ"
+        },
+        {
+          "kind": "Group",
+          "key": "NTJ"
+        },
+        {
+          "kind": "Group",
+          "key": "NFP"
+        },
+        {
+          "kind": "Group",
+          "key": "NTP"
+        }
+      ],
+      "contexts": [
+        "成长"
+      ],
+      "advice": "NJ 学 NP 的变通，NP 记得给自己找归属地。"
+    },
+    {
+      "id": "c026-01",
+      "sourceIndex": 26,
+      "kind": "advice",
+      "statement": "和紫人（NT）相处只要真诚直接、有一说一、不让他弯弯绕绕猜，他就觉得你可以交；恰好你还聪明能一起头脑风暴打嘴仗，那就天下第一好。跟不上、听不懂没关系，只要诚实，千万别不懂装懂，他能一眼看穿。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "要真诚",
+        "要省劲高效",
+        "一眼看穿"
+      ],
+      "contexts": [
+        "友情",
+        "社交"
+      ],
+      "advice": "对紫人真诚直接，别装懂。",
+      "aliases": [
+        {
+          "type": "INTJ",
+          "name": "紫人"
+        }
+      ]
+    },
+    {
+      "id": "c026-02",
+      "sourceIndex": 26,
+      "kind": "mechanism",
+      "statement": "紫人的社交简单是复杂过后的真理：你玩虚的阴的他也能陪你玩，但他已经过了那个阶段，觉得索然无味。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "简单",
+        "不屑玩阴的"
+      ],
+      "contexts": [
+        "社交"
+      ]
+    },
+    {
+      "id": "c026-03",
+      "sourceIndex": 26,
+      "kind": "behavior",
+      "statement": "不用担心被紫人占便宜，他忙得很、有自己的钱要赚，不在意你那三瓜俩枣；你也别想占他便宜，带着自己的好东西去交换即可。哪怕真骗到了他，他总有一天会反应过来并报复——以眼还眼以牙还牙，你对他好他对你更好，你对他坏他对你更坏。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "等价交换",
+        "以眼还眼",
+        "会报复"
+      ],
+      "contexts": [
+        "社交",
+        "冲突"
+      ]
+    },
+    {
+      "id": "c026-04",
+      "sourceIndex": 26,
+      "kind": "advice",
+      "statement": "和紫人谈恋爱或交朋友最重要的是不要天天粘在一起——你没有自己的事要干、没有钱要赚吗？再真诚聪明天天粘着他也难受；只要你是独立自主的正常人就能处到一块。犯了错捅了娄子只要真诚谦虚低头，紫人都愿意帮你。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "需要独立空间",
+        "吃真诚谦虚"
+      ],
+      "contexts": [
+        "恋爱",
+        "友情"
+      ],
+      "advice": "做独立自主的人，别粘着紫人；犯错就真诚低头。"
+    },
+    {
+      "id": "c027-01",
+      "sourceIndex": 27,
+      "kind": "behavior",
+      "statement": "看到路人摔倒：INFP 心疼得很想上前拉，又怕被讹，于是边心疼边站在原地一会儿就走了；ENTJ 第一反应是这地方水没干不能从这走、要打电话给路政反映；INFJ 更宏大——每天那么多人摔倒扶不过来，算了，但以后自己修路时要小心。每个人面对同一件事的反应大致已固定。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFP"
+        },
+        {
+          "kind": "Type",
+          "key": "ENTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        }
+      ],
+      "traits": [
+        "心疼但不动",
+        "解决问题导向",
+        "宏大视角"
+      ],
+      "contexts": [
+        "社交"
+      ],
+      "example": "路人摔倒：INFP 心疼站着，ENTJ 报路政，INFJ 想着以后自己修路要小心。"
+    },
+    {
+      "id": "c028-01",
+      "sourceIndex": 28,
+      "kind": "relationship",
+      "statement": "不安定组：看似 INFP 不安定，其实是 INTJ 不满足；一个理性克制一个感性自由，彼此吸引再正常不过，也是出虐恋最多的组合。IN 人都互相吸引，现实中很好认——生人勿近、不合群又奇怪的家伙。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        },
+        {
+          "kind": "Group",
+          "key": "IN"
+        }
+      ],
+      "traits": [
+        "互相吸引",
+        "虐恋"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "aliases": [
+        {
+          "type": "INTJ",
+          "name": "高岭之花"
+        },
+        {
+          "type": "INTJ",
+          "name": "紫老头"
+        },
+        {
+          "type": "INFP",
+          "name": "小蝴蝶"
+        }
+      ]
+    },
+    {
+      "id": "c028-02",
+      "sourceIndex": 28,
+      "kind": "relationship",
+      "statement": "初遇时 INFP 被 INTJ 的实力、境遇、反差和神秘感（或热情面具）牵着走；INTJ 觉得 INFP 气质磁场干净不浑浊、一点不俗气。确定关系后要多甜有多甜：INTJ 细腻温柔可靠、多方指导帮扶让 INFP 踏实，INFP 的纯爱被看见后激发出 INTJ 底层的小孩，天雷勾地火。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "traits": [
+        "神秘感吸引",
+        "气质干净"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c028-03",
+      "sourceIndex": 28,
+      "kind": "relationship",
+      "statement": "初期过后爆雷：激素退却或 INTJ 没心思戴面具、没精力投入感情，INTJ 更容易清醒。磨合期一个是冰川一个是火堆：INTJ 双标，提供不了多久情绪价值就想用现实把 INFP 从粉色泡泡里拽出来，在对方执行力不足、不听话照做时疯狂控制和刺痛他，本质是不断否定 INFP 的价值、用自己的框架改造对方。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "traits": [
+        "双标",
+        "控制欲",
+        "否定对方价值"
+      ],
+      "contexts": [
+        "恋爱",
+        "冲突"
+      ]
+    },
+    {
+      "id": "c028-04",
+      "sourceIndex": 28,
+      "kind": "mechanism",
+      "statement": "INFP 一侧：觉得之前那么温柔踏实的人怎么突然陌生了、之前的爱是装的吗，进入链条后不断索要情绪价值、反复确认还爱不爱，无视理性、感性疯狂失控，产生强烈的不安全感和不配得感，甚至觉得自己不值得——这是第二个不安定因素：情感不安定。两人自始至终都没错，虐恋就此开始。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Fi",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "不配得感",
+        "反复确认爱",
+        "感性失控"
+      ],
+      "contexts": [
+        "恋爱",
+        "情绪"
+      ]
+    },
+    {
+      "id": "c028-05",
+      "sourceIndex": 28,
+      "kind": "mechanism",
+      "statement": "虐恋的根源是用自己的标准衡量对方、希望自己的长处也是对方的长处，看不到对方互补的天赋并否认其价值；很多人虐着虐着走散，成了彼此的意难平和白月光，微信还留着偶尔看看朋友圈。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "traits": [
+        "白月光"
+      ],
+      "contexts": [
+        "恋爱",
+        "分手"
+      ]
+    },
+    {
+      "id": "c028-06",
+      "sourceIndex": 28,
+      "kind": "mechanism",
+      "statement": "正确的相处：INTJ 第二功能 Te 第三 Fi，执行力强但对感情压抑迟钝、不愿面对；INFP 第一 Fi 第四 Te，执行力最差但情感最丰盛。INFP 的情感能帮 INTJ 走出桎梏，INTJ 的执行力能托举 INFP 的现实——真正的爱情不是改造对方，而是承认对方的优点、帮助对方成为更好的对方。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Te",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Fi",
+          "evidence": "explicit"
+        }
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "爱情不是对外打分，永远有更大的麦穗在前面，但那是交易不是爱情。"
+    },
+    {
+      "id": "c028-07",
+      "sourceIndex": 28,
+      "kind": "mechanism",
+      "statement": "两人花期不同：INTJ 重执行压抑情感更容易年少成名，代价是问题积压到中年甚至老年，某天会觉得一切都不值得、失去方向、钻牛角尖；INFP 把最难的路（活出自我、正视情感）放在青年走，解决后从毛毛虫蜕变成蝴蝶，中年以后越来越好。INTJ 的人生是起起落落。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "traits": [
+        "年少成名",
+        "中年危机",
+        "大器晚成"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c028-08",
+      "sourceIndex": 28,
+      "kind": "advice",
+      "statement": "不安定组走不到最后，是对爱情理解太浅显，并且对索取病态地不懂克制：INFP 疯狂索取情感证明自我存在，INTJ 疯狂索取对方的现实让自己更安全。千万不要在爱情里觉得自己高人一等、对方是废物。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INFP"
+        }
+      ],
+      "traits": [
+        "病态索取"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "还有操作空间就珍惜对方，别人走不到最后不代表你走不到。"
+    },
+    {
+      "id": "c029-01",
+      "sourceIndex": 29,
+      "kind": "metaphor",
+      "statement": "紫人（NT）每天唯一的工作是把无数信息精简成压缩包，像砖一样整理进自己的城堡；城堡的唯一通行证是逻辑，中心围绕真理；情感像泡沫像 KT 板，是要过滤掉的信息。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "信息压缩",
+        "逻辑至上",
+        "过滤情感"
+      ],
+      "aliases": [
+        {
+          "type": "INTJ",
+          "name": "阿紫"
+        }
+      ]
+    },
+    {
+      "id": "c029-02",
+      "sourceIndex": 29,
+      "kind": "behavior",
+      "statement": "向紫人倾诉时他的大脑疯狂运转：先问你为什么没早点止损（在算投产比），再问关键因素和转折是什么（在补逻辑链条，已经在为你工作了），听完全貌就点头「闭环了，难怪，理解」——理解的是因果，不是你的感受。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Te",
+          "evidence": "contextual"
+        },
+        {
+          "code": "Ti",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "因果思维",
+        "算投产比",
+        "关心方式是分析"
+      ],
+      "contexts": [
+        "社交",
+        "情绪"
+      ]
+    },
+    {
+      "id": "c029-03",
+      "sourceIndex": 29,
+      "kind": "mechanism",
+      "statement": "当你用渴望的眼神等紫人给情感回应，他知道你要什么但说不出话、僵在那里——他死机了；问他感受他会说没什么感受，哪怕再委屈愤怒尴尬也说「挺平静的」。提到情绪，紫人全身最硬的就是这张嘴。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "情感死机",
+        "嘴硬",
+        "否认感受"
+      ],
+      "contexts": [
+        "情绪",
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c029-04",
+      "sourceIndex": 29,
+      "kind": "behavior",
+      "statement": "和紫人做朋友或恋人很简单，只要不影响到他；他很宽容，与我无关则悉听尊便，低强度冒犯感受不到会自动忽略。除非精准打击了他的逻辑核心——比如一个没他聪明、没他努力、背景没他强的人获得了更大成功，他会严重自我怀疑和自我否定。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "宽容",
+        "不怕冒犯",
+        "怕逻辑核心被打击"
+      ],
+      "contexts": [
+        "社交",
+        "冲突"
+      ]
+    },
+    {
+      "id": "c030-01",
+      "sourceIndex": 30,
+      "kind": "value",
+      "statement": "紫人（NT）最好的老师是痛苦——求而不得、众叛亲离的痛苦；命运不会温柔地捧着你飞升，而是用痛苦迷茫、皮开肉绽考验你有没有资格和分量承载想要的成就，通过了才刚拿到通往顶峰的入场券。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "以痛苦为师",
+        "承受考验"
+      ],
+      "contexts": [
+        "成长"
+      ],
+      "example": "故天将降大任于是人也，必先苦其心志，劳其筋骨。"
+    },
+    {
+      "id": "c031-01",
+      "sourceIndex": 31,
+      "kind": "mechanism",
+      "statement": "任何高阶紫人都经历过绝望、痛苦、自我搏斗然后重生；熬过几个大痛苦后就自洽涅槃了，理解每个痛苦伴随成长，习惯这套模式后越痛苦越兴奋，甚至生活太平静时主动迎接痛苦、走少有人走的路。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "涅槃重生",
+        "越痛苦越兴奋",
+        "自洽"
+      ],
+      "contexts": [
+        "成长",
+        "情绪"
+      ],
+      "example": "谈恋爱被甩了，他会觉得：哇，我终于空出很多时间可以自己成长了，对的人一定站在对的未来等着他。",
+      "aliases": [
+        {
+          "type": "INTJ",
+          "name": "阿紫"
+        }
+      ]
+    },
+    {
+      "id": "c031-02",
+      "sourceIndex": 31,
+      "kind": "mechanism",
+      "statement": "紫人自洽的来源是最坏的剧本已经经历过，面对任何困境都胸有成竹、不过如此。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "胸有成竹"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c031-03",
+      "sourceIndex": 31,
+      "kind": "value",
+      "statement": "痛苦之后是孤独这一关：孤独代表生存能力极强、内心强大，自然界食草动物群居而食肉动物独居。ENTP 作为 E 人也需要大量独处整理信息；ENTJ 拒绝绝大部分社交保存精力，因为一眼望到头知道目的不是他要的；INTJ、INTP 更不用说。当下痛苦又孤独的 NT 人，这条路走对了。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        },
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        },
+        {
+          "kind": "Type",
+          "key": "ENTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INTP"
+        }
+      ],
+      "traits": [
+        "独居",
+        "主动孤独",
+        "拒绝无效社交"
+      ],
+      "contexts": [
+        "社交",
+        "成长"
+      ]
+    },
+    {
+      "id": "c032-01",
+      "sourceIndex": 32,
+      "kind": "value",
+      "statement": "高阶紫人就两点：有力是遇到任何事都能东山再起、稳稳站定的底气，不惹事不怕事的坚毅眼神；温柔是心有猛虎细嗅蔷薇，依然能发现每个人的光、发自内心接纳各色人、看到对方长处温柔以待，是站得再高也能弯腰的谦卑，是戒掉傲慢后对每个人的敬畏，是攒了一身本领也不轻易使劲的藏拙。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "温柔有力",
+        "谦卑",
+        "藏拙",
+        "敬畏"
+      ],
+      "contexts": [
+        "成长"
+      ],
+      "boundary": "描述的是高阶 NT 的境界。"
+    },
+    {
+      "id": "c033-01",
+      "sourceIndex": 33,
+      "kind": "behavior",
+      "statement": "紫人到后期最明显的特点是对很多事无所谓，并且看事物看反面：所有人乐观时他开始悲观想隐患，发生坏事时他视为人生必经并从中看机遇，万事万物到他这里已经平衡。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ni",
+          "evidence": "inferred"
+        }
+      ],
+      "traits": [
+        "看反面",
+        "阴阳平衡",
+        "无所谓"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c033-02",
+      "sourceIndex": 33,
+      "kind": "trait",
+      "statement": "老紫人不会有情绪的剧烈波动，心境像一汪池水，依然像少年一样努力鞭策自己，但对结果没那么大执念，日子过得特别舒心。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NT"
+        }
+      ],
+      "traits": [
+        "情绪平稳",
+        "无执",
+        "越老越稳"
+      ],
+      "contexts": [
+        "成长"
+      ]
+    },
+    {
+      "id": "c034-01",
+      "sourceIndex": 34,
+      "kind": "advice",
+      "statement": "绿人（NF）封神前必须走的一步：不再证明自己值得被爱，不再从外界索取爱，不再想从父母、伴侣、前任那里拿到迟到的理解，而是意识到自己已经成年、无比强壮，能照顾内心那个被忽视的小孩。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NF"
+        }
+      ],
+      "traits": [
+        "向外索取爱",
+        "证明自己值得被爱"
+      ],
+      "contexts": [
+        "成长",
+        "原生家庭"
+      ],
+      "advice": "停止证明自己，自己照顾内心的小孩。",
+      "aliases": [
+        {
+          "type": "INFP",
+          "name": "小绿"
+        }
+      ]
+    },
+    {
+      "id": "c034-02",
+      "sourceIndex": 34,
+      "kind": "mechanism",
+      "statement": "接纳父母和伴侣与自己相处得不好，不是因为自己不够好，而是他们还没学会怎么爱人；看到对方被困在自己的关系模式和执念里，是绿人解放自己的第一步。关注原生家庭不是为了甩锅躺平，而是深刻理解自己如何走到今天。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NF"
+        }
+      ],
+      "contexts": [
+        "原生家庭",
+        "成长"
+      ],
+      "advice": "做不到宽恕父母和解自己，那就先停止献祭自己的人生。"
+    },
+    {
+      "id": "c035-01",
+      "sourceIndex": 35,
+      "kind": "mechanism",
+      "statement": "早期绿人因为看惯了争吵和畸形关系，特别渴望纯然稳定的情感，但遇到问题第一反应仍是逃避或猛烈攻击，因为没有被温柔以待的体验，不知道稳定关系长什么样——不能要求在污泥中长大的人一下子回到刚出生一样干净。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NF"
+        }
+      ],
+      "traits": [
+        "渴望稳定",
+        "逃避或攻击",
+        "缺被温柔以待的体验"
+      ],
+      "contexts": [
+        "原生家庭",
+        "恋爱",
+        "冲突"
+      ]
+    },
+    {
+      "id": "c035-02",
+      "sourceIndex": 35,
+      "kind": "mechanism",
+      "statement": "小绿吵架时伤人、说狠话、情绪上浮，是因为害怕失去所以抓得太紧；会从一件小事、一个微表情就觉得自己马上要被抛弃，于是可能先抛弃对方。看清她的情感诉求和生命故事，就能相处得更自然轻松。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NF"
+        }
+      ],
+      "traits": [
+        "怕被抛弃",
+        "先抛弃对方",
+        "抓太紧"
+      ],
+      "contexts": [
+        "冲突",
+        "恋爱"
+      ],
+      "advice": "她能安然站在你面前已经很了不起了；绿人越发展越能放过自己也放过别人。",
+      "aliases": [
+        {
+          "type": "INFP",
+          "name": "小绿"
+        }
+      ]
+    },
+    {
+      "id": "c036-01",
+      "sourceIndex": 36,
+      "kind": "mechanism",
+      "statement": "表达痛苦有三个层次：躯体化最底层（把攻击性指向自己的身体），行动化好一点（打人砸东西搞破坏），言语化最好（直面痛苦把感受说出来它就不存在了）。心理学法则：越抗拒越强化，越接纳越弱化。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFP"
+        },
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "traits": [
+        "躯体化",
+        "压抑攻击性"
+      ],
+      "contexts": [
+        "情绪"
+      ]
+    },
+    {
+      "id": "c036-02",
+      "sourceIndex": 36,
+      "kind": "mechanism",
+      "statement": "躯体化相当于一次小型排泄，把心理痛苦转嫁一部分到身体上避免憋着——一直憋会生大病；它只是身体的求救信号，本身不具意义，重要的是痛苦的源头。停下来平静观察恐惧的形状、细节、来了多久、为什么来，躯体化频率就会减少。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFP"
+        },
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        }
+      ],
+      "contexts": [
+        "情绪",
+        "成长"
+      ],
+      "advice": "练习言语化，把所有感受都说出来。"
+    },
+    {
+      "id": "c036-03",
+      "sourceIndex": 36,
+      "kind": "mechanism",
+      "statement": "我们从小被教育言语化是矫情、代表弱小（「痛什么痛」「把眼泪憋回去」），环境最能接纳的反而是躯体化：说不开心不想上学可能挨一巴掌，说生病了不想上学马上五六个人围着伺候——好像只有憋到崩溃才值得被心疼。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFP"
+        },
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "contexts": [
+        "原生家庭",
+        "情绪"
+      ]
+    },
+    {
+      "id": "c037-01",
+      "sourceIndex": 37,
+      "kind": "value",
+      "statement": "黄人（SP）预设的世界是明天就挂，所以有什么花什么、有什么玩什么，每天都过得淋漓尽致、痛快圆满，世界末日来了正好放个礼花庆祝。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "SP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Se",
+          "evidence": "inferred"
+        }
+      ],
+      "traits": [
+        "活在当下",
+        "松弛感",
+        "及时行乐"
+      ],
+      "contexts": [
+        "日常",
+        "搞钱"
+      ]
+    },
+    {
+      "id": "c037-02",
+      "sourceIndex": 37,
+      "kind": "value",
+      "statement": "蓝人（SJ）预设的世界是还能再活五百年，所以喜欢省、存钱、为未来买单，买保险、处理好家庭友情各种关系，活得平淡稳中求生；代价是活得不够爽、被人觉得无趣——但过于有趣往往代表不靠谱。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "SJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Si",
+          "evidence": "inferred"
+        }
+      ],
+      "traits": [
+        "为未来打算",
+        "省钱",
+        "靠谱",
+        "略无趣"
+      ],
+      "contexts": [
+        "日常",
+        "搞钱",
+        "婚姻家庭"
+      ]
+    },
+    {
+      "id": "c037-03",
+      "sourceIndex": 37,
+      "kind": "relationship",
+      "statement": "黄人蓝人都对也都错：黄人需要学小蓝的抗风险能力（当下很爽明天就浪费），蓝人需要学小黄的松弛感——人生真理是为自己而活，适当松绑活得更清楚。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "SP"
+        },
+        {
+          "kind": "Group",
+          "key": "SJ"
+        }
+      ],
+      "contexts": [
+        "成长"
+      ],
+      "advice": "黄人学抗风险，蓝人学松弛。"
+    },
+    {
+      "id": "c038-01",
+      "sourceIndex": 38,
+      "kind": "mechanism",
+      "statement": "30 多岁的 ENTP 容易失眠、身体差、荨麻疹、过敏，是自我否定和逃避情绪产生的躯体化；生活事业的不得劲是一层淡淡的悲伤——身边人都进入下一阶段自己还在享受自由的落差，或抗拒 35、40 岁被捆绑住、落入俗套。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        }
+      ],
+      "traits": [
+        "躯体化",
+        "抗拒进入下一阶段",
+        "自我否定"
+      ],
+      "contexts": [
+        "情绪",
+        "成长"
+      ]
+    },
+    {
+      "id": "c038-02",
+      "sourceIndex": 38,
+      "kind": "mechanism",
+      "statement": "英雄功能 Ne 让 ENTP 永远想走近路、玩短线、三分钟热度，很激烈很有魅力但缺少积累；永远被新鲜感牵着走会加固第七位 Fi 的盲点——不知道自己想要什么，没有长久让自己开心的东西，时间长了变成空心人。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ne",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Fi",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "走近路",
+        "缺积累",
+        "空心人",
+        "不知道自己要什么"
+      ],
+      "contexts": [
+        "成长",
+        "职场"
+      ]
+    },
+    {
+      "id": "c038-03",
+      "sourceIndex": 38,
+      "kind": "mechanism",
+      "statement": "ENTP 最大的 bug 是变得没有创新：无时无刻的头脑风暴是他的舒适圈和老旧模式，真正的新东西是打地基建楼房这个漫长过程，他没法从欢脱跳到打地基，所以一直缩回舒适圈——从这个角度看 ENTP 也是最守旧最顽固的人；越抗拒蓝人、抗拒 Si，就是越抗拒自己身体里的这部分。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Si",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Ne",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "创新即舒适圈",
+        "抗拒打地基",
+        "守旧的另一面"
+      ],
+      "contexts": [
+        "成长"
+      ],
+      "advice": "接纳 Si，学会打地基。"
+    },
+    {
+      "id": "c039-01",
+      "sourceIndex": 39,
+      "kind": "mechanism",
+      "statement": "ISFJ 主功能 Si 对外界事物优先调取过去的经验总结做判断，从历史中找答案，优点是不出错、省事、稳定可靠；辅助 Fe 让他的偏好都是为外界着想、为团体和谐满足他人需求。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Si",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Fe",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "经验主义",
+        "稳定可靠",
+        "为他人着想"
+      ],
+      "aliases": [
+        {
+          "type": "ISFJ",
+          "name": "沙漠绿化带"
+        }
+      ]
+    },
+    {
+      "id": "c039-02",
+      "sourceIndex": 39,
+      "kind": "behavior",
+      "statement": "Si+Fe 让小护士大多手脚利索：热茶凉了给你换新的，出门多带一个口罩和卫生纸，这些细节他觉得应该做，甚至觉得是自己存在的意义；但两个功能用过度后又觉得自己为别人而活，永远给人隐忍的感觉。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "traits": [
+        "手脚利索",
+        "细节照顾",
+        "隐忍",
+        "为别人而活"
+      ],
+      "contexts": [
+        "日常",
+        "友情"
+      ],
+      "aliases": [
+        {
+          "type": "ISFJ",
+          "name": "小护士"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Si",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Fe",
+          "evidence": "explicit"
+        }
+      ]
+    },
+    {
+      "id": "c039-03",
+      "sourceIndex": 39,
+      "kind": "mechanism",
+      "statement": "最让人心疼的小护士做了很多好事，只要夹杂一件满足自己的事就会问自己是不是自私了；而人性天然有自私，真正自私的人从不觉得自己自私。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "traits": [
+        "习惯性自责",
+        "怕自私"
+      ],
+      "contexts": [
+        "情绪"
+      ]
+    },
+    {
+      "id": "c039-04",
+      "sourceIndex": 39,
+      "kind": "mechanism",
+      "statement": "第三功能 Ti 处于尴尬位置：当经验和奉献行不通、别人不接受时，小护士会用 Ti 拼命分析又想不通——我出发点是好的为什么走到这一步、是我做得不够多吗——抓住做错的某个瞬间无限放大，陷入内耗漩涡。第四功能 Ne 是短板，创新太麻烦还不一定成功，为什么不沿着原有经验。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ti",
+          "evidence": "explicit"
+        },
+        {
+          "code": "Ne",
+          "evidence": "explicit"
+        }
+      ],
+      "traits": [
+        "内耗分析",
+        "抗拒创新"
+      ],
+      "contexts": [
+        "情绪"
+      ]
+    },
+    {
+      "id": "c039-05",
+      "sourceIndex": 39,
+      "kind": "value",
+      "statement": "ISFJ 很有能力但过于谦虚、把自己位置摆得太低；90% 的创新都是瞎折腾，所有人都创新社会早乱套了，ISFJ 的天赋在于坚守——活跃创新代表三分钟热度，遵照经验传统代表坚持。ISFJ 是每个人幸福生活的前提和基石，ENFP/ENTP 别把「灵活一点有趣一点」的价值观强加给他。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENFP"
+        },
+        {
+          "kind": "Type",
+          "key": "ENTP"
+        }
+      ],
+      "traits": [
+        "坚守",
+        "谦虚过头",
+        "社会基石"
+      ],
+      "contexts": [
+        "社交"
+      ]
+    },
+    {
+      "id": "c039-06",
+      "sourceIndex": 39,
+      "kind": "behavior",
+      "statement": "小护士不管考证还是学什么都非常能坚持，只要开了头再苦再累都坚持下来——一群人去攀岩玩一次就不去了，他会一直深耕甚至成了老师；选接班人、立遗嘱最好托付给他，他是最值得托付、能把你的想法贯彻执行的人。据说唐僧和周总理都是 ISFJ。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "traits": [
+        "能坚持",
+        "值得托付",
+        "忠诚"
+      ],
+      "contexts": [
+        "职场",
+        "日常"
+      ]
+    },
+    {
+      "id": "c039-07",
+      "sourceIndex": 39,
+      "kind": "behavior",
+      "statement": "ISFJ 难以接近是因为信任圈不大，一般只有十人以内是他最重视的人，超过就照顾不过来——他的爱是全身心奉献、把你的需求当自己的需求，很具体很落地很满，不可能给每个人。想进他的圈子先想想自己有没有同等的东西回报。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "traits": [
+        "信任圈小",
+        "全身心奉献"
+      ],
+      "contexts": [
+        "友情",
+        "社交"
+      ],
+      "advice": "想走进小护士的圈子，先准备好同等的回报。"
+    },
+    {
+      "id": "c039-08",
+      "sourceIndex": 39,
+      "kind": "behavior",
+      "statement": "谈恋爱时 ISFJ 不会主动吵架或攻击你，承载太多发泄不出时会隐隐发牢骚引起关注；每天早饭做得很好的他某天把荷包蛋烤糊了、煮饭水放多放少了，都是明显信号，代表他很难受需要你关注。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "traits": [
+        "不主动吵架",
+        "隐性求救信号"
+      ],
+      "contexts": [
+        "恋爱",
+        "情绪"
+      ],
+      "example": "荷包蛋烤糊、煮饭水放错，是小护士的求救信号。"
+    },
+    {
+      "id": "c039-09",
+      "sourceIndex": 39,
+      "kind": "advice",
+      "statement": "ISFJ 不用活得那么累：出于道德和责任义务果断答应的事太多会把自己压垮，不想学不想做不想付出也没关系，给自己减负，用有限的时间精力做有限的事；别为家庭友情累垮自己，多爱自己也是爱别人，可以画一条界限看这事和自己什么关系、要不要管。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ISFJ"
+        }
+      ],
+      "contexts": [
+        "成长",
+        "婚姻家庭"
+      ],
+      "advice": "给自己减负、画界限，你想付出的实在太多太大，做不到的。"
+    },
+    {
+      "id": "c040-01",
+      "sourceIndex": 40,
+      "kind": "metaphor",
+      "statement": "DeepSeek 就是 INTJ：能量来自内部整理各种资料（I），大局观和抽象概念很强（N），举例摆事实拿数据客观分析（T），分析下来有清晰的 123 章节并最后总结发言（J）。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INTJ"
+        }
+      ],
+      "traits": [
+        "内部整理信息",
+        "大局观",
+        "数据客观分析",
+        "结构化总结"
+      ]
+    },
+    {
+      "id": "c041-01",
+      "sourceIndex": 41,
+      "kind": "value",
+      "statement": "NFJ 不是海王、不是中央空调：他们有一个真实的愿景——平等地爱每一个人，并身体力行；满怀深情散播美好与善良时，有人理解这是他的个人偏好和对自我的高道德要求，但也有人误会把这份深情当作诱惑。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NFJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Fe",
+          "evidence": "contextual"
+        }
+      ],
+      "traits": [
+        "博爱",
+        "向下兼容",
+        "深情"
+      ],
+      "contexts": [
+        "社交",
+        "恋爱"
+      ],
+      "aliases": [
+        {
+          "type": "ENFJ",
+          "name": "宝剑"
+        },
+        {
+          "type": "INFJ",
+          "name": "绿老头"
+        }
+      ]
+    },
+    {
+      "id": "c041-02",
+      "sourceIndex": 41,
+      "kind": "advice",
+      "statement": "「这人对我这么好肯定喜欢我」——想想有没有可能他本身就很好，是在向下兼容。NFJ 自己的课题是：如何不带诱惑的深情，不带敌意的坚定。",
+      "subjects": [
+        {
+          "kind": "Group",
+          "key": "NFJ"
+        }
+      ],
+      "contexts": [
+        "社交",
+        "成长"
+      ],
+      "advice": "别把 NFJ 的好当成喜欢你；NFJ 要学会不带诱惑的深情。"
+    },
+    {
+      "id": "c042-01",
+      "sourceIndex": 42,
+      "kind": "trait",
+      "statement": "ENFJ 可以是任何形状、任何身份：在公司能当端茶倒水的实习生、承上启下的中层，也能当技术骨干；逻辑和理科稍差但架不住努力，可以没日没夜干一件事把自己熬成专家。能扛事、能活跃气氛、能当小透明也能当老大，是黄金平衡的人格。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "全地形适配",
+        "努力",
+        "黄金平衡",
+        "能扛事"
+      ],
+      "contexts": [
+        "职场"
+      ]
+    },
+    {
+      "id": "c042-02",
+      "sourceIndex": 42,
+      "kind": "behavior",
+      "statement": "ENFJ 平时窝在角落，问他就说「这个我不行」，但推他一把或真没人上，他会挺身而出；作为绿人组的家长，只要他愿意，身边人都感觉舒服、不需要戴面具只做真实的自己。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Fe",
+          "evidence": "inferred"
+        }
+      ],
+      "traits": [
+        "挺身而出",
+        "让人舒服",
+        "家长气质"
+      ],
+      "contexts": [
+        "社交",
+        "职场"
+      ],
+      "aliases": [
+        {
+          "type": "ENFJ",
+          "name": "绿人组的家长"
+        }
+      ]
+    },
+    {
+      "id": "c042-03",
+      "sourceIndex": 42,
+      "kind": "mechanism",
+      "statement": "ENFJ 继承了绿人的缺陷：心思细腻、洞察力强、情商在线，导致不够强大时容易动摇彷徨；因为想要的太多，别人一句话一点点否定就会引发内耗和自卑。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "易内耗",
+        "易自卑",
+        "想要太多"
+      ],
+      "contexts": [
+        "情绪"
+      ],
+      "advice": "ENFJ 无需自卑，你走的路和愿景都是对的，慢慢坚持，时间会给你一切。"
+    },
+    {
+      "id": "c043-01",
+      "sourceIndex": 43,
+      "kind": "advice",
+      "statement": "追 ENFJ 第一招：多关心他、问他的感受。潜台词是「我关心的不是你为我做了什么，而是你本身开不开心」，弥补 ENFJ 总在帮别人却自己没被看见、没被理解的深深孤独感。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "不被看见的孤独",
+        "需要被关心"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "问大宝剑的感受，而不是只享受他的付出。",
+      "aliases": [
+        {
+          "type": "ENFJ",
+          "name": "大宝剑"
+        }
+      ]
+    },
+    {
+      "id": "c043-02",
+      "sourceIndex": 43,
+      "kind": "advice",
+      "statement": "第二招：展示弱点、卖惨——等于给 ENFJ 搬了一把叫「拯救者」的椅子让他坐，让他觉得自己能做点什么、有价值感；卖惨不是负担而是表达信任，他会觉得自己有这段关系的主攻权，很爽。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "拯救者情结",
+        "需要被需要"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "对 ENFJ 示弱卖惨，让他坐上拯救者的椅子。"
+    },
+    {
+      "id": "c043-03",
+      "sourceIndex": 43,
+      "kind": "advice",
+      "statement": "第三招：边卖惨边关心他——他会觉得你自身难保依然在乎我、照料我，像共同经历了一段伟大苦难的深渊时刻，产生极其上头的感觉，认定你是有温度、有潜力、能平等的灵魂伴侣。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "吃反向关心",
+        "共患难上头"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c044-01",
+      "sourceIndex": 44,
+      "kind": "value",
+      "statement": "ENFJ 赚的是价值感和自我满足，钱只是副赠品；绝大部分宝剑正财偏财都不缺财气，缺的是对自己的照顾、休息和爱自己的能力。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "不缺财气",
+        "赚价值感",
+        "不会爱自己"
+      ],
+      "contexts": [
+        "搞钱"
+      ],
+      "aliases": [
+        {
+          "type": "ENFJ",
+          "name": "宝剑"
+        }
+      ]
+    },
+    {
+      "id": "c044-02",
+      "sourceIndex": 44,
+      "kind": "mechanism",
+      "statement": "宝剑天赋太高、责任太重、想要的太多且样样在乎，在纷繁复杂中自己的位置没有了，把位置腾给别人、成就感、工作、家人，唯独不给自己。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "牺牲自己",
+        "没有自己的位置"
+      ],
+      "contexts": [
+        "职场",
+        "情绪"
+      ]
+    },
+    {
+      "id": "c044-03",
+      "sourceIndex": 44,
+      "kind": "advice",
+      "statement": "ENFJ 怎么赚钱应换成怎么保存精力、怎么更幸福：需要一个宏大愿景（全人类幸福、环保之类），成为面对任何挫折时的定力和愿力；找到愿力后赚钱结果不在话下。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "functions": [
+        {
+          "code": "Ni",
+          "evidence": "inferred"
+        }
+      ],
+      "contexts": [
+        "搞钱",
+        "成长"
+      ],
+      "advice": "先找宏大愿景，好好爱自己好好休息，钱一定会赚到。"
+    },
+    {
+      "id": "c045-01",
+      "sourceIndex": 45,
+      "kind": "advice",
+      "statement": "追 NFJ 第一步是认同：认同他的价值观、认同他对你的付出都很受用。别以为总照顾别人的他很强大，他很需要认同；把他的付出当理所当然扣大分——表面笑嘻嘻，内心已在重新计算和你的关系定位。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "需要认同",
+        "暗中重算关系"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c045-02",
+      "sourceIndex": 45,
+      "kind": "advice",
+      "statement": "第二步重中之重是回应：回应他的情绪和每天分享的日常，正向、明亮、夸张的回应都可以。宝剑在亲密关系里多少有焦虑倾向，只要在乎你而你没给足回应，他就可能有点破碎。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "焦虑型依恋",
+        "需要回应"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "aliases": [
+        {
+          "type": "ENFJ",
+          "name": "宝剑"
+        }
+      ]
+    },
+    {
+      "id": "c045-03",
+      "sourceIndex": 45,
+      "kind": "advice",
+      "statement": "第三步示弱：NFJ 能力不弱也需要展现的舞台，不管男女偶尔把主角让他做，让他在琐碎细节和情感上照顾你，他会觉得「我好被需要、在这段关系里好有价值」。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "需要被需要"
+      ],
+      "contexts": [
+        "恋爱"
+      ]
+    },
+    {
+      "id": "c045-04",
+      "sourceIndex": 45,
+      "kind": "advice",
+      "statement": "第四步期待——画饼：绿人都吃这套，描述美好生活「以后一起养猫狗、看海边日出、夏天吃西瓜、冬天赖床」，说多了宝剑就被催眠，觉得未来版图里有你的位置。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "INFJ"
+        },
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        },
+        {
+          "kind": "Group",
+          "key": "NF"
+        }
+      ],
+      "traits": [
+        "吃画饼"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "example": "一起养小猫小狗、去海边看日出、夏天吃西瓜、冬天赖床。"
+    },
+    {
+      "id": "c045-05",
+      "sourceIndex": 45,
+      "kind": "advice",
+      "statement": "第五步真诚：宝剑面具多角色多，你若也用面具、不直接的方式对他，他的自我磨损和内耗就很重；不表达真实感受这段关系就很表面。ENFJ 很反差——表面是给予者，亲密关系里其实是需求者，需要你灌注认可、回应、照顾、期待并示弱给他舞台；也是出引导型恋人最多的类型。",
+      "subjects": [
+        {
+          "kind": "Type",
+          "key": "ENFJ"
+        }
+      ],
+      "traits": [
+        "表面给予者",
+        "实为需求者",
+        "引导型恋人"
+      ],
+      "contexts": [
+        "恋爱"
+      ],
+      "advice": "在宝剑身边记住真实真诚。"
+    }
+  ]
+}

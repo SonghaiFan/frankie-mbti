@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Portal from "./portal";
 import { MBTIType } from "@/types/mbti";
-import { mbtiTypes } from "@/data/mbti-data";
+import { mbtiTypes } from "@/data/core/mbti-data";
 import { cn } from "@/lib/utils";
 import { useMBTIStore } from "@/store/mbti-store";
 import { MBTIState } from "@/store/mbti-store";

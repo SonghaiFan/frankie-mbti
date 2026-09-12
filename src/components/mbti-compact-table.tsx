@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
-import { mbtiTypes } from "@/data/mbti-data";
+import { mbtiTypes } from "@/data/core/mbti-data";
 import { cn } from "@/lib/utils";
 import { useMBTIStore } from "@/store/mbti-store";
 import { accentWash } from "@/styles/mbti-styles";

@@ -8,7 +8,6 @@ import { MBTIType } from "@/types/mbti";
 import { accentOf, groupCode } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
 import { CharacterGlow } from "./character-glow";
-import { MBTIIntroduction } from "./mbti-introduction";
 import { MBTIDimensions } from "./mbti-dimensions";
 import { MBTICognitiveFunctions } from "./mbti-cognitive-functions";
 import { MBTIMatches } from "./mbti-matches";
@@ -45,7 +44,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
         aria-label={`${type.type} ${type.title}`}
         className="fixed left-1/2 top-1/2 z-[200] w-[96vw] max-w-6xl -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-paper shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] sm:w-[94vw]"
       >
-        <div className="flex max-h-[94dvh] flex-col sm:max-h-[92vh]">
+        <div className="flex max-h-[94dvh] flex-col sm:h-[92vh] sm:max-h-[92vh]">
           <button
             onClick={onClose}
             type="button"
@@ -64,9 +63,9 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
             </svg>
           </button>
 
-          {/* Masthead */}
-          <div className="rule-b relative flex shrink-0 flex-row items-stretch overflow-hidden">
-            <div className="relative w-20 shrink-0 sm:h-auto sm:min-h-[220px] sm:w-[34%] sm:max-w-[280px]">
+          {/* Masthead — three tenths of the sheet; the long readings live in the body. */}
+          <div className="rule-b relative flex shrink-0 flex-row items-stretch overflow-hidden sm:h-[30%] sm:min-h-[15.5rem]">
+            <div className="relative w-20 shrink-0 sm:w-[34%] sm:max-w-[280px]">
               <CharacterGlow activeColor={type.color} />
               <Image
                 src={`/mbti_img/${type.image}`}
@@ -77,7 +76,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
               />
             </div>
 
-            <div className="relative z-10 flex flex-1 flex-col justify-between gap-4 p-3 pr-10 sm:gap-8 sm:p-10">
+            <div className="relative z-10 flex min-w-0 flex-1 flex-col justify-between gap-4 p-3 pr-10 sm:gap-5 sm:px-10 sm:py-7">
               <div>
                 <div className="flex items-center gap-2">
                   <span
@@ -90,62 +89,46 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 </div>
 
                 <h2
-                  className="display mt-1 text-ink sm:mt-5"
-                  style={{ fontSize: "clamp(1.75rem, 6vw, 4.5rem)" }}
+                  className="display mt-1 text-ink sm:mt-3"
+                  style={{ fontSize: "clamp(1.75rem, 5vw, 3.75rem)" }}
                 >
                   {type.type}
                 </h2>
-                <p className="mt-0.5 text-[0.8125rem] text-ink-soft sm:mt-3 sm:text-lg">
+                <p className="mt-0.5 line-clamp-2 text-[0.8125rem] text-ink-soft sm:mt-2 sm:text-base">
                   {type.title} · {type.nickname}{type.archetype ? ` · ${type.archetype}` : ""}
                 </p>
               </div>
 
               {/* On a phone these move into the scrolling body — the masthead
                   has to stay a header, not eat the sheet. */}
-              <dl className="hidden gap-x-10 gap-y-5 sm:grid sm:grid-cols-2">
+              <dl className="hidden gap-x-10 sm:grid sm:grid-cols-2">
                 <div>
                   <dt className="eyebrow">特征</dt>
-                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                  <dd className="mt-1.5 text-[0.9375rem] leading-relaxed text-ink">
                     {type.group_des}
                   </dd>
                 </div>
                 <div>
                   <dt className="eyebrow">宣告</dt>
-                  <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
+                  <dd className="mt-1.5 line-clamp-2 text-[0.9375rem] leading-relaxed text-ink">
                     {type.slogan}
                   </dd>
                 </div>
-                {type.vividAnalogy && (
-                  <div>
-                    <dt className="eyebrow">灵魂隐喻 / 拟人</dt>
-                    <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
-                      {type.vividAnalogy}
-                    </dd>
-                  </div>
-                )}
-                {type.coreParadox && (
-                  <div>
-                    <dt className="eyebrow">核心矛盾与内耗</dt>
-                    <dd className="mt-2 text-[0.9375rem] leading-relaxed text-ink">
-                      {type.coreParadox}
-                    </dd>
-                  </div>
-                )}
               </dl>
             </div>
           </div>
 
           {/* Body */}
-          <div className="scroll-quiet flex-1 overflow-y-auto bg-paper px-4 py-6 sm:px-10 sm:py-16">
+          <div className="scroll-quiet flex-1 overflow-y-auto bg-paper px-4 py-6 sm:min-h-0 sm:flex-1 sm:px-10 sm:py-12">
             <div className="space-y-8 sm:space-y-28">
-              <dl className="grid grid-cols-1 gap-3 sm:hidden">
-                <div>
+              <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-6">
+                <div className="sm:hidden">
                   <dt className="eyebrow text-[0.625rem]">特征</dt>
                   <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
                     {type.group_des}
                   </dd>
                 </div>
-                <div>
+                <div className="sm:hidden">
                   <dt className="eyebrow text-[0.625rem]">宣告</dt>
                   <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
                     {type.slogan}
@@ -153,23 +136,22 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 </div>
                 {type.vividAnalogy && (
                   <div>
-                    <dt className="eyebrow text-[0.625rem]">灵魂隐喻 / 拟人</dt>
-                    <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
+                    <dt className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">灵魂隐喻 / 拟人</dt>
+                    <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink sm:mt-2 sm:text-[0.9375rem] sm:leading-[1.8]">
                       {type.vividAnalogy}
                     </dd>
                   </div>
                 )}
                 {type.coreParadox && (
                   <div>
-                    <dt className="eyebrow text-[0.625rem]">核心矛盾与内耗</dt>
-                    <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink">
+                    <dt className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">核心矛盾与内耗</dt>
+                    <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink sm:mt-2 sm:text-[0.9375rem] sm:leading-[1.8]">
                       {type.coreParadox}
                     </dd>
                   </div>
                 )}
               </dl>
 
-              <MBTIIntroduction type={type} />
               <MBTIDimensions type={type} />
               <MBTICognitiveFunctions type={type} />
               <MBTIMatches type={type} />

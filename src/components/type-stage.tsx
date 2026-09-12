@@ -6,7 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { MorphFigure } from "@/components/morph-figure";
 import { CharacterGlow } from "@/components/character-glow";
-import { mbtiTypes, dimensions, cognitiveFunctions } from "@/data/mbti-data";
+import { mbtiTypes, dimensions, cognitiveFunctions } from "@/data/core/mbti-data";
 import { MBTIType } from "@/types/mbti";
 import { cn } from "@/lib/utils";
 import { accentOf, groupCode } from "@/styles/mbti-styles";
