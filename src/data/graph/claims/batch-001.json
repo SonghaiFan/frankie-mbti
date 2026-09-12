@@ -1,0 +1,1029 @@
+{
+  "batchId": "batch-001",
+  "sources": [
+    {
+      "sourceIndex": 1,
+      "portrait": "ENFP 快乐小狗：坦诚善良、爱吃爱玩，唯一的毛病是好色。",
+      "aliases": [{ "type": "ENFP", "name": "快乐小狗" }],
+      "claims": [
+        {
+          "id": "c001-01",
+          "kind": "trait",
+          "statement": "ENFP 本性坦诚善良，几乎没有坏心眼，即使有也坏不到哪去。",
+          "originalVoice": "一定要和快乐小狗交朋友啊，那没什么坏人的，就算有，他也坏不到哪去。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "traits": ["坦诚", "善良", "没坏心眼"],
+          "contexts": ["友情"]
+        },
+        {
+          "id": "c001-02",
+          "kind": "behavior",
+          "statement": "ENFP 日常热衷于钻研哪里有好吃的、什么游戏好玩，并给朋友分享沙雕小视频。",
+          "originalVoice": "平时就喜欢钻研哪有好吃的，什么游戏好玩，再给你发点低质小视频。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "functions": [{ "code": "Ne", "evidence": "inferred" }],
+          "traits": ["爱吃爱玩", "爱分享"],
+          "contexts": ["日常", "友情"]
+        },
+        {
+          "id": "c001-03",
+          "kind": "trait",
+          "statement": "ENFP 若说有什么毛病，就是偶尔好色，喜欢拉朋友去看帅哥美女。",
+          "originalVoice": "你要非说有什么毛病的话，那可能就是偶尔搞搞颜色了，除了好色，别的没啥毛病了。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "traits": ["好色", "颜控"],
+          "contexts": ["友情"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 2,
+      "portrait": "ENFP 很好哄：脑子只存开心记忆，睡一觉负面情绪自动清空，像每天恢复出厂设置。",
+      "aliases": [{ "type": "ENFP", "name": "小狗" }],
+      "claims": [
+        {
+          "id": "c002-01",
+          "kind": "behavior",
+          "statement": "ENFP 很好哄，难过的事睡一觉就忘了；一个冰淇淋、一次寻宝加几句好话，他就自己给自己找台阶下。",
+          "originalVoice": "你给他买个冰淇淋或者去寻寻宝，然后说点好话，这一通操作下来，他自己就给自己台阶下了。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "traits": ["好哄", "不记仇"],
+          "contexts": ["恋爱", "冲突"],
+          "advice": "惹小狗生气了不要冷处理，递个甜筒说两句软话，他睡一觉就好了。"
+        },
+        {
+          "id": "c002-02",
+          "kind": "mechanism",
+          "statement": "ENFP 忘性大是一种自我保护：大脑只储存开心的记忆，负面记忆睡一觉就自动删除，像每天恢复出厂设置。",
+          "originalVoice": "小狗的这个脑子，他只是储存开心的记忆，那些所有难过的负面的睡一觉就自动删掉了，每天早上都会像恢复出厂设置一样。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "functions": [{ "code": "Ne", "evidence": "inferred" }],
+          "traits": ["忘性大", "自愈力强", "只记开心事"],
+          "contexts": ["情绪"]
+        },
+        {
+          "id": "c002-03",
+          "kind": "trait",
+          "statement": "ENFP 善良可爱、懂梗、真诚鲜活又会照顾人，谁和他在一起都会幸福。",
+          "originalVoice": "他们善良、可爱，又懂很多梗，而且真诚鲜活，又很会照顾别人。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "traits": ["善良", "可爱", "懂梗", "真诚", "会照顾人"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c002-04",
+          "kind": "advice",
+          "statement": "如果连哄 ENFP 都懒得哄，就把享受幸福的名额让给别人。",
+          "originalVoice": "如果你连小狗都谈不明白，回家吧孩子。",
+          "subjects": [{ "kind": "Type", "key": "ENFP" }],
+          "contexts": ["恋爱"],
+          "advice": "谈 ENFP 的门槛就是愿意哄他，做不到就别谈。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 3,
+      "portrait": "每个 INFJ 体内都藏着一个 INTJ：Fe 走不通时掏出 Ti，Ni+Ti 让最温柔的人戴上冷酷面具。",
+      "aliases": [
+        { "type": "INFJ", "name": "绿老头" },
+        { "type": "INTJ", "name": "紫老头" }
+      ],
+      "claims": [
+        {
+          "id": "c003-01",
+          "kind": "mechanism",
+          "statement": "INFJ 在无法靠 Fe 把理想场景变成现实时，会暂时放弃第二功能 Fe，直接启用第三功能 Ti，Ni+Ti 的组合使其表现得非常像 INTJ。",
+          "originalVoice": "它就暂时放弃了第二功能，直接掏出了第三功能 Ti，这个 Ni 加上 Ti 就非常非常像 INTJ 的感觉。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }, { "kind": "Type", "key": "INTJ" }],
+          "functions": [
+            { "code": "Ni", "evidence": "explicit" },
+            { "code": "Fe", "evidence": "explicit" },
+            { "code": "Ti", "evidence": "explicit" }
+          ],
+          "traits": ["体内有紫老头"],
+          "contexts": ["成长", "测试"]
+        },
+        {
+          "id": "c003-02",
+          "kind": "trait",
+          "statement": "INFJ 与 INTJ 都享受与孤独为伴，并带有清冷深邃的气质。",
+          "originalVoice": "这两个人格都是非常享受与孤独为伴，并且有清冷深邃的特质。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }, { "kind": "Type", "key": "INTJ" }],
+          "traits": ["享受孤独", "清冷深邃"]
+        },
+        {
+          "id": "c003-03",
+          "kind": "metaphor",
+          "statement": "最不想伤害别人的 INFJ 戴上 INTJ 面具后成了行刑者，好比最善良的羊做了最背黑锅的事；这个内在的 INTJ 是绿老头百宝箱里一件强力武器，极端生存条件下 INFJ 也能犀利果决。",
+          "originalVoice": "最善良的羊，做了最背黑锅的事。内在的这个 INTJ 只是绿老头自己百宝箱当中一件强有力的武器。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["善良", "极端时犀利果决"],
+          "contexts": ["成长"],
+          "boundary": "只在极端生存条件下出现，不是 INFJ 的常态。"
+        },
+        {
+          "id": "c003-04",
+          "kind": "mistype",
+          "statement": "INFJ 处于 Ni+Ti 的苦行僧阶段时，很容易测出 INTJ。",
+          "originalVoice": "那你呢？有测出 INTJ 吗？",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }, { "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Ti", "evidence": "explicit" }],
+          "contexts": ["测试"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 4,
+      "portrait": "高阶 FJ 人：一眼看穿你的心事却不说破，把你的脆弱小心安放，静水流深、拎得清也守得住。",
+      "aliases": [],
+      "claims": [
+        {
+          "id": "c004-01",
+          "kind": "behavior",
+          "statement": "高阶 FJ 能一眼看穿别人欲言又止的心事和情绪，却不会轻易说破让人难堪，而是小心保管安放你的负面。",
+          "originalVoice": "那些藏着很深的心事、欲言又止的情绪，他们能一眼看穿，却又不会轻易地说破让人难堪。",
+          "subjects": [{ "kind": "Group", "key": "FJ" }],
+          "functions": [{ "code": "Fe", "evidence": "contextual" }],
+          "traits": ["洞察人心", "不说破", "包容"],
+          "contexts": ["社交", "友情"]
+        },
+        {
+          "id": "c004-02",
+          "kind": "trait",
+          "statement": "在高阶 FJ 面前不用装得光鲜亮丽，他早已读懂你最狼狈的一面却依然温柔以待；相处感受不是博弈、压迫或剥削，而是一种深沉的安心。",
+          "originalVoice": "在它面前，你不用再装得光鲜亮丽积极向上，因为 FJ 天然就已经读懂了最狼狈的你，却没有抛弃。",
+          "subjects": [{ "kind": "Group", "key": "FJ" }],
+          "traits": ["让人安心", "不剥削", "温柔"],
+          "contexts": ["社交"]
+        },
+        {
+          "id": "c004-03",
+          "kind": "behavior",
+          "statement": "即使关系只能走一段路，高阶 FJ 也不会指责或纠结，而是默默退场、轻轻告别，像大地接纳落叶。",
+          "originalVoice": "就像厚重的大地默默接纳落叶一样。",
+          "subjects": [{ "kind": "Group", "key": "FJ" }],
+          "traits": ["拎得清", "体面告别"],
+          "contexts": ["分手", "友情"]
+        },
+        {
+          "id": "c004-04",
+          "kind": "mechanism",
+          "statement": "高阶 FJ 的淡然不是迟钝，而是自己经历过拉扯与黑暗后，对人性和对你的清醒与慈悲。",
+          "originalVoice": "这种人的策略不是迟钝，而是他自己经历过黑暗之后，对人性、对你的一层清醒和慈悲。",
+          "subjects": [{ "kind": "Group", "key": "FJ" }],
+          "traits": ["清醒", "慈悲", "静水流深"],
+          "contexts": ["成长"],
+          "boundary": "描述的是高阶 FJ，早期 FJ 未必如此。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 5,
+      "portrait": "INFJ 测成 ISFJ 是身体在自救：把无能为力的 N 转化为有所作为的 S，用 Si 的秩序阻断 Ni 的内耗。",
+      "aliases": [
+        { "type": "INFJ", "name": "绿老头" },
+        { "type": "ISFJ", "name": "小护士" }
+      ],
+      "claims": [
+        {
+          "id": "c005-01",
+          "kind": "mistype",
+          "statement": "INFJ 测成 ISFJ 是好事，代表成长，也代表身体在自救。",
+          "originalVoice": "INFJ 测成 ISFJ 其实是好事，代表成长了，也代表你的身体正在自救。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }, { "kind": "Type", "key": "ISFJ" }],
+          "contexts": ["测试", "成长"]
+        },
+        {
+          "id": "c005-02",
+          "kind": "mechanism",
+          "statement": "年幼的 INFJ 面对父母吵架却无能为力时，会开始写作业、拖地、做家务，把无能为力的 N 转化成有所作为的 S；这个模式常常带到成年。",
+          "originalVoice": "他把无能为力的 N 值转化成有所作为的 S 值，看起来测出来就会变成 ISFJ。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "functions": [
+            { "code": "Ni", "evidence": "explicit" },
+            { "code": "Si", "evidence": "explicit" }
+          ],
+          "traits": ["用做事逃避无力感"],
+          "contexts": ["原生家庭", "情绪"],
+          "example": "看到爸妈吵架很痛苦又什么都做不了，于是开始写作业、拖地、做家务。"
+        },
+        {
+          "id": "c005-03",
+          "kind": "behavior",
+          "statement": "遇到想不通的卡点时，INFJ 会通过收拾房间、旅游、刷老剧、列清单切换到 S 状态，白天目标明确活力四射，一到晚上就变成思考死亡、孤独和人生意义的诗人。",
+          "originalVoice": "白天的时候活力四射，目标性也很强，但一到晚上就成了一个诗人，开始思考死亡、孤独、自由和人生意义。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "functions": [{ "code": "Si", "evidence": "explicit" }],
+          "traits": ["昼夜反差", "深夜诗人"],
+          "contexts": ["日常", "情绪"],
+          "example": "刷武林外传、老友记，列清单做该做的事，这就是 Si 的秩序感大爆发。"
+        },
+        {
+          "id": "c005-04",
+          "kind": "mechanism",
+          "statement": "变成 ISFJ 本质上是大脑死机前强行开启的生存保护模式，用 Si 的具象事物阻断 Ni 的精神内耗，像船锚一样把自己固定在原地获得安全感。",
+          "originalVoice": "这是大脑死机之前强行开启的生存保护模式，用 Si 的具象事物来阻断 Ni 的精神内耗。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "functions": [
+            { "code": "Si", "evidence": "explicit" },
+            { "code": "Ni", "evidence": "explicit" }
+          ],
+          "traits": ["精神内耗", "自我保护"],
+          "contexts": ["情绪"]
+        },
+        {
+          "id": "c005-05",
+          "kind": "relationship",
+          "statement": "在团体中 INFJ 更多用言语和精神的方式关爱别人，ISFJ 更多通过递纸巾、带充电宝这类具体事物表达关心；当 INFJ 无法从精神上关照大家时，会切换成 ISFJ 模式为大家做事。",
+          "originalVoice": "INFJ 更多是从言语上让别人觉得温暖，而 ISFJ 更多是通过给别人递纸巾、带个充电宝来代表我关心大家。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }, { "kind": "Type", "key": "ISFJ" }],
+          "traits": ["精神关照", "具体照顾"],
+          "contexts": ["社交"]
+        },
+        {
+          "id": "c005-06",
+          "kind": "mistype",
+          "statement": "区分 INFJ 与 ISFJ 的判定：面对痛苦时翻旧账找细节是 ISFJ，分析痛苦模式以防未来是 INFJ；深夜无力感来自人类共同劣根性是 INFJ，困在具体的人或事上是 ISFJ。大部分 INFJ 都误测过 ISFJ，反之很少。",
+          "originalVoice": "回忆过去呢就是 ISFJ，分析模式普遍是 INFJ。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }, { "kind": "Type", "key": "ISFJ" }],
+          "contexts": ["测试"]
+        },
+        {
+          "id": "c005-07",
+          "kind": "metaphor",
+          "statement": "Ni 的 INFJ 像向上延伸的翅膀带他脱离沉沦，翅膀打湿时需要 ISFJ 的根向下扎进现实土地稳住自己；在两者之间反复横跳不代表不成熟。",
+          "originalVoice": "扎根这片现实的土地，一点也不妨碍我们向往星空。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "functions": [{ "code": "Ni", "evidence": "explicit" }, { "code": "Si", "evidence": "explicit" }],
+          "contexts": ["成长"],
+          "advice": "用定期闭关的方式清理大脑，借 S 投入现实，是 INFJ 超级大的进化。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 6,
+      "portrait": "找 INFJ 谈恋爱的各打五十大板：追的人爱的是工具箱，绿老头则把最好的面具挂在外面、苛刻对待亲近的人。",
+      "aliases": [{ "type": "INFJ", "name": "绿老头" }],
+      "claims": [
+        {
+          "id": "c006-01",
+          "kind": "value",
+          "statement": "很多人追 INFJ 只是看中他会照顾人、温柔隐忍没意见，爱的其实是一个工具包、百宝箱和倾听师，而非 INFJ 本人。",
+          "originalVoice": "你哪是爱 INFJ 啊？你分明爱的是一个工具包、百宝箱，还有一个倾听师而已。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["会照顾人", "温柔隐忍"],
+          "contexts": ["恋爱"],
+          "boundary": "没见过 INFJ 锋利失控的一面，就谈不上真正了解他。"
+        },
+        {
+          "id": "c006-02",
+          "kind": "advice",
+          "statement": "检验你是否真的了解 INFJ：他喜欢吃什么、玩什么、上次哭是什么时候、最在意的点是什么；只享受他洗手做羹汤却不问他喜不喜欢这个身份，不是爱。",
+          "originalVoice": "他喜欢吃什么？他喜欢玩什么？他上次哭是什么时候？他最在意的点是什么？",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "contexts": ["恋爱"],
+          "advice": "先问自己是否见过他失控和锋利的一面，再说喜欢。"
+        },
+        {
+          "id": "c006-03",
+          "kind": "behavior",
+          "statement": "INFJ 把最好的面具挂在外面吸引人，真正恋爱后却开始折磨、考察对方，把最苛刻的要求留给爱人和家人，把最好的面孔给外人。",
+          "originalVoice": "你用非常苛刻的要求对待你的爱人、对待你的家人，结果你用最好的面孔去对待外人。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["外松内苛", "考察伴侣", "戴面具"],
+          "contexts": ["恋爱", "婚姻家庭"]
+        },
+        {
+          "id": "c006-04",
+          "kind": "mechanism",
+          "statement": "INFJ 害怕在同一个人面前露出破绽、被看到真实的自己，因为他连自己都害怕触摸自己的真实。",
+          "originalVoice": "他是很害怕这一层的，因为自己都害怕触摸自己的真实。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["害怕暴露真实"],
+          "contexts": ["恋爱", "情绪"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 7,
+      "portrait": "绿老头的终极悲观：深信没人会喜欢摘下面具的自己，所以厌倦世界、需要大量独处，并预设每段爱情终将结束。",
+      "aliases": [{ "type": "INFJ", "name": "绿老头" }],
+      "claims": [
+        {
+          "id": "c007-01",
+          "kind": "value",
+          "statement": "INFJ 不相信有人会喜欢真实的自己，认为对方只是喜欢自己当下扮演的面具，一旦面具拿开外界就会抱有恶意四散逃开。",
+          "originalVoice": "绿老头对人性的揣测就这么悲观。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["悲观", "戴面具", "不信任人性"],
+          "contexts": ["社交", "恋爱"]
+        },
+        {
+          "id": "c007-02",
+          "kind": "mechanism",
+          "statement": "INFJ 很难约出来，因为每天戴面具很累，对世界感到厌倦、对戴面具的自己厌恶，所以需要大量时间独处。",
+          "originalVoice": "每天戴面具很累的，他需要大量的时间来独处。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["难约", "需要独处", "厌倦面具"],
+          "contexts": ["社交", "情绪"]
+        },
+        {
+          "id": "c007-03",
+          "kind": "value",
+          "statement": "INFJ 会预设每一段发生在自己身上的爱情，都会随着面具褪去而走向终结。",
+          "originalVoice": "预售了每一段发生在自己身上的爱情，一定会随着面具褪去而走向终结。",
+          "subjects": [{ "kind": "Type", "key": "INFJ" }],
+          "traits": ["预设失败", "悲观"],
+          "contexts": ["恋爱"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 8,
+      "portrait": "早期 INFP 小蝴蝶：网上很嗨现实不敢打招呼，爱看人生回放逐帧慢放，爱情要深度契合再深度绑定。",
+      "aliases": [{ "type": "INFP", "name": "小蝴蝶" }],
+      "claims": [
+        {
+          "id": "c008-01",
+          "kind": "behavior",
+          "statement": "早期 INFP 在网上很嗨、在熟人面前很癫，现实中见面却甚至不敢打招呼，因为怕对方不够热情时自己过度袒露显得自作多情。",
+          "originalVoice": "早期的 INFP 在网上很 high，在熟人面前很颠，但现实当中见到了甚至都不敢打招呼。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["线上线下反差", "怕自作多情", "慢热"],
+          "contexts": ["社交"]
+        },
+        {
+          "id": "c008-02",
+          "kind": "behavior",
+          "statement": "善良的 INFP 多少有过交浅言深，会不自觉进入自己脑补的剧情填补空白，像天然呆的白日梦想家；幻想泡泡被戳破、落差太大时会迎来极致的破碎体验。",
+          "originalVoice": "一旦他这个幻想的泡泡被戳破，落差太大的时候，他就会迎来极致的破碎体验。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "functions": [{ "code": "Ne", "evidence": "inferred" }, { "code": "Fi", "evidence": "inferred" }],
+          "traits": ["脑补剧情", "交浅言深", "易破碎"],
+          "contexts": ["社交", "情绪"]
+        },
+        {
+          "id": "c008-03",
+          "kind": "metaphor",
+          "statement": "如果生活是一场直播，INFP 不看直播只爱看回放，还是逐帧慢放那种，因为回放里有自由和没有压力。",
+          "originalVoice": "INFP 他不看直播，但是爱看回放，而且还是逐帧慢放那种。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "functions": [{ "code": "Si", "evidence": "inferred" }],
+          "traits": ["爱回味", "逃避现实压力"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c008-04",
+          "kind": "value",
+          "statement": "INFP 的爱情最重要的是深度契合，契合之后一定要深度绑定；绑得不够牢就没有安全感，所以会粘住对方、挂在对方身上、要求消息回得快，并把真实自我完全坦露。",
+          "originalVoice": "INFP 的爱情一定要粘住对方，挂在对方身上，消息也要回快一些，这就是他爱你的方式。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["要深度绑定", "粘人", "缺安全感"],
+          "contexts": ["恋爱"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 9,
+      "portrait": "INFP 是现实世界最后一抹善良：看得清人性下限所以紧锁心门，走近了却什么都说、化身人形挂件。",
+      "aliases": [{ "type": "INFP", "name": "小蝴蝶" }],
+      "claims": [
+        {
+          "id": "c009-01",
+          "kind": "trait",
+          "statement": "INFP 是世上最善良的代表，除了极短暂的黑化期会无差别攻击外界；那段时间只要稍微给他一点阳光，他又恢复天真浪漫。",
+          "originalVoice": "INFP 能平安长大，真的就已经谢天谢地了。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["善良", "短暂黑化", "天真浪漫"],
+          "contexts": ["情绪"]
+        },
+        {
+          "id": "c009-02",
+          "kind": "trait",
+          "statement": "网上很抽象很发疯的博主多是 INFP（尤其 -A 型），看着很癫其实很敏锐；大家以为他清高不合群，其实情商很高，阿谀奉承那套他全懂，只是不愿意做。",
+          "originalVoice": "他看起来很颠，其实很敏锐。他情商是很高的，他就是不愿意去做。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["抽象", "敏锐", "高情商不用", "不合群"],
+          "contexts": ["社交"]
+        },
+        {
+          "id": "c009-03",
+          "kind": "mechanism",
+          "statement": "INFP 自我保护很深、很难走进内心，是因为知道人性的下限和世界的丑恶，被伤害过很多次才紧锁心门。",
+          "originalVoice": "他是已经被伤害了很多次，所以紧锁心门。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["紧锁心门", "自我保护深"],
+          "contexts": ["社交", "情绪"]
+        },
+        {
+          "id": "c009-04",
+          "kind": "behavior",
+          "statement": "真正走近 INFP 后会发现他什么都说、藏不住心事，完全化成人形挂件、消息秒回；他话变少、看起来有心事时才是出了问题。",
+          "originalVoice": "只要他话很多，那就没事了。要是有一天他开始话变少了，看起来有心事了，那就完蛋了。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["人形挂件", "秒回", "藏不住心事"],
+          "contexts": ["友情", "恋爱"],
+          "advice": "小蝴蝶很被动，你主动一些就行，啥事都没有；他话变少了要警惕。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 10,
+      "portrait": "和早期 INFP 谈恋爱：若即若离的温柔陷阱、藤蔓般的占有欲、用否定自己钓鼓励，披着舔狗外衣的驯狗人。",
+      "aliases": [{ "type": "INFP", "name": "小蝴蝶" }],
+      "claims": [
+        {
+          "id": "c010-01",
+          "kind": "value",
+          "statement": "INFP 喜欢的恋爱是随叫随到但又不能天天黏在一起：随叫随到是需要安全感、需要你在他的感知范围内并即时回应他的情绪。",
+          "originalVoice": "INFP 喜欢的恋爱关系是那种可以随叫随到，同时又不能天天连在一起的伴侣。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["若即若离", "要即时回应"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c010-02",
+          "kind": "mechanism",
+          "statement": "INFP 不能天天黏在一起，是因为翻涌的 Fi 在共处一室时要腾出一半精力观察对方感受，天天如此 Fi 无法自我清理，会很难受。",
+          "originalVoice": "天天这样做，他的 Fi 没有办法自我清理，就会很难受。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "functions": [{ "code": "Fi", "evidence": "explicit" }],
+          "traits": ["需要独处清理情绪"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c010-03",
+          "kind": "metaphor",
+          "statement": "很多 INFP 说自己是舔狗，其实是披着舔狗外衣的驯狗人，对方才是被驯化的那个；他有一股阴湿的占有欲，像藤蔓爬满你的身体，柔软贴合却随时可以收紧。",
+          "originalVoice": "其实他是披着舔狗外衣的一个驯狗人，对方才是被驯化的那个。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["占有欲", "暗戳戳控制欲", "温柔入侵"],
+          "contexts": ["恋爱"],
+          "boundary": "聊的更多是早期 INFP，并非所有小蝴蝶都这样。"
+        },
+        {
+          "id": "c010-04",
+          "kind": "behavior",
+          "statement": "早期 INFP 会主动展示脆弱、否定自己，通过自我否定获得外界鼓励，让对方自动代入拯救者角色，把每段亲密关系都处成同一种模式；在爱情里既是囚徒又是狱卒。",
+          "originalVoice": "小蝴蝶它在爱情里面既是囚徒又是狱卒，囚禁它的人是自己，受到折磨的人也是自己。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "traits": ["自我否定", "钓鼓励", "测试对方"],
+          "contexts": ["恋爱", "情绪"]
+        },
+        {
+          "id": "c010-05",
+          "kind": "advice",
+          "statement": "INFP 的伴侣作为拯救者不能力量太强大，要用 INFP 听得懂的语言帮助他；TJ 型理性地强行掰开正在睡觉的茧，只会让小蝴蝶非常难受——柔软最深处是坚不可摧的倔强，他有自己的花期。",
+          "originalVoice": "在没有退茧成蝶之前，它有自己的花期，你不要强行地过度用自己的方式去干预。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }, { "kind": "Group", "key": "TJ" }],
+          "traits": ["外柔内倔"],
+          "contexts": ["恋爱"],
+          "advice": "别用理性强行掰开小蝴蝶的茧，等他自己的花期。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 11,
+      "portrait": "INFP 放鸽子的真相：答应是为了让你开心，临近时在不想去和不想伤害你之间反复磨蹭，最后还是鸽。",
+      "aliases": [{ "type": "INFP", "name": "小蝴蝶" }],
+      "claims": [
+        {
+          "id": "c011-01",
+          "kind": "mechanism",
+          "statement": "INFP 答应事情很多时候是为了让你开心而不是真想做；临近时因为既不想做又不想伤害你而反复挣扎拖延，最后太难受才说不去了——答应是真的，鸽你也是真的。",
+          "originalVoice": "他答应你的时候是真的答应，他鸽你的时候也是真的鸽你。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "functions": [{ "code": "Fi", "evidence": "inferred" }],
+          "traits": ["放鸽子", "迁就别人", "拖延"],
+          "contexts": ["友情", "社交"]
+        },
+        {
+          "id": "c011-02",
+          "kind": "advice",
+          "statement": "让 INFP 做决定时要多关注他的感受，反复问他是真心想去还是想迁就别人，给他轻松不施压的氛围，不要把控制欲投射到他身上，他才能做出真正符合自己的选择。",
+          "originalVoice": "你不用难为自己的，想去就去，就给他这种轻松的，不要给他压力。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "contexts": ["友情", "社交"],
+          "advice": "邀请小蝴蝶时反复确认是不是他真心想去，不施压。"
+        },
+        {
+          "id": "c011-03",
+          "kind": "advice",
+          "statement": "给 INFP 本人的建议：与其到时候鸽别人，不如一开始就别答应。",
+          "originalVoice": "与其鸽别人，倒不如一开始就别答应他，对吧？",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "contexts": ["社交"],
+          "advice": "不想去就一开始别答应。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 12,
+      "portrait": "每个 INTJ 体内都藏着一个 INFP：坚硬盔甲里住着柔软小孩，恋爱里第三功能 Fi 被推到聚光灯下。",
+      "aliases": [
+        { "type": "INTJ", "name": "紫老头" },
+        { "type": "INTJ", "name": "寡王" },
+        { "type": "INFP", "name": "小蝴蝶" }
+      ],
+      "claims": [
+        {
+          "id": "c012-01",
+          "kind": "mechanism",
+          "statement": "INTJ 在爱情中脆弱、细腻、敏感，是因为一二位功能 Ni/Te 失效，第三功能 Fi 突然被推到聚光灯下；冷酷的杀手突然变成追求深刻情感和意义的理想爱情主义者。",
+          "originalVoice": "每个 INTJ 体内都藏了一个 INFP，这就像一副坚硬盔甲里面住了个柔软小孩。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }, { "kind": "Type", "key": "INFP" }],
+          "functions": [
+            { "code": "Fi", "evidence": "explicit" },
+            { "code": "Ni", "evidence": "explicit" },
+            { "code": "Te", "evidence": "explicit" }
+          ],
+          "traits": ["恋爱中脆弱敏感", "体内有小蝴蝶", "高需求安全感"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c012-02",
+          "kind": "behavior",
+          "statement": "INTJ 情感上的敏感脆弱会包一层墙向外输出：你退一步我退一万步；哪怕只是主观臆测对方不爱自己，也会立刻断崖——看似主动拒绝，其实是听到一点风吹草动就给自己宣判死刑的虚假强大。",
+          "originalVoice": "你要是退一步，那我就后退一万步。这是受不了一点伤所表现出来的虚假强大。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["断崖式抽离", "受不了一点伤", "虚假强大"],
+          "contexts": ["恋爱", "分手"]
+        },
+        {
+          "id": "c012-03",
+          "kind": "value",
+          "statement": "INTJ 心中的爱情近乎完美且形而上：不是简单陪吃陪喝的人，而是能赚钱、能谈心、懂自己灵魂的伴侣，这份爱必须私人化、深刻、持久——与 INFP 的纯爱追求不谋而合，典型的 Fi 味道。",
+          "originalVoice": "紫老头心中的爱情，第一近乎完美，第二又是一种形而上的理想化追求。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Fi", "evidence": "explicit" }],
+          "traits": ["理想化爱情", "要灵魂伴侣"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c012-04",
+          "kind": "mechanism",
+          "statement": "INTJ 外在的强和内心的弱一直在拉扯，造成巨大内心矛盾；内心矛盾没处理好就很难收获外界的爱情，所以「寡王」这个外号有逻辑可盘。",
+          "originalVoice": "所以寡王这个外号真的是有逻辑可盘的。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["外强内弱", "寡王"],
+          "contexts": ["恋爱"],
+          "advice": "在 INTJ 身上看到 INFP 的影子时要好好珍惜，那才是紫老头最真实最柔软的样子。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 13,
+      "portrait": "INTJ 是隐藏款高敏感人格：害怕感性失控，用超强执行力让自己无敌忙，永远带着一层生存焦虑。",
+      "aliases": [{ "type": "INTJ", "name": "建筑师" }],
+      "claims": [
+        {
+          "id": "c013-01",
+          "kind": "trait",
+          "statement": "INTJ 是隐藏款高敏感人格，什么感受都有也很感性，只是把感性压抑住或强行洗脑自己感性不重要。",
+          "originalVoice": "INTJ 是隐藏款的高敏人格，他什么感受都有，他也很感性。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["隐藏款高敏感", "压抑感性"],
+          "contexts": ["情绪"]
+        },
+        {
+          "id": "c013-02",
+          "kind": "mechanism",
+          "statement": "INTJ 用超强执行力让自己无敌忙、走在正确轨道上，以避免任何捣乱的感性；因为他害怕感性失控、应付不了失控，在他的字典里感性几乎等于崩溃。",
+          "originalVoice": "在 INTJ 的字典里，感性通常不是什么好词，甚至一旦感性，就会和崩溃挂钩。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Te", "evidence": "contextual" }, { "code": "Fi", "evidence": "contextual" }],
+          "traits": ["用忙碌逃避感性", "怕失控", "禁欲自律"],
+          "contexts": ["情绪", "日常"]
+        },
+        {
+          "id": "c013-03",
+          "kind": "value",
+          "statement": "INTJ 在爱情里想一蹴而就，用心中一套完美标准给爱情做加法：爱的人必须满足一二三，一条不满足就请走开，我的爱人一定比我差不到哪去。",
+          "originalVoice": "只要一个因素不满足，那就请你走开，爱情这个座位不是你坐的。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["爱情做加法", "标准苛刻"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c013-04",
+          "kind": "mechanism",
+          "statement": "INTJ 永远有一层生存焦虑，觉得人都快饿死了还管什么精神追求和情感；焦虑从吃奶吃不饱、玩具被抢、成绩差被鄙视等现实经历中不断巩固，一生如履薄冰——而这薄冰只是他不肯放过自己。",
+          "originalVoice": "INTJ 永远都有一层生存焦虑。那这个薄冰到底是谁给他的呢？只不过是他不肯放过自己而已。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["生存焦虑", "不放过自己", "如履薄冰"],
+          "contexts": ["情绪", "原生家庭", "搞钱"]
+        },
+        {
+          "id": "c013-05",
+          "kind": "advice",
+          "statement": "要改变现状，INTJ 一定要先赚到足够的钱、达到自己稍微满意的社会地位和安全感，没到这条线之前他不愿花精力对待感性。",
+          "originalVoice": "如果没达到这根线的话，INTJ 他是不想去花多余的精力去对待感性的。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "contexts": ["搞钱", "成长"]
+        },
+        {
+          "id": "c013-06",
+          "kind": "mechanism",
+          "statement": "INTJ 其实早已上岸、一直很幸福，敏感力也很高，只是不愿承认；在理性和感性两个极端之间来回摆荡是每个 INTJ 前期逃不开的宿命，劣势功能 Se 让他无法松弛，把自己和人生抓得很紧。",
+          "originalVoice": "他把自己抓得很紧，他把人生也抓得很紧。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Se", "evidence": "explicit" }],
+          "traits": ["理性感性摆荡", "无法松弛", "同理心可比绿人"],
+          "contexts": ["成长", "情绪"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 14,
+      "portrait": "INTJ 最大的矛盾：很想听从内心，却总是听从外界的「应不应该」，把自己当赚钱机器而不是人。",
+      "aliases": [{ "type": "INTJ", "name": "紫老头" }],
+      "claims": [
+        {
+          "id": "c014-01",
+          "kind": "mechanism",
+          "statement": "INTJ 最大的矛盾是很想听从内心（从自己愿不愿意出发），但动作却变成听从外界（看投产比、收益、应不应该）；看应不应该就是把自己当物品、当赚钱机器。",
+          "originalVoice": "愿不愿意就是拿自己当人，应不应该就是拿自己当一个物品，当一个赚钱的机器。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Te", "evidence": "explicit" }, { "code": "Fi", "evidence": "explicit" }],
+          "traits": ["听从外界", "自我物化", "内心撕裂"],
+          "contexts": ["职场", "搞钱", "成长"]
+        },
+        {
+          "id": "c014-02",
+          "kind": "value",
+          "statement": "很多 INTJ 当一把手、创业、干大风大浪的事是迫不得已；真正解绑后他可能想重新上大学、研究理论、做不赚钱但自己愿意的人文社科哲学的事，哪个 INTJ 不想当二把手。",
+          "originalVoice": "哪个 INTJ 不想当二把手，不想解放自己。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["被迫当老大", "向往人文哲学"],
+          "contexts": ["职场"],
+          "example": "一个已经做到 A9 规模的 INTJ 朋友，最大的梦想居然是去新疆放羊。"
+        },
+        {
+          "id": "c014-03",
+          "kind": "mechanism",
+          "statement": "INTJ 的心魔是「这件事应不应该、会不会受惩罚」，惩罚不来自别人而是他审视自己觉得不过关；有人把惩罚具象化为生存焦虑、觉得下一刻就要死，于是拼命做应该的事。他一点不装，再强也发自内心觉得自己不够强。",
+          "originalVoice": "这个不装就是他哪怕再强了，他还是真正发自内心会觉得自己不够强。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["自我惩罚", "永远觉得不够强", "不装"],
+          "contexts": ["情绪", "成长"]
+        },
+        {
+          "id": "c014-04",
+          "kind": "mechanism",
+          "statement": "只有真正满足了安全感、放下惩罚自我之后，INTJ 才有力量听从内心，走向第三功能 Fi；表现为当了大老板赚够钱后突然回村买房做匪夷所思的事。但更多 INTJ 倒在寻找 Fi 的路上，在 Te 这一关反复卡死。",
+          "originalVoice": "在现实生活当中有更多的 INTJ 已经倒在了寻找 Fi 的路上，他在 Te 这一关反复地卡死。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Fi", "evidence": "explicit" }, { "code": "Te", "evidence": "explicit" }],
+          "contexts": ["成长"],
+          "advice": "如果你困在这层最大的矛盾里，说明你还有成长空间。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 15,
+      "portrait": "INTJ 全面解析：清冷月光气质，Ni 一眼顿悟但活在未来，Te 执行、Fi 压抑或失控、Se 短板；外热内冷再内热的洋葱式爱情，超我拿鞭子抽自己。",
+      "aliases": [
+        { "type": "INTJ", "name": "紫老头" },
+        { "type": "ENFP", "name": "快乐小狗" }
+      ],
+      "claims": [
+        {
+          "id": "c015-01",
+          "kind": "metaphor",
+          "statement": "INTJ 的气质像朦胧的月光：神秘、清冷又让人上头；喜欢他的人很喜欢，讨厌他的人也很讨厌。「老头」指的是 Ni 让灵魂稍显苍老，更多是沉稳、老练和通透。",
+          "originalVoice": "他的气质更像朦胧的月光照到你的身上，神秘、清冷又让你很上头。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Ni", "evidence": "explicit" }],
+          "traits": ["清冷", "神秘", "沉稳通透", "有主意很倔"]
+        },
+        {
+          "id": "c015-02",
+          "kind": "mechanism",
+          "statement": "Ni 是一眼看穿本质的顿悟功能，但看得过于长远会让 INTJ 活在对未来的想象和布局中而忽略当下——预知未来是要付出代价的。",
+          "originalVoice": "预知未来它是要付出代价的。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Ni", "evidence": "explicit" }],
+          "traits": ["活在未来", "一眼看穿本质", "焦虑未来"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c015-03",
+          "kind": "mechanism",
+          "statement": "Ni 辅助 Te 让 INTJ 做事前列出把好坏乃至自然灾害都考虑到的详细规划，早期思虑过重、行动滞后，觉得没想通透就动很蠢，常错失先机；被莽撞者反超刺激多次后 Te 会被重视甚至超过 Ni，先干再干中学，容易测出 ENTJ。",
+          "originalVoice": "有的人一点规划都没有，盲目地往前冲，反而比 INTJ 拿到的成就更大。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }, { "kind": "Type", "key": "ENTJ" }],
+          "functions": [{ "code": "Te", "evidence": "explicit" }, { "code": "Ni", "evidence": "explicit" }],
+          "traits": ["思虑过重", "规划狂", "前期行动滞后"],
+          "contexts": ["职场", "测试"]
+        },
+        {
+          "id": "c015-04",
+          "kind": "mechanism",
+          "statement": "INTJ 的 Fi 是个谜：一种表现是压抑逃避——把情绪当垃圾扔进地下室眼不见为净，也顺带逃避别人的情绪；另一种是失控——外界一点负反馈就从自负跌到无力感的谷底，一会儿在天上一会儿在地狱。",
+          "originalVoice": "情绪对于他来说是垃圾，是无用的，他就把这个垃圾扔到地下室，眼不见为净，就等着它慢慢积压。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Fi", "evidence": "explicit" }],
+          "traits": ["逃避情绪", "情绪失控反差", "内外反差"],
+          "contexts": ["情绪"]
+        },
+        {
+          "id": "c015-05",
+          "kind": "mechanism",
+          "statement": "INTJ 是隐藏款高敏人格，情绪感知力、细腻程度和同理心都很高，但不愿正视自己真实的软弱，一定要把自己塑造成不流血不流泪不失败的神，所以紧张、严肃、面瘫、没有松弛感。",
+          "originalVoice": "神是不会流血的，神更加不会流泪，不会失败的，他不断地把自己推到那个位置。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["要当神", "面瘫", "没有松弛感", "高敏"],
+          "contexts": ["情绪"]
+        },
+        {
+          "id": "c015-06",
+          "kind": "trait",
+          "statement": "高阶 INTJ 的 Fi 修炼到与搞钱能力齐平后给人全能感：既理性又感性、既平和又有力量，像一头不需要展示獠牙就让你知道它很强、而且很慈悲的沉默雄狮。",
+          "originalVoice": "这头狮子不需要展示他的獠牙和爪子，你就知道他很强，而且他是很慈悲的。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Fi", "evidence": "explicit" }],
+          "traits": ["全能感", "慈悲", "沉默雄狮"],
+          "contexts": ["成长"],
+          "boundary": "指高阶 INTJ。"
+        },
+        {
+          "id": "c015-07",
+          "kind": "mechanism",
+          "statement": "第四功能 Se 是 INTJ 真正的短板：身体协调、跳舞、平衡力差，思考时旁边炸了东西或被戳肩膀要三秒才感觉到；身边人情绪不对、身体出状况、衣服穿反都后知后觉，对未来却很敏锐。",
+          "originalVoice": "你戳一戳他的肩膀，他隔了三秒钟才感受到。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Se", "evidence": "explicit" }],
+          "traits": ["身体迟钝", "忽略当下", "完美主义"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c015-08",
+          "kind": "behavior",
+          "statement": "INTJ 是人群中最难被发现的人格：中后期很会戴面具，可以是舞池中央的 dancer、领导型人物或耐心的倾听者；只有没电或觉得社交没价值时才高冷板脸，而那种场合他通常压根不来或看一眼就走。早期则几乎都是扑克脸。",
+          "originalVoice": "他一般很高冷很生人勿近的时候代表他没电，他不乐意和外界去互动。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["很会戴面具", "早期扑克脸", "没电才高冷"],
+          "contexts": ["社交"]
+        },
+        {
+          "id": "c015-09",
+          "kind": "behavior",
+          "statement": "INTJ 穿衣要么黑白灰要么像花孔雀，但都会选双排扣大衣、旗袍这类品质极高的基础款，其他消耗品随意；代表人物尼采、马斯克、诸葛亮，共同点是拥有健全宏大的世界观和极稳定的三观。",
+          "originalVoice": "其实 INTJ 不是什么高智商，只不过他爱学习，而且爱行动，大家就误以为他智商很高。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["基础款品质控", "三观稳定", "爱学习爱行动"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c015-10",
+          "kind": "behavior",
+          "statement": "INTJ 对别人是「普通人只要开心快乐就好」，对自己却极其残暴：咖啡强制开机、褪黑素强制关机、整点番茄钟折腾自己，因为有一套严肃的生活哲学（参考超人哲学）要遵守。",
+          "originalVoice": "完全是咖啡强制使用，褪黑素强制关机，就这样嘎嘎折腾自己。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["双标严于律己", "自我压榨", "超人哲学"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c015-11",
+          "kind": "advice",
+          "statement": "INTJ 适合当专家：钻得够深就获得尊重、单位时间价值高、能自由安排工作，攒完第一桶金后可能撬动更大力量成为投资人；适合符合价值观、利他、蓝图足够打动他的工作，不适合高强度社交、酒桌文化和重复刻板的工作。",
+          "originalVoice": "你让他去打工，听别人的话，他可能做不太到。但是你让他做一个靠谱的专家，这个就是他擅长领域了。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "contexts": ["职场", "搞钱"],
+          "advice": "早期 INTJ 走专家路线，别去打工听话，也别去酒桌。"
+        },
+        {
+          "id": "c015-12",
+          "kind": "value",
+          "statement": "INTJ 的爱情包容两种人：一直跟随他的小可爱，或比他更强的人；只要伴侣愿意站进他的未来蓝图一起走，当下没前景、价值不高也可以。",
+          "originalVoice": "你要么就是一个小可爱一直跟随他，你要么就比他更强。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["看重未来蓝图"],
+          "contexts": ["恋爱"]
+        },
+        {
+          "id": "c015-13",
+          "kind": "behavior",
+          "statement": "和 INTJ 相处有明显反差：开始三个月甜言蜜语像遇到真命天女，新鲜期一过立刻断崖式冷淡；前期的甜言蜜语是真的，是为了让你开心营造的面具，但不能要求他 365 天乘以 20 年都那样。他像剥洋葱：外热、内冷、最里面又是热。",
+          "originalVoice": "他的逻辑更像剥洋葱，也就是外热，内冷，最里面他又是热。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["新鲜期后断崖冷淡", "洋葱式外热内冷"],
+          "contexts": ["恋爱"],
+          "boundary": "INTJ 考察期很长，想走到最后要一起经历挫折、失业、低谷；低谷时让他感觉越好，他越认定你。"
+        },
+        {
+          "id": "c015-14",
+          "kind": "advice",
+          "statement": "和 INTJ 做朋友不需要刻意相处或节日祝福，只要好好爱自己、搞自己的事业、有价值就能成为好友；没有价值的话就要极度纯粹地真诚，比如快乐小狗、INFP、ISFP 这些 FP 人不用有钱有地位也能成为他要好的朋友。",
+          "originalVoice": "你只需要好好爱自己，好好去搞自己的事业，就可以和他成为非常要好的朋友。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }, { "kind": "Group", "key": "FP" }],
+          "traits": ["用价值要求自己", "认真诚的人"],
+          "contexts": ["友情"],
+          "advice": "有实力或足够真诚，二者占其一就能和 INTJ 做朋友。"
+        },
+        {
+          "id": "c015-15",
+          "kind": "mechanism",
+          "statement": "INTJ 的超我极强，像拿鞭子每天抽打督促自己，把肉体和意志长期维持在极限，容易四肢僵硬、腰突、颈椎病；魂在前面跑人在后面追，肉体和灵魂永远不统一，所以幸福感和自我满足感并不高。",
+          "originalVoice": "等于说它的魂在前面跑，它人在后面追，它的肉体和灵魂永远达不到一个统一。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "functions": [{ "code": "Se", "evidence": "explicit" }],
+          "traits": ["超我强大", "身体紧绷", "幸福感低"],
+          "contexts": ["情绪", "日常"],
+          "advice": "每个 INTJ 都要学会四个字：活在当下。好好吃饭、好好爱身边的人，把未来的享受提前给一点当下的你。"
+        },
+        {
+          "id": "c015-16",
+          "kind": "advice",
+          "statement": "给爱 INTJ 的人：他没有看起来那么强，内在只是一个逞强的、没有安全感的、很倔的小孩；看懂他、理解他、不需要改变他，在他身边开心松弛一些，你的能量会修复到他。",
+          "originalVoice": "它内在只不过是一个逞强的，没有安全感的，很倔的小孩而已。",
+          "subjects": [{ "kind": "Type", "key": "INTJ" }],
+          "traits": ["逞强小孩"],
+          "contexts": ["恋爱", "友情"],
+          "advice": "对 INTJ 好的方式是在他身边开心一些。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 16,
+      "portrait": "INTP 理性至上 vs INFP 感觉至上：一个是最好的军师，一个听内心一条路走到黑；过于理性人机化，过于感性不接地气。",
+      "aliases": [
+        { "type": "INTP", "name": "药水" },
+        { "type": "INFP", "name": "小蝴蝶" }
+      ],
+      "claims": [
+        {
+          "id": "c016-01",
+          "kind": "trait",
+          "statement": "INTP 的超能力是超级聪明：只要感兴趣，知识、理论甚至难啃的文献可以一晚上从小白到精通，是最好的军师，千算万算不如药水来算。",
+          "originalVoice": "千算万算都不如药水来算。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "functions": [{ "code": "Ti", "evidence": "inferred" }],
+          "traits": ["超级聪明", "学得快", "军师"],
+          "contexts": ["职场"]
+        },
+        {
+          "id": "c016-02",
+          "kind": "trait",
+          "statement": "INFP 感觉至上：只有在开心的人或环境面前才能看到鲜活的小蝴蝶；做什么都听内心的声音、问符不符合价值观，只要选中喜欢有感觉的人或事就能坚定有力地一条路走到黑。",
+          "originalVoice": "INFP 都能够非常坚定有力量的一条路走到黑。",
+          "subjects": [{ "kind": "Type", "key": "INFP" }],
+          "functions": [{ "code": "Fi", "evidence": "inferred" }],
+          "traits": ["感觉至上", "听从内心", "一条路走到黑"]
+        },
+        {
+          "id": "c016-03",
+          "kind": "relationship",
+          "statement": "INTP 与 INFP 优点越大缺点也越大：INTP 过于分析理论就忽略了人、变得人机化；INFP 过于看重感觉就不现实、不接地气。过于理性和过于感性都有麻烦，平衡在哪里是共同课题。",
+          "originalVoice": "INTP 过于分析事物理论就忽略了人，也就相应地人机化了；INFP 过于看重感觉，那就不现实不接地气了。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }, { "kind": "Type", "key": "INFP" }],
+          "traits": ["人机化", "不接地气"],
+          "contexts": ["成长"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 17,
+      "portrait": "INTP 的「睡觉」是躺床上刷奇怪小知识，看到感兴趣的观点大脑一秒上线头脑风暴到凌晨，顶着黑眼圈还以为自己十点就睡了。",
+      "aliases": [{ "type": "INTP", "name": "药水" }],
+      "claims": [
+        {
+          "id": "c017-01",
+          "kind": "behavior",
+          "statement": "INTP 口中的睡觉休息就是往床上一躺刷手机，刷的是奇奇怪怪的小知识小观点；大量时间花在床上却还顶着黑眼圈。",
+          "originalVoice": "你们都被 INTP 给骗了，他压根没在睡觉。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "traits": ["假睡刷手机", "黑眼圈"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c017-02",
+          "kind": "mechanism",
+          "statement": "别人刷手机越刷越困，INTP 看到一个感兴趣的观点会大脑一秒上线，头脑风暴到凌晨两三点，把所有好奇心满足了才能心满意足入睡，还觉得深夜脑子转得最快。",
+          "originalVoice": "直到凌晨 3 点，INTP 还会觉得，还是深夜，我的脑子转得最快。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "functions": [{ "code": "Ne", "evidence": "inferred" }, { "code": "Ti", "evidence": "inferred" }],
+          "traits": ["好奇心驱动", "深夜脑力峰值", "熬夜不自知"],
+          "contexts": ["日常"]
+        }
+      ]
+    },
+    {
+      "sourceIndex": 18,
+      "portrait": "INTP 像折耳根和野生菌：不端不装、人人平等、不看身份只看道理，和他相处不用演。",
+      "aliases": [{ "type": "INTP", "name": "药水" }],
+      "claims": [
+        {
+          "id": "c018-01",
+          "kind": "metaphor",
+          "statement": "INTP 像折耳根，爱他的人当宝、恨他的人想逃；也像野生菌，再古怪难找也是山珍海味的命。他不想也不屑当人人都喜欢的花，喜欢他的人寻着味自己就来了。",
+          "originalVoice": "INTP 就像折耳根，爱他的人当宝，恨他的人想逃。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "traits": ["小众", "不讨好", "古怪"],
+          "contexts": ["社交"]
+        },
+        {
+          "id": "c018-02",
+          "kind": "behavior",
+          "statement": "INTP 不玩套路不耍心眼，人前人后一个样；说话难听是对每个人都这样，在他的世界人人平等、一点不双标，聊天不看你的身份地位只看讲得有没有道理，不会因你想法小众就有偏见，也不会强行改变你。",
+          "originalVoice": "你觉得他说话难听，那巧了，他对每个人都是这样。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "functions": [{ "code": "Ti", "evidence": "inferred" }],
+          "traits": ["人人平等", "不双标", "不套路", "说话直"],
+          "contexts": ["社交", "友情"]
+        },
+        {
+          "id": "c018-03",
+          "kind": "advice",
+          "statement": "和 INTP 相处不用端着、不用演，只需享受聊天本身；没有 INTP 朋友称不上阅人无数，想做真实的自己就去找个 INTP 处处看。",
+          "originalVoice": "如果你连个 INTP 的朋友都没有，那你真的称不上阅人无数。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "contexts": ["友情"],
+          "advice": "找个 INTP 做朋友，你可以做真实的自己。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 19,
+      "portrait": "INTP 的脑子是飞速旋转的陀螺，太耗蓝所以显得懒；约他出门要勾出好奇心，脑子跟着你走身体自然跟上。",
+      "aliases": [{ "type": "INTP", "name": "药水" }],
+      "claims": [
+        {
+          "id": "c019-01",
+          "kind": "mechanism",
+          "statement": "INTP 的脑子像飞速旋转的陀螺，运作起来没有停歇，太耗蓝，所以常感觉一天啥也没干就很累；外界误以为他体质差、不爱动。",
+          "originalVoice": "这个脑子太耗蓝了，导致药水经常就是感觉一天啥也没干，就已经很累了。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "functions": [{ "code": "Ti", "evidence": "inferred" }, { "code": "Ne", "evidence": "inferred" }],
+          "traits": ["脑力耗蓝", "看似懒"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c019-02",
+          "kind": "behavior",
+          "statement": "INTP 并非不爱运动，只要在感兴趣的点上，徒步、攀岩、游泳这种高强度麻烦的运动他也会主动想体验。",
+          "originalVoice": "只要说感兴趣了，好奇了，哪怕是像徒步、攀岩、游泳这种很高强度很麻烦的运动，他也会很主动想要去体验。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "traits": ["兴趣驱动"],
+          "contexts": ["日常"]
+        },
+        {
+          "id": "c019-03",
+          "kind": "advice",
+          "statement": "和 INTP 相处的核心是勾出他的好奇心：带他去没去过的地方、没看过的风景、没体验过的运动，脑子跟着你走了身体自然就跟着你了。",
+          "originalVoice": "以后别再说药水难约了，那是你的姿势不对啊。",
+          "subjects": [{ "kind": "Type", "key": "INTP" }],
+          "contexts": ["友情", "恋爱"],
+          "advice": "约药水出门先勾好奇心，别硬约。"
+        }
+      ]
+    },
+    {
+      "sourceIndex": 20,
+      "portrait": "ISFP 小画家：安静可爱温柔幽默的猫系人类，不辩论不上课不分析，安安静静接住你，是江湖的解药。",
+      "aliases": [
+        { "type": "ISFP", "name": "小画家" },
+        { "type": "ISFP", "name": "猫系人类" }
+      ],
+      "claims": [
+        {
+          "id": "c020-01",
+          "kind": "trait",
+          "statement": "和 ISFP 待在一起什么都不用做：不用找话题、不用热场、不用表现有趣，一起晒太阳看云听风就很爽，是跑遍江湖后终于能卸下防备的地方。",
+          "originalVoice": "是你跑遍了江湖，发现终于有一块地方可以让整个人卸下防备。",
+          "subjects": [{ "kind": "Type", "key": "ISFP" }],
+          "traits": ["安静", "松弛", "让人卸下防备"],
+          "contexts": ["友情"]
+        },
+        {
+          "id": "c020-02",
+          "kind": "behavior",
+          "statement": "和 ISFP 聊天他不辩论、不上课、不用逻辑分析你，只安静地听、时不时说声哦；很能保守秘密，因为十分钟后就忘了——经常走神是特点，走神还能让你的话不掉在地上是天赋。",
+          "originalVoice": "在走神的同时，还能让你的话不掉在地上，是他的天赋。",
+          "subjects": [{ "kind": "Type", "key": "ISFP" }],
+          "functions": [{ "code": "Fi", "evidence": "inferred" }, { "code": "Se", "evidence": "inferred" }],
+          "traits": ["不评判", "会倾听", "爱走神", "守秘密"],
+          "contexts": ["友情", "社交"]
+        },
+        {
+          "id": "c020-03",
+          "kind": "metaphor",
+          "statement": "ISFP 是长得很像猫的人类：慵懒、有自己的节奏、小世界和审美，坚持执拗、不争不抢、不吵不闹；靠近他就靠近了可爱和一整片温柔的海。",
+          "originalVoice": "靠近他就靠近了可爱，靠近他就靠近了一整片温柔的海。",
+          "subjects": [{ "kind": "Type", "key": "ISFP" }],
+          "traits": ["猫系", "慵懒", "有审美", "执拗", "不争不抢"]
+        },
+        {
+          "id": "c020-04",
+          "kind": "behavior",
+          "statement": "ISFP 不评价、不审判、不要求你：你开心他陪你笑，你难过他在旁边安静待着，你疯的时候他也能陪你一起抽象。",
+          "originalVoice": "你开心，小画家陪你一起笑；你难过的时候，他就在你旁边安安静静待着。",
+          "subjects": [{ "kind": "Type", "key": "ISFP" }],
+          "traits": ["接住情绪", "陪伴型"],
+          "contexts": ["友情", "情绪"],
+          "advice": "有 ISFP 的朋友要好好珍惜。"
+        }
+      ]
+    }
+  ]
+}

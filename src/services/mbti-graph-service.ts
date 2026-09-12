@@ -128,6 +128,7 @@ export async function getTypeGraphData(typeCode: string): Promise<SubgraphRespon
       CALL {
         WITH t
         OPTIONAL MATCH (t)-[r:HAS_INSIGHT]->(ins:Insight)
+        WITH ins, r ORDER BY coalesce(r.weight, 0) DESC, ins.sourceIndex
         RETURN collect({insight: ins, rel: r})[0..8] AS insights
       }
       CALL {
@@ -181,16 +182,16 @@ export async function getTypeGraphData(typeCode: string): Promise<SubgraphRespon
     for (const item of rawLetters) {
       if (!item?.letter) continue;
       const lProps = item.letter.properties;
-      const lId = `letter:${lProps.letter}`;
+      const lId = `letter:${lProps.code}`;
       addNode({
         id: lId,
         label: "Letter",
-        name: `${lProps.letter} (${lProps.name || ""})`,
+        name: `${lProps.code} (${lProps.name || ""})`,
         properties: lProps,
       });
 
       addEdge({
-        id: `rel:${tNode.code}-COMPOSED_OF->${lProps.letter}`,
+        id: `rel:${tNode.code}-COMPOSED_OF->${lProps.code}`,
         source: `type:${tNode.code}`,
         target: lId,
         relationship: "COMPOSED_OF",
@@ -208,7 +209,7 @@ export async function getTypeGraphData(typeCode: string): Promise<SubgraphRespon
         });
 
         addEdge({
-          id: `rel:${lProps.letter}-DIM->${dProps.name}`,
+          id: `rel:${lProps.code}-DIM->${dProps.name}`,
           source: lId,
           target: dId,
           relationship: "BELONGS_TO_DIMENSION",
@@ -350,6 +351,7 @@ export async function getTypeGraphData(typeCode: string): Promise<SubgraphRespon
         source: `type:${tNode.code}`,
         target: insId,
         relationship: "HAS_INSIGHT",
+        properties: item.rel?.properties || {},
       });
     }
 
@@ -409,7 +411,7 @@ export async function getTypeRelations(typeCode: string): Promise<TypeRelationsR
       CALL {
         WITH t
         MATCH (t)-[r:COMPOSED_OF]->(l:Letter)-[:BELONGS_TO_DIMENSION]->(d:Dimension)
-        RETURN collect({letter: l.letter, name: l.name, dimension: d.name, description: l.description, slot: r.slot}) AS letters
+        RETURN collect({letter: l.code, name: l.name, dimension: d.name, description: l.description, slot: r.slot}) AS letters
       }
       CALL {
         WITH t
@@ -544,7 +546,7 @@ export async function getCognitiveFunctionsOverview(): Promise<CognitiveFunction
       OPTIONAL MATCH (f)-[ra:PAIRED_AXIS]->(pf:Function)
       OPTIONAL MATCH (t:Type)-[rs:HAS_FUNCTION_SLOT]->(f)
       WHERE rs.slot <= 4
-      RETURN f, pf.code AS pairedWith, ra.axisName AS axisName,
+      RETURN f, pf.code AS pairedWith, ra.name AS axisName,
              collect({type: t.code, slot: rs.slot}) AS typeSlots
       ORDER BY f.code
     `);
@@ -590,7 +592,8 @@ export async function getAllTypesFromGraph(): Promise<TypesResponse> {
   const dbResult = await withNeo4jSession(async (session) => {
     const result = await session.run(`
       MATCH (t:Type)
-      OPTIONAL MATCH (t)-[rf:HAS_FUNCTION]->(f:Function)
+      OPTIONAL MATCH (t)-[rf:HAS_FUNCTION_SLOT]->(f:Function)
+      WHERE rf.slot <= 4
       OPTIONAL MATCH (t)-[rt:HAS_TRAIT]->(tr:Trait)
       OPTIONAL MATCH (t)-[rc:COMPATIBLE_WITH]->(partner:Type)
       WHERE rc.score IS NULL OR rc.score >= 85
@@ -735,7 +738,7 @@ export async function getGlobalGraphOverview(): Promise<SubgraphResponse> {
   const dbResult = await withNeo4jSession(async (session) => {
     const result = await session.run(`
       MATCH (t:Type)
-      OPTIONAL MATCH (t)-[rg:BELONGS_TO]->(g:Group)
+      OPTIONAL MATCH (t)-[rg:BELONGS_TO_GROUP {category: 'temperament'}]->(g:Group)
       OPTIONAL MATCH (t)-[rd:DUAL_COMPLEMENT]->(dual:Type)
       OPTIONAL MATCH (t)-[rs:SHADOW_MIRROR]->(shadow:Type)
       OPTIONAL MATCH (t)-[rp:PAIR_DYNAMIC]->(pair:Type)
@@ -792,7 +795,7 @@ export async function getGlobalGraphOverview(): Promise<SubgraphResponse> {
           id: `rel:${tNode.code}->${gNode.code}`,
           source: `type:${tNode.code}`,
           target: `group:${gNode.code}`,
-          relationship: "BELONGS_TO",
+          relationship: "BELONGS_TO_GROUP",
         });
       }
 

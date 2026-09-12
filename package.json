@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "graph:migrate": "node --no-warnings scripts/graph/migrate.mts",
+    "graph:reset": "node --no-warnings scripts/graph/migrate.mts --reset",
+    "graph:check": "node --no-warnings scripts/graph/migrate.mts --dry-run",
+    "graph:verify": "node --no-warnings scripts/graph/migrate.mts --verify"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.8",
@@ -16,6 +20,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.501.0",
     "motion": "^12.23.16",
+    "neo4j-driver": "^6.2.0",
     "next": "^15.5.19",
     "ogl": "^1.0.11",
     "react": "^19.0.0",

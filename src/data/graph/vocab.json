@@ -1,0 +1,27 @@
+{
+  "kinds": [
+    { "code": "trait", "name": "特质", "description": "该类型稳定的性格特征或气质" },
+    { "code": "behavior", "name": "行为模式", "description": "在具体情境下的典型做法、习惯或反应" },
+    { "code": "mechanism", "name": "功能机制", "description": "用认知功能（Ni/Te/Fi…）解释某种表现的成因" },
+    { "code": "value", "name": "价值观", "description": "爱情观、人生观、择偶标准、底线等" },
+    { "code": "relationship", "name": "类型关系", "description": "两个类型/组别之间的相处、配对、冲突或互补" },
+    { "code": "mistype", "name": "误测辨析", "description": "两个类型容易混淆之处及区分方法" },
+    { "code": "advice", "name": "建议", "description": "给该类型本人或与其相处者的可操作建议" },
+    { "code": "metaphor", "name": "画像比喻", "description": "对类型的形象化比喻、外号或画像" }
+  ],
+  "contexts": [
+    { "name": "恋爱", "description": "追求、暧昧、恋爱中的表现" },
+    { "name": "分手", "description": "分手、被甩、复合、断联" },
+    { "name": "婚姻家庭", "description": "婚姻、育儿、伴侣长期关系" },
+    { "name": "原生家庭", "description": "父母、童年经历的影响" },
+    { "name": "友情", "description": "交朋友、朋友相处" },
+    { "name": "社交", "description": "泛社交、人际边界、聚会、面子" },
+    { "name": "冲突", "description": "吵架、被冒犯、冷暴力、报复" },
+    { "name": "职场", "description": "工作、上下级、同事、职业选择" },
+    { "name": "搞钱", "description": "赚钱、创业、商业、财富观" },
+    { "name": "情绪", "description": "情绪波动、自愈、崩溃、内耗" },
+    { "name": "成长", "description": "自我修炼、高阶状态、人格整合" },
+    { "name": "日常", "description": "生活习惯、作息、穿搭、消费等" },
+    { "name": "测试", "description": "MBTI 测试、误测、形态与变化" }
+  ]
+}
