@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { MBTIType } from "@/types/mbti";
-import { mbtiMatches, mbtiTypes } from "@/data/core/mbti-data";
+import { mbtiMatches, mbtiTypes, relationOf } from "@/data/core/mbti-data";
 import { accentOf, accentWash } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
 import { Section } from "./section";
@@ -57,26 +57,20 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
   const setSelectedType = useMBTIStore((s) => s.setSelectedType);
   const accent = accentOf(type.group);
 
-  const relevant = mbtiMatches.filter((match) => match.pair.includes(type.type));
+  // The four classic stack relations, plus pairs discussed on their own; the rest live on the pairing page.
+  const relevant = mbtiMatches.filter(
+    (match) => match.pair.includes(type.type) && (match.featured || relationOf(match.pair[0], match.pair[1]).core)
+  );
 
   const partnerOf = (match: (typeof mbtiMatches)[0]) => {
     const partnerId = match.pair[0] === type.type ? match.pair[1] : match.pair[0];
     return mbtiTypes.find((t) => t.type === partnerId);
   };
 
-  const combined = relevant.reduce((acc, match) => {
+  const pairs = relevant.flatMap((match) => {
     const partner = partnerOf(match);
-    if (!partner) return acc;
-    const key = partner.type;
-    if (!acc[key]) {
-      acc[key] = { partner, matches: [], names: new Set<string>() };
-    }
-    acc[key].matches.push(match);
-    acc[key].names.add(match.name);
-    return acc;
-  }, {} as Record<string, { partner: MBTIType; matches: typeof mbtiMatches; names: Set<string> }>);
-
-  const pairs = Object.values(combined);
+    return partner ? [{ partner, match, relation: relationOf(match.pair[0], match.pair[1]) }] : [];
+  });
   if (pairs.length === 0) return null;
 
   return (
@@ -86,7 +80,7 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
       note="按功能栈的结构关系配对，而非印象。"
     >
       <div>
-        {pairs.map(({ partner, matches, names }) => (
+        {pairs.map(({ partner, match, relation }) => (
           <div
             key={partner.type}
             className="rule-t grid grid-cols-1 gap-4 py-4 sm:gap-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16"
@@ -114,14 +108,16 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
                   className="text-[0.875rem] font-medium tracking-tight sm:text-[0.9375rem]"
                   style={{ color: accent }}
                 >
-                  {Array.from(names).join(" · ")}
+                  {match.name}
                 </span>
-                <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">
-                  {matches.map((m) => m.matchType).join(" / ")}
-                </span>
+                <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{relation.name}</span>
               </div>
-              <p className="mt-1.5 text-[0.8125rem] leading-[1.7] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
-                {matches.map((m) => m.description).join("；")}
+              {/* The stack reading speaks of pair[0] as ta — same convention as the description. */}
+              <p className="mt-1.5 text-[0.75rem] leading-[1.7] text-ink-faint sm:mt-3 sm:text-[0.8125rem] sm:leading-[1.8]">
+                {relation.reading}
+              </p>
+              <p className="mt-1 text-[0.8125rem] leading-[1.7] text-ink-soft sm:mt-1.5 sm:text-[0.9375rem] sm:leading-[1.8]">
+                {match.description}
               </p>
             </div>
           </div>

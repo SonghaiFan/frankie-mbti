@@ -94,9 +94,14 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 >
                   {type.type}
                 </h2>
-                <p className="mt-0.5 line-clamp-2 text-[0.8125rem] text-ink-soft sm:mt-2 sm:text-base">
-                  {type.title} · {type.nickname}{type.archetype ? ` · ${type.archetype}` : ""}
+                <p className="mt-0.5 text-[0.8125rem] text-ink-soft sm:mt-2 sm:text-base">
+                  {type.title} · {type.nickname}
                 </p>
+                {type.archetype && (
+                  <p className="mt-0.5 text-[0.75rem] text-ink-faint sm:mt-1 sm:text-[0.9375rem]">
+                    {type.archetype}
+                  </p>
+                )}
               </div>
 
               {/* On a phone these move into the scrolling body — the masthead
@@ -136,7 +141,7 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
                 </div>
                 {type.vividAnalogy && (
                   <div>
-                    <dt className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">灵魂隐喻 / 拟人</dt>
+                    <dt className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">灵魂</dt>
                     <dd className="mt-1 text-[0.8125rem] leading-relaxed text-ink sm:mt-2 sm:text-[0.9375rem] sm:leading-[1.8]">
                       {type.vividAnalogy}
                     </dd>

@@ -108,7 +108,7 @@ function ClaimRow({ claim, accent, typeCode }: { claim: ClaimItem; accent: strin
         )}
       </div>
 
-      {/* Source footnote: video number and title. */}
+      {/* Source footnote: number and title. */}
       <div className="shrink-0 text-[0.6875rem] leading-relaxed text-ink-faint sm:max-w-[14rem] sm:text-right">
         <span className="font-mono">{ref}</span>
         {claim.sourceTitle && <span className="ml-1.5 hidden sm:inline">{claim.sourceTitle}</span>}
@@ -175,11 +175,11 @@ export function ClaimsView() {
           <div>
             <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">Claims</span>
             <h2 className="display mt-2 text-ink sm:mt-4 lg:mt-3" style={{ fontSize: "clamp(1.5rem, 3.4vw, 2.75rem)" }}>
-              三起的观点
+              观点
             </h2>
           </div>
           <p className="max-w-[42ch] text-[0.8125rem] leading-relaxed text-ink-soft sm:text-[0.875rem] sm:leading-[1.8] lg:text-right">
-            540 条视频拆成 1251 条可单独引用的观点。选一个类型，再按情境、观点类型、认知功能或关键词收窄。
+            选一个类型，再按情境、观点类型、认知功能或关键词收窄。
           </p>
         </div>
       </header>

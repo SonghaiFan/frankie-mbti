@@ -1,8 +1,7 @@
 import { withNeo4jSession } from "@/lib/neo4j";
-import { mbtiTypes } from "@/data/core/mbti-data";
-import ontology from "@/data/core/ontology.json";
+import { mbtiTypes, groups } from "@/data/core/mbti-data";
 import vocab from "@/data/claims/vocab.json";
-import insights from "@/data/core/insights.json";
+import sources from "@/data/claims/sources.json";
 import { allClaims, type ClaimRecord } from "@/data/claims";
 
 // ---------------------------------------------------------------------------
@@ -28,7 +27,7 @@ export interface ClaimItem {
   traits: string[];
   functions: Array<{ code: string; evidence: string }>;
   sourceIndex: number;
-  /** Video title from insights.json — the catalogue's own title column is empty. */
+  /** Source title, from sources.json. */
   sourceTitle?: string;
 }
 
@@ -66,14 +65,9 @@ const TYPE_CODES = mbtiTypes.map((t) => t.type);
 const KIND_NAME = new Map(vocab.kinds.map((k) => [k.code, k.name]));
 const CONTEXT_ORDER = vocab.contexts.map((c) => c.name);
 const FUNCTION_ORDER = ["Ni", "Ne", "Si", "Se", "Ti", "Te", "Fi", "Fe"];
-const SOURCE_TITLE = new Map(insights.map((i) => [i.sourceIndex, i.title]));
+const SOURCE_TITLE = new Map(sources.map((v) => [v.index, v.title]));
 
-function typesMatchingLetters(pattern: string): string[] {
-  const letters = pattern.split("").filter((c) => c !== "x");
-  return TYPE_CODES.filter((code) => letters.every((l) => code.includes(l)));
-}
-
-const GROUP_MEMBERS = new Map(ontology.groups.map((g) => [g.code, typesMatchingLetters(g.code)]));
+const GROUP_MEMBERS = new Map(groups.map((g) => [g.code, g.types]));
 
 interface Loaded {
   claims: ClaimItem[];

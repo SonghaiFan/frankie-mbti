@@ -17,72 +17,52 @@ export interface MBTIType {
   coreParadox?: string;
   vividAnalogy?: string;
   energyModel?: string;
-  dualType?: string;
-  shadowType?: string;
 }
 
-export interface MBTIDimension {
-  name: string;
-  description: string;
-  group_des: string[];
-}
+export type GroupCategory =
+  | "temperament"
+  | "interaction"
+  | "lifestyle"
+  | "worldview"
+  | "archetype"
+  | "orientation"
+  | "fine";
 
-export interface MBTIGroup {
-  name: string;
-  color: string;
-  trait: string;
-  keywords: string;
-}
-
-export interface ColorGroupData {
+export interface MBTIGroupDef {
   code: string;
+  category: GroupCategory;
   name: string;
-  color: string;
-  nickname: string;
-  formula: string;
-  trait: string;
   keywords: string;
   description: string;
+  /** Type codes in the group, derived from the letters in `code`. */
   types: string[];
+  // Only the four temperaments carry these — they are what the groups view renders.
+  nickname?: string;
+  formula?: string;
+  color?: string;
 }
 
+/** A temperament group with its UI fields guaranteed. */
+export type ColorGroupData = MBTIGroupDef & Required<Pick<MBTIGroupDef, "nickname" | "formula" | "color">>;
+
+/** One reading of a pair; every pair of types has one. How the stacks relate comes from `relationOf`. */
 export interface MBTIMatch {
   pair: [string, string];
   name: string;
-  matchType: "镜像对应" | "主导劣势" | "辅助第三";
+  /** 0–100, how easy the pair reads as a match. */
+  score: number;
+  /** Discussed on its own; shown in the type sheet even when the relation is not a core one. */
+  featured?: boolean;
   description: string;
 }
 
-export interface CognitiveFunction {
-  readonly code: string;
-  readonly name: string;
-  readonly position: "主导" | "辅助" | "第三" | "劣势";
-}
-
-export type MBTIDimensionInfo = {
+/** How two function stacks sit against each other, keyed by where pair[0]'s functions land in pair[1]'s eight slots. */
+export interface PairRelation {
+  signature: string;
   name: string;
-  description: string;
-  group_des: string[];
-};
-
-export interface MBTIGroupInfo {
-  name: string;
-  color: string;
-  trait: string;
-  keywords: string;
-}
-
-export interface ColorStyle {
-  bg: string;
-  border: string;
-  text: string;
-}
-
-export interface Step {
-  title: string;
-  description: string;
-  getResult: (mbti: MBTIType) => {
-    result: string;
-    explanation: string;
-  };
+  /** Relationship type in the graph. */
+  rel: string;
+  /** The four classic readings; these pairs appear in every type sheet. */
+  core?: boolean;
+  reading: string;
 }

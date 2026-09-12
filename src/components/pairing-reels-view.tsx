@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { mbtiTypes, mbtiMatches } from "@/data/core/mbti-data";
+import { mbtiTypes, mbtiMatches, relationOf } from "@/data/core/mbti-data";
 import { MBTIType } from "@/types/mbti";
 import { cn } from "@/lib/utils";
 import { accentOf } from "@/styles/mbti-styles";
@@ -190,37 +190,23 @@ export function PairingReelsView() {
   const [leftMoving, setLeftMoving] = useState(false);
   const [rightMoving, setRightMoving] = useState(false);
 
-  const [pairs, setPairs] = useState<
-    Array<{ type1: string; type2: string; label: string; score: number }> | null
-  >(null);
-
-  useEffect(() => {
-    fetch("/mbti_pairing_labels_matrix_flat.json")
-      .then((response) => response.json())
-      .then(setPairs)
-      .catch((error) => console.error("Error loading pairing data:", error));
-  }, []);
-
   const left = mbtiTypes[leftIndex];
   const right = mbtiTypes[rightIndex];
   const accent = accentOf(left.group);
 
-  const pair =
-    pairs?.find((p) => p.type1 === left.type && p.type2 === right.type) ??
-    pairs?.find((p) => p.type1 === right.type && p.type2 === left.type) ??
-    null;
-
-  const jung = mbtiMatches.find(
+  // Every pair has a reading; the order in the data does not matter here.
+  const pair = mbtiMatches.find(
     (m) =>
       (m.pair[0] === left.type && m.pair[1] === right.type) ||
       (m.pair[0] === right.type && m.pair[1] === left.type)
-  );
+  )!;
+  const relation = relationOf(pair.pair[0], pair.pair[1]);
 
   const official =
     (left.bestPartners || []).includes(right.type) ||
     (right.bestPartners || []).includes(left.type);
 
-  const tier = pair ? tierOf(pair.score) : null;
+  const tier = tierOf(pair.score);
   const moving = leftMoving || rightMoving;
 
   return (
@@ -282,21 +268,15 @@ export function PairingReelsView() {
                   className="text-[2.75rem] font-medium leading-none tracking-tight tabular-nums sm:mt-4 sm:text-[4.5rem]"
                   style={{ color: accent }}
                 >
-                  {pair ? pair.score : "—"}
+                  {pair.score}
                 </p>
-                {tier && (
-                  <p className="text-[0.875rem] text-ink sm:mt-4 sm:text-[0.9375rem]">{tier.name}</p>
-                )}
+                <p className="text-[0.875rem] text-ink sm:mt-4 sm:text-[0.9375rem]">{tier.name}</p>
               </div>
-              {tier && (
-                <p className="mt-1.5 hidden text-[0.8125rem] text-ink-ghost sm:block sm:mt-2">
-                  {tier.note}
-                </p>
-              )}
+              <p className="mt-1.5 hidden text-[0.8125rem] text-ink-ghost sm:block sm:mt-2">{tier.note}</p>
 
               <div className="rule-t mt-3 pt-2 sm:mt-8 sm:pt-7">
                 <p className="text-xl font-medium leading-none tracking-tight text-ink sm:mt-4 sm:text-3xl">
-                  {pair ? pair.label : "—"}
+                  {pair.name}
                 </p>
                 <p className="mt-1 text-[0.75rem] text-ink-ghost sm:mt-4 sm:text-[0.8125rem]">
                   {left.type} × {right.type}
@@ -306,12 +286,14 @@ export function PairingReelsView() {
 
               <div className="rule-t mt-2 pt-2 sm:mt-8 sm:pt-7">
                 <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">
-                  荣格配对{jung ? ` · ${jung.matchType}` : ""}
+                  荣格配对 · {relation.name}
                 </span>
-                <p className="mt-1 line-clamp-2 min-h-[3em] text-[0.75rem] leading-[1.6] text-ink-soft sm:mt-4 sm:line-clamp-3 sm:min-h-[5.1em] sm:text-[0.875rem] sm:leading-[1.8]">
-                  {jung
-                    ? jung.description
-                    : "这一对没有直接的功能栈镜像关系——差异本身就是它的题目。"}
+                {/* How the stacks sit, then the reading in plain words. Not clamped: the pane scrolls if it must. */}
+                <p className="mt-1 text-[0.6875rem] leading-[1.6] text-ink-faint sm:mt-3 sm:text-[0.8125rem] sm:leading-[1.75]">
+                  {relation.reading}
+                </p>
+                <p className="mt-1.5 text-[0.75rem] leading-[1.6] text-ink-soft sm:mt-3 sm:text-[0.875rem] sm:leading-[1.8]">
+                  {pair.description}
                 </p>
               </div>
             </motion.div>

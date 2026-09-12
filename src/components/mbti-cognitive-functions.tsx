@@ -18,7 +18,9 @@ type FunctionEntry = {
   definition: string;
   characteristics: string;
   training: string;
-  details: string;
+  /** How the function shows when it sits in slots 1–2, and when it is pressed into slots 3–4. */
+  atFront: string;
+  atBottom: string;
 };
 
 const easeOut = [0.16, 1, 0.3, 1] as const;
@@ -75,6 +77,8 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
     ...cognitiveFunctions.categories.perceiving.functions,
   };
   const opened = open ? allFunctions[open] : null;
+  const openedSlot = open ? stack.indexOf(open) : -1;
+  const frontOfStack = openedSlot >= 0 && openedSlot < 2;
 
   return (
     <Section
@@ -133,7 +137,10 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               <Detail label="定义" value={opened.definition} />
               <Detail label="特征" value={opened.characteristics} />
               <Detail label="发展建议" value={opened.training} />
-              <Detail label="细节" value={opened.details} />
+              <Detail
+                label={frontOfStack ? "主导时" : "劣势时"}
+                value={frontOfStack ? opened.atFront : opened.atBottom}
+              />
             </dl>
           </motion.div>
         )}
