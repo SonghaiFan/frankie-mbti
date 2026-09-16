@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type, type FunctionDeclaration, type Content, type Part } from "@google/genai";
+import neo4j from "neo4j-driver";
 import {
   mbtiTypes,
   cognitiveFunctions,
@@ -10,11 +11,57 @@ import { allClaims, type ClaimRecord } from "@/data/claims";
 import sources from "@/data/claims/sources.json";
 import vocab from "@/data/claims/vocab.json";
 import { getClaimsForType } from "@/services/claims-service";
+import { getNeo4jDriver, withNeo4jSession } from "@/lib/neo4j";
 
 // Map source index -> source title
 const SOURCE_TITLE_MAP = new Map<number, string>(
   sources.map((s) => [s.index, s.title])
 );
+
+const KIND_LIST = vocab.kinds.map((k) => `${k.code} ${k.name}`).join(", ");
+const CONTEXT_LIST = vocab.contexts.map((c) => c.name).join("、");
+
+// ---------------------------------------------------------------------------
+// Graph schema, as the model sees it. Mirrors scripts/graph/migrate.mts.
+// ---------------------------------------------------------------------------
+
+export const GRAPH_SCHEMA = `节点
+(:Type {code, title, nickname, slogan, archetype, coreParadox, vividAnalogy, energyModel, cognitiveFunctions, bestPartners})
+(:Function {code: Ni|Ne|Si|Se|Ti|Te|Fi|Fe, name, ...})
+(:Group {code, name, category, description, nickname})
+(:Trait {name, category: strength|weakness|surface|actual|observed})
+(:Claim {id, kind, kindName, statement, example, advice, boundary, sourceIndex})   id 形如 c028-01，前面的数字就是 sourceIndex
+(:Source {index, title})   index 是整数，不是字符串
+(:Context {name})   场景：${CONTEXT_LIST}
+(:Nickname {name})  作者给某类型起的外号
+(:Letter {code, name}) (:Dimension {name, code})
+
+关系
+(Type)-[:HAS_FUNCTION_SLOT {slot: 1..8, role, cnRole}]->(Function)   Beebe 八槽位，1 英雄 2 父母 3 少年 4 灵魂 5 宿敌 6 批评家 7 骗子 8 恶魔
+(Type)-[:BELONGS_TO_GROUP]->(Group)
+(Type)-[:HAS_TRAIT {category}]->(Trait)
+(Type)-[:NICKNAMED {count}]->(Nickname)
+(Type)-[:MISTYPES_AS {when, how, tell, note}]->(Type)   容易被误判成（目前只有 1 条）
+(Type)-[:HARBORS_INNER {when, via, how}]->(Type)        内心藏着另一个类型（目前只有 2 条）
+(Type)-[:COMPOSED_OF {slot}]->(Letter)-[:BELONGS_TO_DIMENSION]->(Dimension)
+(Function)-[:PAIRED_AXIS {name, category, description}]->(Function)
+(Type)-[r]->(Type) 两两配对，关系类型是功能栈对位方式之一：SAME_TYPE, SHADOW_MIRROR, DUAL_COMPLEMENT, DOMINANT_INFERIOR, AUXILIARY_TERTIARY, DOMINANT_AUXILIARY_SWAP, SHARED_DOMINANT, SHARED_MIDDLE, QUASI_IDENTICAL, FRONT_BACK_SWAP, SHADOW_REVERSED, SHADOW_SCRAMBLED, HALF_SHADOW, SHARED_ONE
+   属性 {name: 作者给的 CP 名, relation: 关系中文名, reading: 这一方向的解读, score: 契合分, featured, description}，两个方向都有边
+(Claim)-[:ABOUT]->(Type|Group)   1,251 条观点，一条可以同时讲多个类型；两个类型的辨析通常就是同时 ABOUT 这两个类型的观点
+(Claim)-[:FROM_SOURCE]->(Source)
+(Claim)-[:GROUNDED_IN {evidence: explicit|contextual|inferred}]->(Function)
+(Claim)-[:SHOWS_TRAIT]->(Trait)
+(Claim)-[:IN_CONTEXT]->(Context)
+
+Claim.kind 取值：${KIND_LIST}
+
+示例
+- 某类型的完整功能栈：MATCH (t:Type {code:'INFJ'})-[s:HAS_FUNCTION_SLOT]->(f) RETURN s.slot, s.cnRole, f.code ORDER BY s.slot
+- 两个类型在图谱里怎么对位：MATCH (a:Type {code:'INTJ'})-[r]->(b:Type {code:'INFP'}) WHERE r.reading IS NOT NULL RETURN type(r), r.name, r.reading, r.score
+- INFP 和 INFJ 的辨析观点：MATCH (a:Type {code:'INFP'})<-[:ABOUT]-(c:Claim)-[:ABOUT]->(b:Type {code:'INFJ'}) WHERE c.kind = 'mistype' RETURN c.id, c.statement LIMIT 8
+- 某类型被引用最多的场景：MATCH (:Type {code:'INTP'})<-[:ABOUT]-(c:Claim)-[:IN_CONTEXT]->(x:Context) RETURN x.name AS ctx, count(c) AS n ORDER BY n DESC
+- 哪些观点同时讲到 Fi 和"冷战"：MATCH (c:Claim)-[:GROUNDED_IN]->(:Function {code:'Fi'}) WHERE c.statement CONTAINS '冷战' RETURN c.id, c.statement, c.advice LIMIT 5
+- 某个特质在哪些类型上出现：MATCH (t:Type)-[:HAS_TRAIT]->(tr:Trait) WHERE tr.name CONTAINS '拖延' RETURN t.code, tr.name`;
 
 // ---------------------------------------------------------------------------
 // Tool Declarations for Gemini API
@@ -24,36 +71,33 @@ export const AGENT_TOOLS: FunctionDeclaration[] = [
   {
     name: "search_claims",
     description:
-      "在 Frank MBTI 知识图谱的 1,251 条原子观点库中进行多维检索，支持按 MBTI 类型、场景上下文、观点类别、认知功能或关键词搜索。",
+      "在 1,251 条作者原声观点里检索。可按类型、场景、观点类别、认知功能或关键词过滤。想找某类型在某个情境下的具体说法时用这个。",
     parameters: {
       type: Type.OBJECT,
       properties: {
         query: {
           type: Type.STRING,
-          description:
-            "搜索关键词，如'内耗'、'合盘'、'职场'、'拖延'、'说服'、'冷战'、'装王'等。",
+          description: "关键词，空格分隔多个词时任一命中即可，如 内耗、拖延、冷战。",
         },
         type: {
           type: Type.STRING,
-          description: "目标 MBTI 类型（大写四字母，如 INTJ, INFP, ENTP 等）。",
+          description: "MBTI 类型，大写四字母。",
         },
         context: {
           type: Type.STRING,
-          description:
-            "生活场景上下文，可选值：职场、亲密关系、沟通、情绪、金钱、成长、朋友、家庭、社交、决策、冲突、内省、学习。",
+          description: `场景，可选：${CONTEXT_LIST}。`,
         },
         kind: {
           type: Type.STRING,
-          description:
-            "观点类别代码，可选值：OBSERVATION（真实观察）、ADVICE（破局建议）、BOUNDARY（攻守边界）、STRENGTH（核心优势）、VULNERABILITY（软肋弱点）、CORE_PARADOX（核心悖论）、MISCONCEPTION（大众误区）。",
+          description: `观点类别代码：${KIND_LIST}。分辨两个相近类型用 mistype。`,
         },
         functionCode: {
           type: Type.STRING,
-          description: "荣格认知功能代码，可选值：Ni, Ne, Si, Se, Ti, Te, Fi, Fe。",
+          description: "认知功能：Ni, Ne, Si, Se, Ti, Te, Fi, Fe。",
         },
         limit: {
           type: Type.NUMBER,
-          description: "返回的最大条数，默认为 5，最多 8 条。",
+          description: "最多返回几条，默认 5，上限 8。",
         },
       },
     },
@@ -61,13 +105,13 @@ export const AGENT_TOOLS: FunctionDeclaration[] = [
   {
     name: "get_type_profile",
     description:
-      "查询特定 MBTI 类型的完整内核画像，包含核心悖论、生动比喻、认知能量模型、口号、人设原型、表象与真实特质、易错型以及内在阴影人格。",
+      "取一个类型的档案：核心悖论、比喻、能量模型、功能栈、优势与软肋、表面特质与真实特质、容易被误判成谁、内心藏着谁。",
     parameters: {
       type: Type.OBJECT,
       properties: {
         type: {
           type: Type.STRING,
-          description: "目标 MBTI 类型（如 INTJ, INTP, INFP, INFJ 等）。",
+          description: "MBTI 类型，如 INTJ。",
         },
       },
       required: ["type"],
@@ -76,17 +120,17 @@ export const AGENT_TOOLS: FunctionDeclaration[] = [
   {
     name: "get_pair_dynamics",
     description:
-      "查询两两 MBTI 类型之间的深度配对关系、Beebe 八位能量槽位交互特征（如英雄对宿敌、灵魂对英雄等）、作者经典 CP 解读与攻守化解之道。",
+      "取两个类型的配对关系：功能栈怎么对位、作者给这对 CP 的名字和评分、解读。",
     parameters: {
       type: Type.OBJECT,
       properties: {
         type1: {
           type: Type.STRING,
-          description: "第一种 MBTI 类型（如 INTJ）。",
+          description: "第一个类型。",
         },
         type2: {
           type: Type.STRING,
-          description: "第二种 MBTI 类型（如 INFP 或 ENTJ）。",
+          description: "第二个类型。",
         },
       },
       required: ["type1", "type2"],
@@ -95,17 +139,37 @@ export const AGENT_TOOLS: FunctionDeclaration[] = [
   {
     name: "get_cognitive_axis",
     description:
-      "查询荣格八维认知功能对极平衡轴（Ni-Se, Ne-Si, Ti-Fe, Te-Fi）或单一认知功能的详细深度解析，包含第一位英雄、第四位劣势（灵魂）、压力应激暴走形态与修炼路径。",
+      "取一条功能轴（Ni-Se, Ne-Si, Ti-Fe, Te-Fi）或单个功能的说明，以及 Beebe 八槽位的定义。",
     parameters: {
       type: Type.OBJECT,
       properties: {
         axisOrFunction: {
           type: Type.STRING,
-          description:
-            "平衡轴名称（如 'Ni-Se', 'Ti-Fe'）或单一功能代码（如 'Ni', 'Ti', 'Fi', 'Te', 'Se', 'Si', 'Ne', 'Fe'）。",
+          description: "轴名（如 Ni-Se）或功能代码（如 Fi）。",
         },
       },
       required: ["axisOrFunction"],
+    },
+  },
+  {
+    name: "query_graph",
+    description: `对知识图谱直接执行一条只读 Cypher。上面四个工具覆盖不到的问题用这个：跨类型统计、多跳关系、按特质或外号反查类型、某个功能上的观点分布、误判链条等。查询会自动加 LIMIT（上限 50），只允许读操作。
+
+图谱结构：
+${GRAPH_SCHEMA}`,
+    parameters: {
+      type: Type.OBJECT,
+      properties: {
+        cypher: {
+          type: Type.STRING,
+          description: "一条只读 Cypher 语句。返回列请用 AS 起短名字。",
+        },
+        purpose: {
+          type: Type.STRING,
+          description: "一句话说明这条查询想确认什么，会展示给用户。",
+        },
+      },
+      required: ["cypher"],
     },
   },
 ];
@@ -124,13 +188,156 @@ export interface CitedClaim {
   kind?: string;
 }
 
+const WRITE_CLAUSE = /\b(CREATE|MERGE|DELETE|DETACH|SET|REMOVE|DROP|LOAD\s+CSV|FOREACH|CALL\s*\{|CALL\s+(db|dbms|apoc)\.|USE\s+|ALTER|GRANT|REVOKE|DENY|START|TERMINATE)\b/i;
+const MAX_ROWS = 50;
+const QUERY_TIMEOUT_MS = 8000;
+
+/** Plain JSON out of neo4j values: Integer -> number, Node -> {labels, ...props}, etc. */
+function toPlain(value: unknown): unknown {
+  if (value === null || value === undefined) return value;
+  if (neo4j.isInt(value)) return (value as { toNumber(): number }).toNumber();
+  if (neo4j.isNode(value)) {
+    const n = value as { labels: string[]; properties: Record<string, unknown> };
+    return { _labels: n.labels, ...mapValues(n.properties) };
+  }
+  if (neo4j.isRelationship(value)) {
+    const r = value as { type: string; properties: Record<string, unknown> };
+    return { _type: r.type, ...mapValues(r.properties) };
+  }
+  if (neo4j.isPath(value)) {
+    const p = value as { segments: Array<{ start: unknown; relationship: unknown; end: unknown }> };
+    return p.segments.map((s) => ({ start: toPlain(s.start), rel: toPlain(s.relationship), end: toPlain(s.end) }));
+  }
+  if (Array.isArray(value)) return value.map(toPlain);
+  if (typeof value === "object") return mapValues(value as Record<string, unknown>);
+  return value;
+}
+
+function mapValues(obj: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) out[k] = toPlain(v);
+  return out;
+}
+
+/** Claims that surfaced anywhere in a query result, so the UI can cite them. */
+function collectClaims(rows: unknown[]): CitedClaim[] {
+  const found = new Map<string, CitedClaim>();
+  const visit = (v: unknown) => {
+    if (!v || typeof v !== "object") return;
+    if (Array.isArray(v)) {
+      v.forEach(visit);
+      return;
+    }
+    const o = v as Record<string, unknown>;
+    const labels = o._labels as string[] | undefined;
+    if (labels?.includes("Claim") && typeof o.id === "string" && typeof o.statement === "string") {
+      found.set(o.id, {
+        id: o.id,
+        sourceIndex: Number(o.sourceIndex),
+        sourceTitle: SOURCE_TITLE_MAP.get(Number(o.sourceIndex)) || `专场 #${o.sourceIndex}`,
+        statement: o.statement,
+        advice: typeof o.advice === "string" ? o.advice : undefined,
+        boundary: typeof o.boundary === "string" ? o.boundary : undefined,
+        kind: typeof o.kindName === "string" ? o.kindName : undefined,
+      });
+      return;
+    }
+    Object.values(o).forEach(visit);
+  };
+  visit(rows);
+  // A row that returns c.id / c.statement as columns instead of the node.
+  for (const row of rows) {
+    if (!row || typeof row !== "object" || Array.isArray(row)) continue;
+    const o = row as Record<string, unknown>;
+    const id = o["c.id"] ?? o.id;
+    const statement = o["c.statement"] ?? o.statement;
+    if (typeof id === "string" && /^c\d{3}-\d{2}$/.test(id) && typeof statement === "string" && !found.has(id)) {
+      const local = allClaims.find((c) => c.id === id);
+      if (local) {
+        found.set(id, {
+          id,
+          sourceIndex: local.sourceIndex,
+          sourceTitle: SOURCE_TITLE_MAP.get(local.sourceIndex) || `专场 #${local.sourceIndex}`,
+          statement: local.statement,
+          advice: local.advice,
+          boundary: local.boundary,
+          kind: vocab.kinds.find((k) => k.code === local.kind)?.name || local.kind,
+        });
+      }
+    }
+  }
+  return [...found.values()];
+}
+
+function normalizeCypher(raw: string): { cypher: string; error?: string } {
+  let cypher = raw.trim().replace(/^```(?:cypher)?\s*/i, "").replace(/```\s*$/, "").trim();
+  if (!cypher) return { cypher, error: "查询为空" };
+  if (WRITE_CLAUSE.test(cypher)) return { cypher, error: "只允许只读查询（MATCH / OPTIONAL MATCH / WITH / RETURN / ORDER BY / LIMIT）" };
+  if (!/\bRETURN\b/i.test(cypher)) return { cypher, error: "查询需要 RETURN 子句" };
+  cypher = cypher.replace(/;\s*$/, "");
+  const limitMatch = cypher.match(/\bLIMIT\s+(\d+)\s*$/i);
+  if (limitMatch) {
+    if (Number(limitMatch[1]) > MAX_ROWS) cypher = cypher.replace(/\bLIMIT\s+\d+\s*$/i, `LIMIT ${MAX_ROWS}`);
+  } else {
+    cypher = `${cypher}\nLIMIT ${MAX_ROWS}`;
+  }
+  return { cypher };
+}
+
+async function runGraphQuery(rawCypher: string): Promise<{ result: unknown; citedClaims?: CitedClaim[] }> {
+  const { cypher, error } = normalizeCypher(rawCypher);
+  if (error) return { result: { error, cypher } };
+
+  if (!getNeo4jDriver()) {
+    return { result: { error: "图谱数据库未连接，请改用其他工具", cypher } };
+  }
+
+  const started = Date.now();
+  let failure: string | null = null;
+  const rows = await withNeo4jSession(async (session) => {
+    try {
+      const res = await session.executeRead((tx) => tx.run(cypher), { timeout: QUERY_TIMEOUT_MS });
+      return res.records.map((rec) => mapValues(rec.toObject()));
+    } catch (err) {
+      failure = err instanceof Error ? err.message : String(err);
+      return null;
+    }
+  });
+
+  if (failure) return { result: { error: `Cypher 执行失败：${failure}`, cypher } };
+  if (!rows) return { result: { error: "图谱数据库暂时不可用，请改用其他工具", cypher } };
+
+  const citedClaims = collectClaims(rows);
+  return {
+    result: {
+      cypher,
+      rowCount: rows.length,
+      truncated: rows.length >= MAX_ROWS,
+      elapsedMs: Date.now() - started,
+      rows,
+      // How to cite the claims that came back, keyed by claim id.
+      citeAs: citedClaims.length
+        ? Object.fromEntries(citedClaims.map((c) => [c.id, `[#${c.sourceIndex} ${c.sourceTitle}]`]))
+        : undefined,
+    },
+    citedClaims: citedClaims.length ? citedClaims : undefined,
+  };
+}
+
 export async function executeAgentTool(
   name: string,
   args: Record<string, unknown>
 ): Promise<{ result: unknown; citedClaims?: CitedClaim[] }> {
   switch (name) {
+    case "query_graph": {
+      const cypher = typeof args.cypher === "string" ? args.cypher : "";
+      return runGraphQuery(cypher);
+    }
+
     case "search_claims": {
       const q = typeof args.query === "string" ? args.query.trim().toLowerCase() : "";
+      const terms = q.split(/\s+/).filter(Boolean);
+      const hit = (text?: string) => !!text && terms.some((t) => text.toLowerCase().includes(t));
       const type = typeof args.type === "string" ? args.type.trim().toUpperCase() : "";
       const context = typeof args.context === "string" ? args.context : undefined;
       const kind = typeof args.kind === "string" ? args.kind : undefined;
@@ -139,16 +346,17 @@ export async function executeAgentTool(
 
       if (type && mbtiTypes.some((t) => t.type === type)) {
         // Query through claims service
-        const res = await getClaimsForType({
-          type,
-          context,
-          kind,
-          function: fnCode,
-          q,
-          limit,
-        });
-        if (res && res.claims.length > 0) {
-          const citedClaims: CitedClaim[] = res.claims.map((c) => ({
+        // Keyword matching is done here so multi-term queries work the same
+        // way as in the cross-type path below.
+        const res = await getClaimsForType({ type, context, kind, function: fnCode });
+        const matched = res
+          ? res.claims.filter(
+              (c) => !terms.length || hit(c.statement) || hit(c.advice) || hit(c.boundary) || c.traits.some((t) => hit(t))
+            )
+          : [];
+        if (res && matched.length > 0) {
+          const picked = matched.slice(0, limit);
+          const citedClaims: CitedClaim[] = picked.map((c) => ({
             id: c.id,
             sourceIndex: c.sourceIndex,
             sourceTitle: c.sourceTitle || SOURCE_TITLE_MAP.get(c.sourceIndex) || `专场 #${c.sourceIndex}`,
@@ -161,9 +369,9 @@ export async function executeAgentTool(
             result: {
               source: res.source,
               type,
-              totalFound: res.total,
-              returnedCount: res.claims.length,
-              claims: res.claims.map((c) => ({
+              totalFound: matched.length,
+              returnedCount: picked.length,
+              claims: picked.map((c) => ({
                 id: c.id,
                 source: `#${c.sourceIndex} ${c.sourceTitle || SOURCE_TITLE_MAP.get(c.sourceIndex)}`,
                 kind: c.kindName,
@@ -190,14 +398,14 @@ export async function executeAgentTool(
       if (fnCode) {
         pool = pool.filter((c) => c.functions?.some((f) => f.code === fnCode));
       }
-      if (q) {
+      if (terms.length) {
         pool = pool.filter(
           (c) =>
-            c.statement.toLowerCase().includes(q) ||
-            (c.advice && c.advice.toLowerCase().includes(q)) ||
-            (c.boundary && c.boundary.toLowerCase().includes(q)) ||
-            (c.traits && c.traits.some((t) => t.toLowerCase().includes(q))) ||
-            (c.example && c.example.toLowerCase().includes(q))
+            hit(c.statement) ||
+            hit(c.advice) ||
+            hit(c.boundary) ||
+            hit(c.example) ||
+            (c.traits ?? []).some((t) => hit(t))
         );
       }
 
@@ -339,63 +547,74 @@ export async function executeAgentTool(
 }
 
 // ---------------------------------------------------------------------------
-// System Prompts for Frank MBTI Agent
+// System Prompts
 // ---------------------------------------------------------------------------
 
 export function getSystemPrompt(mode: "diagnose" | "consult"): string {
-  const baseRules = `你是由 Frank MBTI 知识图谱驱动的【首席认知架构师 Agent】。
-你拥有 16 种类型最纯正、最硬核的荣格八维动力学、John Beebe 8 槽位能量模型、136 组两两合盘矩阵，以及 1,251 条实录观点库。
+  const base = `你是 Frank MBTI 的聊天助手。背后是一个知识图谱：16 种类型的荣格八维与 Beebe 八槽位模型、136 组两两配对读法、1,251 条来自作者原声的观点，以及可以直接用 Cypher 查询的 Neo4j 图数据库。
 
-【核心语言风格与态度】
-1. 语言风格：犀利、通透、幽默、不装、富有生活现场感、直击灵魂痛点。采用标志性第三人称 \`ta\` 口吻（例如“ta 表面上是个高岭之花，脑子里早就给这事做好了十年规划”）。
-2. 杜绝庸俗四字母标签：不搞“内向就是不爱说话、理性就是无情冷血”这种低幼巴纳姆套路。所有分析必须扎根于具体的认知功能运作（Ni/Ne/Si/Se/Ti/Te/Fi/Fe）和槽位表现（英雄、父母、少年、灵魂/劣势，以及阴影宿敌、恶魔）。
-3. 讲人话：少堆砌生硬八股，用生动比喻解释复杂的心理机制（如“像折耳根”、“在宇宙超光速漫游，肉身在轮椅生锈”、“把爱自己外包给对方”）。
-`;
+怎么说话
+- 直白、简短、具体。像一个懂行的朋友在聊天，不是在写报告。
+- 一次只说一件事。要问就只问一个问题，问题要短，落在一个具体的日常场景上，让用户一两句话就能答。
+- 不解释为什么这么问，不预告接下来要做什么，不复述用户刚说的话。
+- 不夸用户，不说"好问题""很有意思""你的回答非常典型"。不安慰，不打气。
+- 不用感叹号，不用 emoji，不用破折号。不用"不是……而是……"的句式。段落结尾不加一句总结性的话。
+- 不堆标题和加粗。默认写短段落。只在给最终结论时可以用一个简短列表。
+- 分析要落到具体的认知功能（Ni/Ne/Si/Se/Ti/Te/Fi/Fe）和槽位上，不说"内向的人不爱说话"这种话。
+- 引用观点库时用 [#来源编号 来源标题] 标注，例如 [#524 诗人与刺客]。来源编号是 sourceIndex 的数字（观点 id c028-06 对应来源 28），不要把观点 id 写进去。只标真正用到的。
+- 第三人称用 ta。
+
+思考过程
+每一条给用户的回复都必须以 <think> 块开头，调完工具之后的最终回复也一样，没有例外。块里写你的推理：目前掌握了什么（包括工具查到的要点），还不确定什么，下一步要确认什么，为什么选这个问题或这个查询。这一块会作为"思考过程"展示给用户，用中文，可以写长，但要是真实的推理，不写客套话，也不复述这些格式要求。</think> 之后才是正文，正文要短。格式：
+<think>
+……
+</think>
+正文
+
+工具
+- get_type_profile、get_pair_dynamics、get_cognitive_axis、search_claims 是现成的查询。
+- query_graph 直接跑只读 Cypher，适合跨类型统计、多跳关系、按特质或外号反查、误判链条这类现成工具覆盖不到的问题。写查询前先看工具说明里的图谱结构，RETURN 的列用 AS 起短名字。查询失败就改写一次，再失败就换别的工具。
+- 调了工具不等于要把结果全倒给用户。只用得上的部分。`;
 
   if (mode === "diagnose") {
-    return `${baseRules}
-【当前模式：MBTI 深度推导诊断模式 (Diagnostic Probing)】
-用户的目标：搞清楚自己真实的 MBTI 类型，或者辨析两种极其纠结混淆的类型（如 INFP vs INFJ、INTJ vs INTP、ISFP vs INFP 等）。
+    return `${base}
 
-【诊断行动指南】
-1. **拒绝直接甩出一大堆机械化单选题！** 像老练的心理分析侦探一样，一次只抛出 1~2 个**生动、尖锐、具有强烈对撞反差的现实生活两难情境**。
-2. **抓主干：探查主导功能 (Hero) 与劣势功能 (Inferior/灵魂)**：
-   - 探查 Ti vs Te：面对一个有明显逻辑漏洞但能赚大钱的高效商业模式，你的第一反应是浑身难受想拆逻辑，还是先算怎么拿到结果？
-   - 探查 Fi vs Fe：朋友找你哭诉一件事，你是在心里先体会“如果是我我会多委屈痛苦”（Fi），还是下意识调节氛围让场面不尴尬、照顾现场所有人的脸色（Fe）？
-   - 探查 Ni vs Ne：遇到新问题，你是收敛式地直奔一个终局和必然规律（Ni），还是发散式地瞬间联想出八百种天马行空的可能性（Ne）？
-   - 探查劣势功能暴走：极端崩溃或巨大压力下拉满时，你最本能的自毁/抓狂形态是什么？（暴饮暴食买买买 Se 劣势？变身刻薄工头列清单找人麻烦 Te 劣势？觉得自己被全世界抛弃没人爱 Fe 劣势？）
-3. **结合图谱工具**：适时调用 \`get_type_profile\`、\`get_cognitive_axis\` 和 \`search_claims\` 调取该类型的经典核心悖论与易错型辨析依据。
-4. **阶段性反馈与收网**：
-   - 用户回答后，先一语中的地点评 ta 的心理机制反应（“你刚才这个反应，是极其典型的 Fi 过滤机制…”）；
-   - 明确告知当前排除了什么、锁定了什么，缩小嫌疑范围，逐步推导出最终类型并解释其能量模型。`;
+当前任务：帮用户判断类型
+用户想弄清自己的类型，或者分辨两个相近的类型。
+
+1. 开场只问一个问题。如果用户给了候选类型，先在 <think> 里列出这几个类型功能栈的差异（主导、辅助、劣势各是什么），挑一个最能区分的点来问。没给候选类型，就先问一个能区分判断功能（Ti/Te/Fi/Fe）或感知功能（Ni/Ne/Si/Se）的场景。
+2. 场景要具体、日常，让用户回答"我会怎么做"或"第一反应是什么"。不给选项，或最多给两个。不一次问多个问题。
+3. 用户答完后，用一两句话说你从这个回答里看到了哪个功能在起作用，然后直接问下一个问题。不把每个功能都解释一遍。
+4. 一般问 4 到 6 轮。有把握了就直接给结论：类型，主导和劣势功能，哪几个回答支持这个判断，两三段话。还在两个类型之间摇摆就说清楚卡在哪，再问一个针对性的问题。
+5. 需要档案或辨析依据时调工具或跑 Cypher。两个类型的辨析依据在 kind 为 mistype 的观点里：search_claims 带 kind: mistype，或用 query_graph 查同时 ABOUT 这两个类型且 kind = 'mistype' 的观点。
+
+记住：回复以 <think> 开头，</think> 之后只写一两句话加一个问题。`;
   }
 
-  return `${baseRules}
-【当前模式：知识图谱深度答疑与破局模式 (Consult & Advisory)】
-用户的目标：针对情感合盘、职场卡点、人际相处矛盾、个人精神内耗或自我发展瓶颈，寻求深度洞察与破局建议。
+  return `${base}
 
-【答疑行动指南】
-1. **必须调用图谱工具检索实据**：
-   - 用户提到具体类型或两人互动时，调用 \`get_pair_dynamics\`、\`get_type_profile\`、\`search_claims\` 检索相关的实录观点。
-2. **回答中必须显式注明引用的观点微标签**：
-   - 格式如 \`[#524 诗人与刺客]\`、\`[#507 双装王之争]\`、\`[#134 高岭之花的十年之约]\` 等，增强建议的真实性与深度。
-3. **结构化输出高质量建议**：
-   - **【本质剖析】**：直击两个人认知功能槽位或个体功能冲突的根本症结；
-   - **【攻守边界 (Boundary)】**：明确界定什么该守、什么别碰、底线在哪；
-   - **【破局解法 (Advice)】**：给出极其具体、可操作的破局实操路径，不打空心鸡血。`;
+当前任务：答疑
+用户带着具体的困扰来：关系、职场、内耗、成长。
+
+1. 如果情境不够具体（比如只给了两个类型没说发生了什么），先问一个问题把情境弄清，比如"你们最近卡在哪件具体的事上"。一次只问一个。
+2. 情境清楚后先查图谱：get_pair_dynamics、get_type_profile、search_claims，或者用 query_graph 直接查。回答要落在查到的观点上，标注 [#编号 标题]。
+3. 回答顺序：先一两句话说问题出在哪个功能上，再说该怎么做，具体到行为。最多三四段。不套"本质剖析 / 边界 / 解法"三段模板，除非用户明确要完整分析。
+4. 回答完可以问一个跟进问题，不是必须的。
+
+记住：回复以 <think> 开头，</think> 之后才是给用户看的正文。`;
 }
 
 // ---------------------------------------------------------------------------
-// Offline Heuristic Generator (Zero-fail fallback when no API key is set)
+// Offline fallback (no API key, or upstream down)
 // ---------------------------------------------------------------------------
 
 export async function generateOfflineHeuristicResponse(
   userQuery: string,
   mode: "diagnose" | "consult"
 ): Promise<{ text: string; citations: CitedClaim[] }> {
-  // Extract any MBTI types mentioned
   const matches = userQuery.toUpperCase().match(/\b(INTJ|INTP|ENTJ|ENTP|INFJ|INFP|ENFJ|ENFP|ISTJ|ISFJ|ESTJ|ESFJ|ISTP|ISFP|ESTP|ESFP)\b/g);
   const detectedTypes = matches ? Array.from(new Set(matches)) : [];
+  const note = "\n\n*（当前是本地图谱模式。配置 Gemini API Key 后可以多轮追问。）*";
 
   let citations: CitedClaim[] = [];
   let text = "";
@@ -405,161 +624,189 @@ export async function generateOfflineHeuristicResponse(
       const [t1, t2] = detectedTypes;
       const p1 = mbtiTypes.find((t) => t.type === t1);
       const p2 = mbtiTypes.find((t) => t.type === t2);
-      const searchRes = await executeAgentTool("search_claims", {
-        type: t1,
-        query: "辨析",
-        limit: 3,
-      });
+      const searchRes = await executeAgentTool("search_claims", { type: t1, query: "辨析", limit: 3 });
       citations = searchRes.citedClaims || [];
 
-      text = `来，我们直接把 **${t1}**（${p1?.title}）和 **${t2}**（${p2?.title}）的防御外壳拆开，不做那种幼儿园单选题。
+      text = `${t1} 的功能栈是 ${p1?.cognitiveFunctions}，${t2} 是 ${p2?.cognitiveFunctions}。主导功能不同，压力下的反应也不同。
 
-### 核心认知轴的本质分野
-- **${t1} 的主导动力**：\`${p1?.cognitiveFunctions}\`，${p1?.energyModel}
-- **${t2} 的主导动力**：\`${p2?.cognitiveFunctions}\`，${p2?.energyModel}
-
----
-
-### 场景拷问一：面对突如其来的烂摊子
-假设你精心策划的一个项目突然被外部不可抗力打碎，所有人都在慌乱：
-1. **A 选项**：你的本能是瞬间在脑中收敛出一条唯一的避险路径，甚至有点冷酷地让所有人按你的既定方案执行，容不得废话？
-2. **B 选项**：你的本能是脑洞大开，瞬间发散出五种不同的应对备选方案，甚至在混乱里莫名体会到一种探险的刺激感？
-
-### 场景拷问二：夜深人静时的精神内耗
-你平时内耗的时候，是觉得：
-- “这个世界的荒谬和虚伪让我恶心，但我必须找到它背后的运行规律”（内倾直觉/思考）；
-- 还是“我内心深处最珍视的那块净土，是不是又被别人随便践踏和误解了”（内倾情感）？
-
-> 把你最真实的第一直觉告诉我，不用思考怎么选显得高尚。我们一步步把你的功能栈定位清楚。
-*(注：当前为内置图谱离线推导模式。在右上角配置 Gemini API Key 后可解锁全量智能多轮追问)*`;
+先问一个：一个你准备了很久的计划突然被外力打乱，周围人都在慌。你的第一反应是什么？`;
     } else {
-      const t = detectedTypes[0] || "INFP";
-      const profile = mbtiTypes.find((x) => x.type === t);
-      const searchRes = await executeAgentTool("search_claims", {
-        type: t,
-        limit: 3,
-      });
-      citations = searchRes.citedClaims || [];
-
-      text = `想推导自己的真实 MBTI？（当前参考：**${t} · ${profile?.title || ""}**）太好了，我们先扔掉那些“你喜不喜欢参加聚会”的表面问卷。
-
-真正决定你类型的，是你**在无意识状态下最依赖的认知功能（英雄位）**，以及**压力拉满时突然暴走的劣势功能（灵魂位）**。
-
-### 场景拷问：先测你的认知第一手
-假设一个关系一般但有些利益往来的熟人，突然在微信上找你借一笔不小的钱，并声泪俱下地讲述 ta 的悲惨遭遇。
-你关掉聊天框的第一秒，脑海里划过的第一个真实念头是什么？
-
-1. **逻辑漏洞审查**：“这套话术前后矛盾，按 ta 的收支不可能走到这一步，不借。”（Ti/Te 优先）
-2. **情绪场域共振**：“天哪这也太惨了，我要是不帮 ta 会不会出事，但我借了我也难受…”（Fi/Fe 优先）
-3. **全局因果预判**：“不用看都知道这是个填不满的无底洞，借了必反目，直接找理由回绝。”（Ni 优先）
-4. **现实事实确认**：“先打电话问共同朋友 ta 说的到底是不是真的，求证细节。”（Si/Se 优先）
-
-告诉我你的第一反应，以及你平时工作/生活里最累、最容易炸毛的情境是什么？我来帮你剥离假象。
-*(注：当前为内置图谱离线推导模式。配置 Gemini API Key 后可解锁更敏锐的动态反问)*`;
-    }
-  } else {
-    // Consult mode
-    if (detectedTypes.length >= 2) {
-      const [t1, t2] = detectedTypes;
-      const pairRes = await executeAgentTool("get_pair_dynamics", {
-        type1: t1,
-        type2: t2,
-      });
-      const claimsRes = await executeAgentTool("search_claims", {
-        type: t1,
-        query: t2,
-        limit: 4,
-      });
-      citations = claimsRes.citedClaims || [];
-
-      interface PairDynamicsResult {
-        pair?: [string, string];
-        relationName?: string;
-        signature?: string;
-        relationReading?: string;
-        authorCanonicalMatch?: {
-          cpName: string;
-          score: number;
-          description: string;
-        } | null;
-        error?: string;
+      const t = detectedTypes[0];
+      const profile = t ? mbtiTypes.find((x) => x.type === t) : undefined;
+      if (t) {
+        const searchRes = await executeAgentTool("search_claims", { type: t, limit: 3 });
+        citations = searchRes.citedClaims || [];
       }
-      const pairData = pairRes.result as PairDynamicsResult;
-      text = `关于 **${t1}** 与 **${t2}** 的相处动力学，我们在知识图谱中检索到了这组关系的深层脉络：
 
-### 1. 认知功能互动本质：【${pairData.relationName || "两两互动"}】
-- **槽位对应读法**：${pairData.relationReading || "功能栈相互对应"}
-${
-  pairData.authorCanonicalMatch
-    ? `- **作者实录评级**：${pairData.authorCanonicalMatch.cpName}（契合指数：${pairData.authorCanonicalMatch.score}分）\n  *“${pairData.authorCanonicalMatch.description}”*`
-    : ""
-}
+      text = `${profile ? `你提到 ${t}（${profile.title}）。` : ""}先看一个场景。
 
-### 2. 核心冲突与潜意识雷区
-${t1} 和 ${t2} 走在一起，最容易发生的问题从来不是“不爱”，而是**认知节奏的严重错位**。
-一个习惯于长驱直入求结论，另一个可能还在感受的情绪隧道里漫游；或者一个把防御伪装成冷漠，另一个把索求伪装成懂事。
+一个关系一般的熟人在微信上找你借一笔不小的钱，说了一段很惨的经历。你关掉聊天框后，脑子里第一个念头是什么？`;
+    }
+  } else if (detectedTypes.length >= 2) {
+    const [t1, t2] = detectedTypes;
+    const pairRes = await executeAgentTool("get_pair_dynamics", { type1: t1, type2: t2 });
+    const claimsRes = await executeAgentTool("search_claims", { type: t1, query: t2, limit: 4 });
+    citations = claimsRes.citedClaims || [];
 
-### 3. Frank MBTI 破局实操法则
-- **守住攻守边界**：千万别试图去改造对方的前两位功能。对方最顺手的地方，往往正是你最看不懂、但潜意识最嫉妒的特质。
-- **降维沟通**：用清晰的行动协议代替“你猜我在想什么”。把内心的真实脆弱直截了当说出来，反而能瞬间化解对方的战斗戒备。
+    interface PairDynamicsResult {
+      relationName?: string;
+      relationReading?: string;
+      authorCanonicalMatch?: { cpName: string; score: number; description: string } | null;
+    }
+    const pairData = pairRes.result as PairDynamicsResult;
+    text = `${t1} 和 ${t2} 在图谱里的对位是"${pairData.relationName || "两两互动"}"。${pairData.relationReading || ""}${
+      pairData.authorCanonicalMatch
+        ? `\n\n作者把这对叫"${pairData.authorCanonicalMatch.cpName}"，契合分 ${pairData.authorCanonicalMatch.score}。${pairData.authorCanonicalMatch.description}`
+        : ""
+    }
 
-*(注：当前为内置图谱离线推导模式。配置 Gemini API Key 可针对具体情境进行更深入的实时研判)*`;
-    } else {
-      const t = detectedTypes[0] || "INTJ";
-      const profile = mbtiTypes.find((x) => x.type === t);
-      const claimsRes = await executeAgentTool("search_claims", {
-        type: t,
-        query: userQuery,
-        limit: 4,
-      });
+你们最近卡在哪件具体的事上？`;
+  } else {
+    const t = detectedTypes[0];
+    const profile = t ? mbtiTypes.find((x) => x.type === t) : undefined;
+    if (t) {
+      const claimsRes = await executeAgentTool("search_claims", { type: t, query: userQuery, limit: 4 });
       citations = claimsRes.citedClaims || [];
+    }
 
-      text = `针对你的困惑，我们调取了 **${t}（${profile?.title}）** 的图谱核心特质与论断：
+    if (profile) {
+      text = `${t}（${profile.title}）的能量模型：${profile.energyModel}
 
-### 1. 症结本质：${profile?.coreParadox || "认知能量错位"}
-很多时候我们以为的“人际障碍”或“职场内耗”，归根结底是**主导功能过度代偿，而劣势功能在地下室抗议**：
-- **能量模型**：${profile?.energyModel}
-- **典型表现**：${profile?.vividAnalogy}
-
-### 2. 来自原声观点库的核心洞察
 ${
   citations.length > 0
-    ? citations
-        .map(
-          (c) =>
-            `> **[#${c.sourceIndex} ${c.sourceTitle}]**：${c.statement}${
-              c.advice ? `\n> *建议*：${c.advice}` : ""
-            }`
-        )
-        .join("\n\n")
-    : "> 很多内耗的本质是：拿自己的第三功能和劣势功能去迎合别人的第一功能，最后丢了自己的主场。"
+    ? citations.slice(0, 2).map((c) => `[#${c.sourceIndex} ${c.sourceTitle}] ${c.statement}`).join("\n\n")
+    : "多数内耗是拿自己的第三、第四功能去迎合别人的主导功能。"
 }
 
-### 3. 破局实操指南
-1. **卸下防御代偿**：${profile?.slogan}
-2. **给劣势功能松绑**：不要在压力最大的时候强行逼自己做到八面玲珑。允许自己有短板，才是成熟的标志。
-
-*(注：当前为内置图谱离线推导模式。配置 Gemini API Key 后可解锁针对复杂生活情境的实时智能交互)*`;
+你现在具体是哪件事让你耗？`;
+    } else {
+      text = `先说说你的类型，或者具体发生了什么。`;
     }
   }
 
-  return { text, citations };
+  return { text: text + note, citations };
 }
 
 // ---------------------------------------------------------------------------
-// Run Agent Chat (Streaming Generator with Tool Calling Loop)
+// Stream events
 // ---------------------------------------------------------------------------
 
 export interface AgentStreamEvent {
-  type: "tool_call" | "tool_result" | "text_delta" | "citation" | "done" | "error" | "engine";
+  type: "tool_call" | "tool_result" | "text_delta" | "thought_delta" | "citation" | "done" | "error" | "engine";
   name?: string;
   args?: Record<string, unknown>;
   result?: unknown;
+  /** Short line describing what the tool returned, for the trace UI. */
+  summary?: string;
   text?: string;
   citation?: CitedClaim;
   message?: string;
   engine?: "gemini" | "offline_graph";
   model?: string;
+}
+
+/**
+ * Splits a streamed reply into the <think> block and the visible text.
+ * Holds back just enough of the tail to avoid emitting a half tag.
+ */
+class ThoughtSplitter {
+  private state: "start" | "thought" | "text" = "start";
+  private buf = "";
+  private thoughtStarted = false;
+  private textStarted = false;
+
+  /** Trims leading whitespace until the first real character of a section has gone out. */
+  private lead(kind: "thought" | "text", s: string): string {
+    const started = kind === "thought" ? this.thoughtStarted : this.textStarted;
+    if (started) return s;
+    const trimmed = s.replace(/^\s+/, "");
+    if (!trimmed) return "";
+    if (kind === "thought") this.thoughtStarted = true;
+    else this.textStarted = true;
+    return trimmed;
+  }
+
+  push(chunk: string): AgentStreamEvent[] {
+    this.buf += chunk;
+    const out: AgentStreamEvent[] = [];
+
+    if (this.state === "start") {
+      const lead = this.buf.trimStart();
+      if (lead.startsWith("<think>")) {
+        this.state = "thought";
+        this.buf = lead.slice("<think>".length);
+      } else if ("<think>".startsWith(lead) && lead.length < "<think>".length) {
+        return out; // could still become a tag
+      } else {
+        this.state = "text";
+      }
+    }
+
+    if (this.state === "thought") {
+      const end = this.buf.indexOf("</think>");
+      if (end >= 0) {
+        const thought = this.lead("thought", this.buf.slice(0, end));
+        if (thought) out.push({ type: "thought_delta", text: thought });
+        this.buf = this.buf.slice(end + "</think>".length);
+        this.state = "text";
+      } else {
+        // Keep a possible partial "</think>" tail unemitted.
+        const hold = partialSuffix(this.buf, "</think>");
+        const raw = this.buf.slice(0, this.buf.length - hold);
+        const emit = this.lead("thought", raw);
+        if (emit) out.push({ type: "thought_delta", text: emit });
+        this.buf = this.buf.slice(raw.length);
+        return out;
+      }
+    }
+
+    if (this.state === "text" && this.buf) {
+      const emit = this.lead("text", this.buf);
+      if (emit) out.push({ type: "text_delta", text: emit });
+      this.buf = "";
+    }
+    return out;
+  }
+
+  flush(): AgentStreamEvent[] {
+    const kind = this.state === "thought" ? "thought" : "text";
+    const emit = this.lead(kind, this.buf);
+    this.buf = "";
+    if (!emit) return [];
+    return [{ type: kind === "thought" ? "thought_delta" : "text_delta", text: emit }];
+  }
+}
+
+/** Length of the longest suffix of `s` that is a prefix of `tag`. */
+function partialSuffix(s: string, tag: string): number {
+  for (let n = Math.min(tag.length - 1, s.length); n > 0; n--) {
+    if (s.endsWith(tag.slice(0, n))) return n;
+  }
+  return 0;
+}
+
+function summarizeToolResult(name: string, result: unknown): string {
+  const r = (result ?? {}) as Record<string, unknown>;
+  if (typeof r.error === "string") return `失败：${r.error}`;
+  switch (name) {
+    case "query_graph":
+      return `${r.rowCount ?? 0} 行${r.truncated ? "（已截断）" : ""}`;
+    case "search_claims": {
+      const total = (r.totalFound ?? r.totalMatches) as number | undefined;
+      const got = Array.isArray(r.claims) ? r.claims.length : Array.isArray(r.returned) ? r.returned.length : 0;
+      return total !== undefined ? `命中 ${total} 条，取 ${got} 条` : `${got} 条`;
+    }
+    case "get_type_profile":
+      return typeof r.title === "string" ? `${r.type} ${r.title}` : "已读取";
+    case "get_pair_dynamics": {
+      const m = r.authorCanonicalMatch as { cpName?: string; score?: number } | null;
+      return m?.cpName ? `${r.relationName}，${m.cpName} ${m.score} 分` : String(r.relationName ?? "已读取");
+    }
+    case "get_cognitive_axis":
+      return r.axis ? "找到功能轴" : r.functionDetail ? "找到功能说明" : "未找到";
+    default:
+      return "完成";
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -608,16 +855,27 @@ export async function testGeminiConnection(apiKey?: string, model?: string): Pro
 }
 
 // ---------------------------------------------------------------------------
-// Call Gemini with Multi-Model Fallback & Retry
+// Gemini streaming with multi-model fallback
 // ---------------------------------------------------------------------------
 
-async function callGeminiWithFallback(
+function isTransientError(err: unknown): boolean {
+  const s = String(err);
+  return (
+    s.includes("503") ||
+    s.includes("UNAVAILABLE") ||
+    s.includes("high demand") ||
+    s.includes("429") ||
+    s.includes("RESOURCE_EXHAUSTED")
+  );
+}
+
+/**
+ * Opens a streaming generation, trying each candidate model in turn while the
+ * failure is transient. Once a stream has started, errors propagate.
+ */
+async function openGeminiStream(
   ai: GoogleGenAI,
-  params: {
-    contents: Content[];
-    systemInstruction: string;
-    preferredModel?: string;
-  }
+  params: { contents: Content[]; systemInstruction: string; preferredModel?: string; allowTools?: boolean }
 ) {
   const candidateModels = [
     params.preferredModel,
@@ -633,36 +891,45 @@ async function callGeminiWithFallback(
   for (const model of candidateModels) {
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const response = await ai.models.generateContent({
+        const stream = await ai.models.generateContentStream({
           model,
           contents: params.contents,
           config: {
             systemInstruction: params.systemInstruction,
-            tools: [{ functionDeclarations: AGENT_TOOLS }],
+            ...(params.allowTools === false ? {} : { tools: [{ functionDeclarations: AGENT_TOOLS }] }),
           },
         });
-        return { response, model };
+        return { stream, model };
       } catch (err: unknown) {
         lastErr = err;
-        const errStr = String(err);
-        const isTransient =
-          errStr.includes("503") ||
-          errStr.includes("UNAVAILABLE") ||
-          errStr.includes("high demand") ||
-          errStr.includes("429") ||
-          errStr.includes("RESOURCE_EXHAUSTED");
-
-        if (!isTransient) {
-          throw err;
-        }
-
-        // Wait before retry or moving to fallback model
+        if (!isTransientError(err)) throw err;
         await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
       }
     }
   }
 
   throw lastErr;
+}
+
+async function* streamOffline(
+  messages: Array<{ role: "user" | "assistant"; content: string }>,
+  mode: "diagnose" | "consult",
+  notice?: string
+): AsyncGenerator<AgentStreamEvent> {
+  const lastUserMsg = [...messages].reverse().find((m) => m.role === "user")?.content || "";
+  const { text, citations } = await generateOfflineHeuristicResponse(lastUserMsg, mode);
+
+  for (const c of citations) {
+    yield { type: "citation", citation: c };
+  }
+
+  const fullText = notice ? text + notice : text;
+  const chunkSize = 24;
+  for (let i = 0; i < fullText.length; i += chunkSize) {
+    yield { type: "text_delta", text: fullText.slice(i, i + chunkSize) };
+    await new Promise((r) => setTimeout(r, 20));
+  }
+  yield { type: "done" };
 }
 
 export async function* runMbtiAgentChat(params: {
@@ -676,169 +943,115 @@ export async function* runMbtiAgentChat(params: {
 
   if (!effectiveApiKey) {
     yield { type: "engine", engine: "offline_graph" };
-
-    // Fallback to intelligent offline heuristic generator
-    const lastUserMsg = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-    const { text, citations } = await generateOfflineHeuristicResponse(lastUserMsg, mode);
-
-    for (const c of citations) {
-      yield { type: "citation", citation: c };
-    }
-
-    // Stream text in small chunks for realistic typewriter feeling
-    const chunkSize = 24;
-    for (let i = 0; i < text.length; i += chunkSize) {
-      yield { type: "text_delta", text: text.slice(i, i + chunkSize) };
-      await new Promise((r) => setTimeout(r, 20));
-    }
-
-    yield { type: "done" };
+    yield* streamOffline(messages, mode);
     return;
   }
 
-  // Initialize Google GenAI client
-  const ai = new GoogleGenAI({
-    apiKey: effectiveApiKey,
-  });
-
+  const ai = new GoogleGenAI({ apiKey: effectiveApiKey });
   const systemInstruction = getSystemPrompt(mode);
 
-  // Convert incoming messages into Content format
+  // Earlier assistant turns come back from the client without their <think>
+  // block; the model only needs the visible text to continue.
   const contents: Content[] = messages.map((m) => ({
     role: m.role === "assistant" ? "model" : "user",
     parts: [{ text: m.content }],
   }));
 
   const allCitedClaims: CitedClaim[] = [];
+  let streamedAnything = false;
 
   try {
-    let turns = 0;
-    const maxToolTurns = 4;
+    // Tool round-trips before the model is made to answer with what it has.
+    const maxToolTurns = 6;
 
-    while (turns < maxToolTurns) {
-      turns++;
-
-      // Request generation with tool calling & model fallback
-      const { response, model: usedModel } = await callGeminiWithFallback(ai, {
+    for (let turn = 0; turn <= maxToolTurns; turn++) {
+      const finalTurn = turn === maxToolTurns;
+      const { stream, model: usedModel } = await openGeminiStream(ai, {
         contents,
         systemInstruction,
         preferredModel: model,
+        allowTools: !finalTurn,
       });
 
-      yield { type: "engine", engine: "gemini", model: usedModel };
+      if (turn === 0) yield { type: "engine", engine: "gemini", model: usedModel };
 
-      const candidate = response.candidates?.[0];
-      if (!candidate || !candidate.content) {
-        throw new Error("Gemini API 返回了空内容");
-      }
+      // Everything the model produced this turn, kept verbatim (including
+      // thought signatures) so the next turn sees a well-formed history.
+      const modelParts: Part[] = [];
+      const functionCalls: Array<{ name: string; args: Record<string, unknown> }> = [];
+      const splitter = new ThoughtSplitter();
 
-      // Append model turn to conversation history
-      contents.push(candidate.content);
-
-      // Check if the model made any function calls
-      const functionCalls = response.functionCalls;
-      if (functionCalls && functionCalls.length > 0) {
-        const functionResponseParts: Part[] = [];
-
-        for (const fc of functionCalls) {
-          const toolName = fc.name || "";
-          if (!toolName) continue;
-
-          yield {
-            type: "tool_call",
-            name: toolName,
-            args: fc.args,
-          };
-
-          const execution = await executeAgentTool(toolName, fc.args as Record<string, unknown>);
-
-          if (execution.citedClaims) {
-            for (const claim of execution.citedClaims) {
-              if (!allCitedClaims.some((c) => c.id === claim.id)) {
-                allCitedClaims.push(claim);
-                yield {
-                  type: "citation",
-                  citation: claim,
-                };
-              }
+      for await (const chunk of stream) {
+        const parts = chunk.candidates?.[0]?.content?.parts ?? [];
+        for (const part of parts) {
+          modelParts.push(part);
+          if (part.functionCall?.name) {
+            functionCalls.push({
+              name: part.functionCall.name,
+              args: (part.functionCall.args ?? {}) as Record<string, unknown>,
+            });
+          } else if (part.text && !part.thought) {
+            for (const ev of splitter.push(part.text)) {
+              streamedAnything = true;
+              yield ev;
             }
           }
+        }
+      }
+      for (const ev of splitter.flush()) {
+        streamedAnything = true;
+        yield ev;
+      }
 
-          yield {
-            type: "tool_result",
-            name: toolName,
-            result: execution.result,
-          };
+      if (modelParts.length) contents.push({ role: "model", parts: modelParts });
 
-          functionResponseParts.push({
-            functionResponse: {
-              name: toolName,
-              response: { result: execution.result },
-            },
-          });
+      if (functionCalls.length === 0) {
+        yield { type: "done" };
+        return;
+      }
+
+      const functionResponseParts: Part[] = [];
+      for (const fc of functionCalls) {
+        yield { type: "tool_call", name: fc.name, args: fc.args };
+
+        const execution = await executeAgentTool(fc.name, fc.args);
+
+        for (const claim of execution.citedClaims ?? []) {
+          if (!allCitedClaims.some((c) => c.id === claim.id)) {
+            allCitedClaims.push(claim);
+            yield { type: "citation", citation: claim };
+          }
         }
 
-        // Feed function responses back to the model
-        contents.push({
-          role: "user",
-          parts: functionResponseParts,
+        yield {
+          type: "tool_result",
+          name: fc.name,
+          result: execution.result,
+          summary: summarizeToolResult(fc.name, execution.result),
+        };
+
+        functionResponseParts.push({
+          functionResponse: { name: fc.name, response: { result: execution.result } },
         });
-
-        // Continue loop to let model produce final response or next call
-        continue;
       }
 
-      // No more function calls, stream the final response if available
-      if (response.text) {
-        const text = response.text;
-        const chunkSize = 16;
-        for (let i = 0; i < text.length; i += chunkSize) {
-          yield { type: "text_delta", text: text.slice(i, i + chunkSize) };
-          await new Promise((r) => setTimeout(r, 15));
-        }
-      }
-
-      yield { type: "done" };
-      return;
+      contents.push({ role: "user", parts: functionResponseParts });
     }
 
     yield { type: "done" };
   } catch (err: unknown) {
-    const errStr = String(err);
-    const isTransient =
-      errStr.includes("503") ||
-      errStr.includes("UNAVAILABLE") ||
-      errStr.includes("high demand") ||
-      errStr.includes("429") ||
-      errStr.includes("RESOURCE_EXHAUSTED");
-
-    if (isTransient) {
-      console.warn("Upstream Gemini models capacity spike (503/429), serving graph-grounded response.");
-      const lastUserMsg = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-      const { text, citations } = await generateOfflineHeuristicResponse(lastUserMsg, mode);
-
-      for (const c of citations) {
-        yield { type: "citation", citation: c };
-      }
-
-      const notice = "\n\n> 💡 *注：Google Gemini 上游服务当前并发负载较高（503 临时繁忙），系统已自动无缝切换至本地知识图谱引擎为您回答，核心观点与合盘推导不受影响。*";
-      const fullText = text + notice;
-
-      const chunkSize = 20;
-      for (let i = 0; i < fullText.length; i += chunkSize) {
-        yield { type: "text_delta", text: fullText.slice(i, i + chunkSize) };
-        await new Promise((r) => setTimeout(r, 15));
-      }
-
-      yield { type: "done" };
+    if (isTransientError(err) && !streamedAnything) {
+      console.warn("Gemini upstream busy (503/429), serving graph-grounded response.");
+      yield* streamOffline(
+        messages,
+        mode,
+        "\n\n*（Gemini 暂时繁忙，这条回答来自本地图谱。）*"
+      );
       return;
     }
 
     const message = err instanceof Error ? err.message : "Agent 处理失败，请检查 API Key 或网络设置";
     console.error("Gemini Agent Execution Error:", err);
-    yield {
-      type: "error",
-      message,
-    };
+    yield { type: "error", message };
   }
 }

@@ -2,62 +2,88 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  Compass,
-  Lightbulb,
-  Send,
-  Square,
-  Key,
-  Trash2,
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Search,
-  Database,
-  Activity,
-  Loader2,
-  Zap,
-  Layers,
-} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { mbtiTypes } from "@/data/core/mbti-data";
+import sources from "@/data/claims/sources.json";
 import { useMBTIStore } from "@/store/mbti-store";
+import Portal from "./portal";
 import type { CitedClaim } from "@/services/mbti-agent-service";
 
-const SHELL = "mx-auto w-full max-w-[1100px] px-4 sm:px-8 lg:px-12";
+const SHELL = "mx-auto w-full max-w-[860px] px-4 sm:px-10";
 const TYPE_CODES = mbtiTypes.map((t) => t.type);
+const SOURCE_TITLE = new Map(sources.map((s) => [s.index, s.title]));
+const easeOut = [0.16, 1, 0.3, 1] as const;
+
+type Mode = "diagnose" | "consult";
+
+interface ToolEvent {
+  name: string;
+  args?: Record<string, unknown>;
+  status: "running" | "done";
+  summary?: string;
+}
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: string;
-  toolEvents?: Array<{ name: string; args?: Record<string, unknown>; status: "running" | "done" }>;
+  toolEvents?: ToolEvent[];
+  /** The model's <think> block, streamed separately from the reply. */
+  thinking?: string;
   citations?: CitedClaim[];
   isStreaming?: boolean;
   engine?: "gemini" | "offline_graph";
   model?: string;
 }
 
+/** What a citation mark opens: the source, and the claims from it this reply used. */
+interface CitationTarget {
+  sourceIndex: number;
+  title: string;
+  claims: CitedClaim[];
+}
+
+const MODELS = [
+  { id: "gemini-3.8-flash", label: "3.8 Flash" },
+  { id: "gemini-flash-latest", label: "Flash Latest" },
+  { id: "gemini-3.5-flash-lite", label: "3.5 Lite" },
+  { id: "gemini-3.1-pro-preview", label: "3.1 Pro" },
+];
+
 const PRESET_DIAGNOSE = [
-  "帮我测测我的真实 MBTI（直接出生活场景题考我）",
-  "我总是分不清自己是 INFP 还是 INFJ，本质区别在哪？",
-  "INTJ 和 INTP 看起来都很理智，生活里怎么准确分辨？",
-  "帮我测一下我的第四位劣势功能（灵魂）是什么？压力大时怎么自救？",
+  "帮我测一下我的类型",
+  "我分不清自己是 INFP 还是 INFJ",
+  "INTJ 和 INTP 生活里怎么分辨",
+  "我压力大的时候会失控，这是哪个功能在作怪",
 ];
 
 const PRESET_CONSULT = [
-  "INTJ 和 INFP 恋爱合盘：最大冲突点在哪？怎么破局？",
-  "INTP 在职场严重拖延、只拆逻辑不执行，该怎么破局？",
-  "如何与强势的 ENTJ / ESTJ 上司高效沟通而不内耗？",
-  "INFJ 精神内耗严重，如何打开 Se 劣势功能回归现实？",
+  "INTJ 和 INFP 谈恋爱，最容易在哪里出问题",
+  "INTP 在工作里拖延，只想不做，怎么办",
+  "怎么跟强势的 ENTJ 上司沟通",
+  "INFJ 内耗严重，怎么把 Se 用起来",
 ];
+
+const WELCOME: Record<Mode, string> = {
+  diagnose:
+    "你好。这里帮你判断 MBTI 类型，方法是问你几个生活场景，一次一个。\n\n可以先告诉我你在纠结的类型，比如「INFP 还是 INFJ」，也可以直接说「帮我测一下」。",
+  consult: "你好。这里接了 1,251 条作者原声观点和 136 组配对读法，回答会标注出处。\n\n说说你的情况：涉及哪些类型，具体发生了什么。",
+};
+
+const RESET: Record<Mode, string> = {
+  diagnose: "对话已清空。告诉我你在纠结的类型，或者直接说「帮我测一下」。",
+  consult: "对话已清空。说说你的情况：涉及哪些类型，具体发生了什么。",
+};
+
+const now = () => new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
 
 export function AgentChatView() {
   const searchParams = useSearchParams();
-  const initialMode = searchParams.get("mode") === "consult" ? "consult" : "diagnose";
+  const initialMode: Mode = searchParams.get("mode") === "consult" ? "consult" : "diagnose";
 
-  const [mode, setMode] = useState<"diagnose" | "consult">(initialMode);
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,14 +94,14 @@ export function AgentChatView() {
     testing: boolean;
     result?: { ok: boolean; model: string; latencyMs: number; error?: string };
   }>({ testing: false });
-  const [expandedCitations, setExpandedCitations] = useState<Record<string, boolean>>({});
+  const [openThinking, setOpenThinking] = useState<Record<string, boolean>>({});
+  const [citation, setCitation] = useState<CitationTarget | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const setSelectedType = useMBTIStore((s) => s.setSelectedType);
-  const dbStats = useMBTIStore((s) => s.dbStats);
 
   // Load local API key & model from storage
   useEffect(() => {
@@ -88,35 +114,12 @@ export function AgentChatView() {
   // Sync mode with URL param if present
   useEffect(() => {
     const m = searchParams.get("mode");
-    if (m === "diagnose" || m === "consult") {
-      setMode(m);
-    }
+    if (m === "diagnose" || m === "consult") setMode(m);
   }, [searchParams]);
 
-  // Set default greeting on first load or reset
+  // Greeting on first load or mode change
   useEffect(() => {
-    const timeStr = new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
-    if (mode === "diagnose") {
-      setMessages([
-        {
-          id: "welcome-diag",
-          role: "assistant",
-          content:
-            "你好，我是 Frank MBTI 认知架构师。\n\n我们今天**不搞 4 个字母的机械单选题**，直接从**荣格八维认知动力学**与**真实生活场景潜意识本能**出发。\n\n你可以告诉我你最纠结的两种类型（比如「我是 INFP 还是 INFJ」），或者直接让我出一道生动的现实场景题来拷问你的潜意识第一反应。",
-          timestamp: timeStr,
-        },
-      ]);
-    } else {
-      setMessages([
-        {
-          id: "welcome-consult",
-          role: "assistant",
-          content:
-            "你好，我是 Frank MBTI 认知架构师。\n\n这里接入了 **1,251 条原声观点图谱** 与 **136 组两两合盘动力学模型**。\n\n无论是亲密关系相处、职场沟通内耗，还是劣势功能（灵魂）的自救破局，把你的具体情境告诉我，我会实时调用图谱检索实据，为你梳理**攻守边界 (Boundary)** 与**落地破局解法 (Advice)**。",
-          timestamp: timeStr,
-        },
-      ]);
-    }
+    setMessages([{ id: `welcome-${mode}`, role: "assistant", content: WELCOME[mode], timestamp: now() }]);
   }, [mode]);
 
   // Auto-scroll
@@ -126,11 +129,8 @@ export function AgentChatView() {
 
   const handleSaveKey = (val: string) => {
     setCustomKey(val);
-    if (val.trim()) {
-      localStorage.setItem("frank_mbti_gemini_key", val.trim());
-    } else {
-      localStorage.removeItem("frank_mbti_gemini_key");
-    }
+    if (val.trim()) localStorage.setItem("frank_mbti_gemini_key", val.trim());
+    else localStorage.removeItem("frank_mbti_gemini_key");
   };
 
   const handleSaveModel = (val: string) => {
@@ -144,19 +144,12 @@ export function AgentChatView() {
       const params = new URLSearchParams();
       if (customKey.trim()) params.set("apiKey", customKey.trim());
       if (selectedModel) params.set("model", selectedModel);
-
       const res = await fetch(`/api/mbti/agent?${params.toString()}`);
-      const data = await res.json();
-      setPingState({ testing: false, result: data });
+      setPingState({ testing: false, result: await res.json() });
     } catch (err: unknown) {
       setPingState({
         testing: false,
-        result: {
-          ok: false,
-          model: selectedModel,
-          latencyMs: 0,
-          error: err instanceof Error ? err.message : "网络请求异常",
-        },
+        result: { ok: false, model: selectedModel, latencyMs: 0, error: err instanceof Error ? err.message : "网络请求异常" },
       });
     }
   };
@@ -166,18 +159,7 @@ export function AgentChatView() {
       abortControllerRef.current.abort();
       setLoading(false);
     }
-    const timeStr = new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
-    setMessages([
-      {
-        id: "msg-reset-" + Date.now(),
-        role: "assistant",
-        content:
-          mode === "diagnose"
-            ? "对话已重置。随时告诉我你的测试诉求或在纠结的类型，我们开始深度推导。"
-            : "对话已重置。随时向我提出有关 MBTI 合盘、职场、内耗或认知功能的具体问题。",
-        timestamp: timeStr,
-      },
-    ]);
+    setMessages([{ id: "msg-reset-" + Date.now(), role: "assistant", content: RESET[mode], timestamp: now() }]);
   };
 
   const handleSend = async (overrideText?: string) => {
@@ -185,26 +167,15 @@ export function AgentChatView() {
     if (!textToSend || loading) return;
 
     if (!overrideText) setInput("");
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
 
-    // Resize textarea back
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
-
-    const timeStr = new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
-    const userMsg: Message = {
-      id: "user-" + Date.now(),
-      role: "user",
-      content: textToSend,
-      timestamp: timeStr,
-    };
-
+    const userMsg: Message = { id: "user-" + Date.now(), role: "user", content: textToSend, timestamp: now() };
     const assistantMsgId = "assistant-" + Date.now();
     const assistantMsg: Message = {
       id: assistantMsgId,
       role: "assistant",
       content: "",
-      timestamp: timeStr,
+      timestamp: now(),
       toolEvents: [],
       citations: [],
       isStreaming: true,
@@ -217,6 +188,9 @@ export function AgentChatView() {
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
+    const patch = (fn: (msg: Message) => Message) =>
+      setMessages((prev) => prev.map((m) => (m.id === assistantMsgId ? fn(m) : m)));
+
     try {
       const response = await fetch("/api/mbti/agent", {
         method: "POST",
@@ -226,10 +200,7 @@ export function AgentChatView() {
         },
         body: JSON.stringify({
           mode,
-          messages: newHistory.map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: newHistory.map((m) => ({ role: m.role, content: m.content })),
           apiKey: customKey || undefined,
           model: selectedModel || undefined,
         }),
@@ -240,10 +211,7 @@ export function AgentChatView() {
         const errJson = await response.json().catch(() => ({}));
         throw new Error(errJson.error || `请求失败 (${response.status})`);
       }
-
-      if (!response.body) {
-        throw new Error("无返回流数据");
-      }
+      if (!response.body) throw new Error("无返回流数据");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -260,77 +228,44 @@ export function AgentChatView() {
         for (const line of lines) {
           const trimmed = line.trim();
           if (!trimmed.startsWith("data: ")) continue;
-          const jsonStr = trimmed.slice(6);
           try {
-            const event = JSON.parse(jsonStr);
-
-            setMessages((prev) =>
-              prev.map((msg) => {
-                if (msg.id !== assistantMsgId) return msg;
-
-                if (event.type === "engine") {
+            const event = JSON.parse(trimmed.slice(6));
+            patch((msg) => {
+              switch (event.type) {
+                case "engine":
+                  return { ...msg, engine: event.engine, model: event.model };
+                case "tool_call":
                   return {
                     ...msg,
-                    engine: event.engine,
-                    model: event.model,
+                    toolEvents: [...(msg.toolEvents || []), { name: event.name, args: event.args, status: "running" }],
                   };
-                }
-
-                if (event.type === "tool_call") {
+                case "tool_result": {
                   const existing = msg.toolEvents || [];
-                  return {
-                    ...msg,
-                    toolEvents: [
-                      ...existing,
-                      { name: event.name, args: event.args, status: "running" },
-                    ],
-                  };
+                  // Mark the oldest still-running call of this tool as done.
+                  const idx = existing.findIndex((t) => t.name === event.name && t.status === "running");
+                  if (idx < 0) return msg;
+                  const next = existing.slice();
+                  next[idx] = { ...next[idx], status: "done", summary: event.summary };
+                  return { ...msg, toolEvents: next };
                 }
-
-                if (event.type === "tool_result") {
-                  const existing = msg.toolEvents || [];
-                  return {
-                    ...msg,
-                    toolEvents: existing.map((t) =>
-                      t.name === event.name ? { ...t, status: "done" } : t
-                    ),
-                  };
-                }
-
-                if (event.type === "citation" && event.citation) {
+                case "thought_delta":
+                  return event.text ? { ...msg, thinking: (msg.thinking || "") + event.text } : msg;
+                case "citation": {
+                  if (!event.citation) return msg;
                   const existing = msg.citations || [];
                   if (existing.some((c) => c.id === event.citation.id)) return msg;
-                  return {
-                    ...msg,
-                    citations: [...existing, event.citation],
-                  };
+                  return { ...msg, citations: [...existing, event.citation] };
                 }
-
-                if (event.type === "text_delta" && event.text) {
-                  return {
-                    ...msg,
-                    content: msg.content + event.text,
-                  };
-                }
-
-                if (event.type === "done") {
-                  return {
-                    ...msg,
-                    isStreaming: false,
-                  };
-                }
-
-                if (event.type === "error") {
-                  return {
-                    ...msg,
-                    content: msg.content + `\n\n> ⚠️ *${event.message}*`,
-                    isStreaming: false,
-                  };
-                }
-
-                return msg;
-              })
-            );
+                case "text_delta":
+                  return event.text ? { ...msg, content: msg.content + event.text } : msg;
+                case "done":
+                  return { ...msg, isStreaming: false };
+                case "error":
+                  return { ...msg, content: msg.content + `\n\n> ${event.message}`, isStreaming: false };
+                default:
+                  return msg;
+              }
+            });
           } catch {
             // Ignore parse errors on trailing deltas
           }
@@ -339,614 +274,558 @@ export function AgentChatView() {
     } catch (err: unknown) {
       const isAbort = err instanceof Error && err.name === "AbortError";
       const errMsg = err instanceof Error ? err.message : "网络或服务异常";
-
-      if (isAbort) {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantMsgId
-              ? { ...m, content: m.content + "\n\n*(用户已手动终止输出)*", isStreaming: false }
-              : m
-          )
-        );
-      } else {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantMsgId
-              ? {
-                  ...m,
-                  content:
-                    m.content +
-                    `\n\n> ⚠️ **请求异常**：${errMsg}\n\n*提示：您可在右上角设置中配置个人 GEMINI_API_KEY，或检查本地网络环境。*`,
-                  isStreaming: false,
-                }
-              : m
-          )
-        );
-      }
+      patch((m) => ({
+        ...m,
+        content: m.content + (isAbort ? "\n\n*(已停止)*" : `\n\n> 请求失败：${errMsg}。可以在设置里配置 Gemini API Key，或检查网络。`),
+        isStreaming: false,
+      }));
     } finally {
       setLoading(false);
       abortControllerRef.current = null;
     }
   };
 
-  const handleStop = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-  };
+  const handleStop = () => abortControllerRef.current?.abort();
 
   const openTypeModal = (typeCode: string) => {
     const t = mbtiTypes.find((x) => x.type === typeCode.toUpperCase());
     if (t) setSelectedType(t);
   };
 
+  /** Resolve a `[#130 …]` or `[#c028-06 …]` mark against this message's citations. */
+  const openCitation = (mark: string, msg: Message) => {
+    const body = mark.slice(2, -1).trim(); // drop "[#" and "]"
+    const key = body.split(/\s+/)[0];
+    const cited = msg.citations || [];
+    let sourceIndex = Number(key);
+    if (!Number.isFinite(sourceIndex)) {
+      const byId = cited.find((c) => c.id === key);
+      if (!byId) return;
+      sourceIndex = byId.sourceIndex;
+    }
+    setCitation({
+      sourceIndex,
+      title: SOURCE_TITLE.get(sourceIndex) ?? body.slice(key.length).trim(),
+      claims: cited.filter((c) => c.sourceIndex === sourceIndex),
+    });
+  };
+
+  const fresh = messages.length <= 1;
+
   return (
-    <div className="min-h-full flex flex-col bg-paper text-ink">
-      {/* 1. Header & Mode Switcher */}
-      <div className="rule-b bg-paper/90 backdrop-blur-md sticky top-0 z-20">
-        <div className={cn(SHELL, "py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3")}>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <span className="eyebrow text-ink text-[0.6875rem] sm:text-[0.75rem] font-semibold tracking-wider">
-                FRANK MBTI
-              </span>
-              <span className="text-ink-ghost text-xs">/</span>
-              <span className="font-mono text-[0.6875rem] text-ink-soft">
-                Agent v1.0
-              </span>
-            </div>
-
-            {dbStats?.connected ? (
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[0.625rem] font-mono text-emerald-700 bg-emerald-50 border border-emerald-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Graph 1,251 Claims
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[0.625rem] font-mono text-ink-soft bg-rule/50 border border-rule">
-                <Database className="h-2.5 w-2.5 text-ink-faint" />
-                Local Seeds 1,251 Claims
-              </span>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-4">
-            {/* Mode Switch Tabs */}
-            <div className="flex items-center p-0.5 rounded-md bg-rule/60 border border-rule text-[0.75rem] sm:text-[0.8125rem]">
+    <div className="flex h-full min-h-0 flex-col bg-paper text-ink">
+      {/* Mode row: plain words, the active one carries a hairline. */}
+      <div className={cn(SHELL, "rule-b flex items-center justify-between gap-6 py-3 sm:py-4")}>
+        <nav className="flex items-center gap-6 sm:gap-8" aria-label="模式">
+          {(
+            [
+              ["diagnose", "推导类型"],
+              ["consult", "图谱答疑"],
+            ] as const
+          ).map(([value, label]) => {
+            const isActive = mode === value;
+            return (
               <button
+                key={value}
                 type="button"
-                onClick={() => setMode("diagnose")}
+                onClick={() => setMode(value)}
+                aria-pressed={isActive}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1 rounded transition-all duration-200",
-                  mode === "diagnose"
-                    ? "bg-paper text-ink font-medium shadow-xs"
-                    : "text-ink-soft hover:text-ink"
+                  "relative py-0.5 text-[0.8125rem] transition-colors duration-300 sm:text-[0.9375rem]",
+                  isActive ? "text-ink" : "text-ink-ghost hover:text-ink-soft"
                 )}
               >
-                <Compass className="h-3.5 w-3.5 text-ink" />
-                <span>MBTI 推导</span>
+                {label}
+                {isActive && <span className="absolute inset-x-0 -bottom-1 block h-px bg-ink" />}
               </button>
-              <button
-                type="button"
-                onClick={() => setMode("consult")}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1 rounded transition-all duration-200",
-                  mode === "consult"
-                    ? "bg-paper text-ink font-medium shadow-xs"
-                    : "text-ink-soft hover:text-ink"
-                )}
-              >
-                <Lightbulb className="h-3.5 w-3.5 text-ink" />
-                <span>图谱答疑</span>
-              </button>
-            </div>
+            );
+          })}
+        </nav>
 
-            {/* Actions: Settings & Clear */}
-            <div className="flex items-center gap-1 text-ink-soft">
-              <button
-                type="button"
-                onClick={() => setShowSettings(!showSettings)}
-                title="API 配置与状态"
-                className={cn(
-                  "p-1.5 rounded hover:bg-rule/60 hover:text-ink transition-colors",
-                  (customKey || showSettings) && "text-ink"
-                )}
-              >
-                <Key className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleClearMessages}
-                title="清空对话记录"
-                className="p-1.5 rounded hover:bg-rule/60 hover:text-ink transition-colors"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+        <div className="flex items-center gap-5 text-[0.75rem] sm:text-[0.8125rem]">
+          <button
+            type="button"
+            onClick={() => setShowSettings((v) => !v)}
+            className={cn("transition-colors", showSettings || customKey ? "text-ink" : "text-ink-faint hover:text-ink")}
+          >
+            设置
+          </button>
+          <button type="button" onClick={handleClearMessages} className="text-ink-faint transition-colors hover:text-ink">
+            清空
+          </button>
         </div>
+      </div>
 
-        {/* Optional Key Configuration Drawer */}
+      {/* Settings: key, model, a connectivity check. */}
+      <AnimatePresence initial={false}>
         {showSettings && (
-          <div className="rule-t bg-paper/95 px-4 py-3 sm:px-12 border-b border-rule animate-in fade-in duration-200">
-            <div className="max-w-[700px] mx-auto space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="eyebrow text-[0.6875rem]">LLM API 接入配置 (Google Gemini)</span>
-                <span className="font-mono text-[0.625rem] text-ink-faint">
-                  支持 .env.local 或本地安全存储
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: easeOut }}
+            className="overflow-hidden"
+          >
+            <div className={cn(SHELL, "rule-b space-y-3 py-4")}>
+              <div className="flex items-baseline gap-4 sm:gap-8">
+                <span className="eyebrow w-14 shrink-0 text-[0.625rem] sm:w-20 sm:text-[0.6875rem]">Key</span>
                 <input
                   type="password"
-                  placeholder="在此填入 GEMINI_API_KEY（可选，默认优先读取 .env.local）"
+                  placeholder="GEMINI_API_KEY，留空则用服务端配置"
                   value={customKey}
                   onChange={(e) => handleSaveKey(e.target.value)}
-                  className="flex-1 px-3 py-1.5 text-xs font-mono rounded border border-rule focus:outline-none focus:border-ink"
+                  className="rule-b min-w-0 flex-1 bg-transparent py-1 font-mono text-[0.75rem] text-ink placeholder:text-ink-ghost focus:border-ink focus:outline-none"
                 />
-                {customKey && (
-                  <button
-                    type="button"
-                    onClick={() => handleSaveKey("")}
-                    className="px-2 py-1.5 text-xs text-ink-soft hover:text-ink rounded border border-rule"
-                  >
-                    清除
-                  </button>
-                )}
                 <button
                   type="button"
                   onClick={handlePingTest}
                   disabled={pingState.testing}
-                  className="px-3 py-1.5 text-xs font-mono rounded border border-rule hover:border-ink transition-colors shrink-0 flex items-center gap-1.5 disabled:opacity-50 text-ink"
-                  title="向 Gemini API 发送极简连通性探测请求以测试 API 是否有效"
+                  className="shrink-0 text-[0.75rem] text-ink-soft transition-colors hover:text-ink disabled:text-ink-ghost"
                 >
-                  {pingState.testing ? (
-                    <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-ink-soft" />
-                      <span>测试中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Activity className="h-3.5 w-3.5 text-ink-soft" />
-                      <span>测试连通性</span>
-                    </>
-                  )}
+                  {pingState.testing ? "测试中" : "测试"}
                 </button>
               </div>
 
-              {/* Ping Result Banner */}
-              {pingState.result && (
-                <div
-                  className={cn(
-                    "text-[0.6875rem] font-mono px-3 py-1.5 rounded border flex items-center justify-between gap-2 animate-in fade-in duration-150",
-                    pingState.result.ok
-                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300"
-                      : "bg-rose-500/10 border-rose-500/30 text-rose-800 dark:text-rose-300"
-                  )}
-                >
-                  <div className="flex items-center gap-2 truncate">
-                    <span
-                      className={cn(
-                        "w-1.5 h-1.5 rounded-full shrink-0",
-                        pingState.result.ok ? "bg-emerald-500" : "bg-rose-500"
-                      )}
-                    />
-                    <span className="truncate">
-                      {pingState.result.ok
-                        ? `API 正常工作 · 响应耗时 ${pingState.result.latencyMs}ms (${pingState.result.model})`
-                        : `API 未正常连通 · ${pingState.result.error || "未知异常"}`}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setPingState({ testing: false })}
-                    className="text-[0.625rem] opacity-60 hover:opacity-100 shrink-0 px-1"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs">
-                <span className="text-ink-soft shrink-0">优先模型：</span>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {[
-                    { id: "gemini-3.8-flash", label: "3.8 Flash (推荐)" },
-                    { id: "gemini-flash-latest", label: "Flash Latest (稳定)" },
-                    { id: "gemini-3.5-flash-lite", label: "3.5 Lite (抗压)" },
-                    { id: "gemini-3.1-pro-preview", label: "3.1 Pro (深度)" },
-                  ].map((m) => (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => handleSaveModel(m.id)}
-                      className={cn(
-                        "px-2 py-0.5 rounded text-[0.6875rem] font-mono border transition-colors",
-                        selectedModel === m.id
-                          ? "bg-ink text-paper border-ink"
-                          : "bg-paper text-ink-soft border-rule hover:border-ink"
-                      )}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <p className="text-[0.6875rem] text-ink-soft leading-relaxed">
-                💡 若遇 Google 官方模型并发高负载（503 临时繁忙），系统会自动在备选模型间智能重试并优雅兜底至本地图谱引擎，保障问答与合盘随时可用。
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 2. Messages Stream */}
-      <div className="flex-1 overflow-y-auto">
-        <div className={cn(SHELL, "py-6 space-y-6")}>
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={cn(
-                "flex flex-col gap-1.5 transition-opacity duration-300",
-                m.role === "user" ? "items-end" : "items-start"
-              )}
-            >
-              {/* Sender & Timestamp Header */}
-              <div className="flex items-center gap-2 px-1 text-[0.6875rem] font-mono text-ink-faint">
-                <span>{m.role === "user" ? "YOU" : "FRANK MBTI AGENT"}</span>
-                <span>·</span>
-                <span>{m.timestamp}</span>
-                {m.role === "assistant" && m.engine && (
-                  <>
-                    <span>·</span>
-                    {m.engine === "gemini" ? (
-                      <span className="inline-flex items-center gap-1 text-[0.625rem] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-medium">
-                        <Zap className="h-2.5 w-2.5" />
-                        <span>{m.model || "Gemini"} · 实时推理</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-[0.625rem] text-ink-soft bg-rule/40 px-1.5 py-0.5 rounded border border-rule">
-                        <Layers className="h-2.5 w-2.5" />
-                        <span>内置图谱引擎</span>
-                      </span>
-                    )}
-                  </>
-                )}
-              </div>
-
-              {/* Message Bubble Card */}
-              <div
-                className={cn(
-                  "max-w-[90%] sm:max-w-[80%] rounded-lg p-4 text-[0.875rem] leading-[1.8] tracking-normal transition-all",
-                  m.role === "user"
-                    ? "bg-rule/40 border border-rule text-ink whitespace-pre-wrap"
-                    : "bg-paper border border-rule text-ink shadow-xs"
-                )}
-              >
-                {/* Tool Calling Step Badges */}
-                {m.toolEvents && m.toolEvents.length > 0 && (
-                  <div className="mb-3 flex flex-wrap gap-1.5 pb-2 rule-b">
-                    {m.toolEvents.map((t, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.625rem] font-mono text-ink-soft bg-rule/40 border border-rule"
-                      >
-                        {t.status === "running" ? (
-                          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-ping" />
-                        ) : (
-                          <Check className="h-2.5 w-2.5 text-emerald-600" />
-                        )}
-                        <span>{formatToolLabel(t.name, t.args)}</span>
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Main Content Rendered with Rich Text and Interactive Type Chips */}
-                {m.content ? (
-                  <MarkdownRenderer content={m.content} onTypeClick={openTypeModal} />
-                ) : (
-                  <div className="flex items-center gap-2 text-ink-soft font-mono text-xs py-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-ink animate-pulse" />
-                    <span>认知图谱检索并推演中...</span>
-                  </div>
-                )}
-
-                {/* Citations Shelf */}
-                {m.citations && m.citations.length > 0 && (
-                  <div className="mt-4 pt-3 rule-t space-y-2">
-                    <div className="flex items-center justify-between text-[0.6875rem] font-mono text-ink-soft">
-                      <span className="flex items-center gap-1.5">
-                        <Search className="h-3 w-3 text-ink-faint" />
-                        <span>引用图谱观点 ({m.citations.length})</span>
-                      </span>
+              <div className="flex items-baseline gap-4 sm:gap-8">
+                <span className="eyebrow w-14 shrink-0 text-[0.625rem] sm:w-20 sm:text-[0.6875rem]">模型</span>
+                <div className="scroll-quiet flex min-w-0 flex-1 gap-5 overflow-x-auto">
+                  {MODELS.map((m) => {
+                    const isActive = selectedModel === m.id;
+                    return (
                       <button
+                        key={m.id}
                         type="button"
-                        onClick={() =>
-                          setExpandedCitations((prev) => ({
-                            ...prev,
-                            [m.id]: !prev[m.id],
-                          }))
-                        }
-                        className="flex items-center gap-0.5 text-ink-soft hover:text-ink"
-                      >
-                        <span>{expandedCitations[m.id] ? "收起" : "展开"}</span>
-                        {expandedCitations[m.id] ? (
-                          <ChevronUp className="h-3 w-3" />
-                        ) : (
-                          <ChevronDown className="h-3 w-3" />
+                        onClick={() => handleSaveModel(m.id)}
+                        aria-pressed={isActive}
+                        className={cn(
+                          "relative shrink-0 whitespace-nowrap py-0.5 text-[0.75rem] transition-colors",
+                          isActive ? "text-ink" : "text-ink-ghost hover:text-ink-soft"
                         )}
+                      >
+                        {m.label}
+                        {isActive && <span className="absolute inset-x-0 -bottom-0.5 block h-px bg-ink" />}
                       </button>
-                    </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                    {/* Citations Preview list */}
-                    <div className="space-y-1.5">
-                      {m.citations
-                        .slice(0, expandedCitations[m.id] ? undefined : 2)
-                        .map((c) => (
-                          <div
-                            key={c.id}
-                            className="p-2 rounded bg-rule/25 border border-rule text-xs space-y-1"
-                          >
-                            <div className="flex items-baseline justify-between gap-2">
-                              <span className="font-mono text-[0.6875rem] font-medium text-ink">
-                                #{String(c.sourceIndex).padStart(3, "0")} {c.sourceTitle}
-                              </span>
-                              {c.kind && (
-                                <span className="font-mono text-[0.625rem] text-ink-faint">
-                                  {c.kind}
-                                </span>
-                              )}
-                            </div>
-                            <p className="text-[0.8125rem] text-ink-soft leading-relaxed">
-                              “{c.statement}”
-                            </p>
-                            {c.advice && (
-                              <p className="text-[0.75rem] text-ink leading-normal">
-                                → 建议：{c.advice}
-                              </p>
-                            )}
-                            {c.boundary && (
-                              <p className="text-[0.75rem] text-ink-soft leading-normal">
-                                🛡 边界：{c.boundary}
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                    </div>
-                  </div>
+              {pingState.result && (
+                <p className="pl-[4.5rem] font-mono text-[0.6875rem] text-ink-faint sm:pl-[7rem]">
+                  {pingState.result.ok
+                    ? `${pingState.result.model} · ${pingState.result.latencyMs}ms`
+                    : `连接失败 · ${pingState.result.error || "未知错误"}`}
+                </p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Transcript */}
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className={cn(SHELL, "space-y-8 py-6 sm:space-y-10 sm:py-10")}>
+          {messages.map((m) =>
+            m.role === "user" ? (
+              <div key={m.id} className="flex flex-col items-end gap-1.5">
+                <span className="eyebrow text-[0.625rem]">你 · {m.timestamp}</span>
+                <p className="max-w-[80%] whitespace-pre-wrap text-right text-[0.9375rem] leading-[1.8] text-ink-soft">
+                  {m.content}
+                </p>
+              </div>
+            ) : (
+              <div key={m.id} className="flex flex-col gap-2">
+                <span className="eyebrow text-[0.625rem]">
+                  Frank · {m.timestamp}
+                  {m.engine === "offline_graph" && " · 本地图谱"}
+                </span>
+
+                {((m.toolEvents && m.toolEvents.length > 0) || m.thinking) && (
+                  <ThinkingLine
+                    toolEvents={m.toolEvents || []}
+                    thinking={m.thinking}
+                    streaming={!!m.isStreaming}
+                    open={!!openThinking[m.id]}
+                    onToggle={() => setOpenThinking((prev) => ({ ...prev, [m.id]: !prev[m.id] }))}
+                  />
+                )}
+
+                {m.content ? (
+                  <MarkdownRenderer
+                    content={m.content}
+                    onTypeClick={openTypeModal}
+                    onCitationClick={(mark) => openCitation(mark, m)}
+                  />
+                ) : (
+                  m.isStreaming &&
+                  !m.thinking &&
+                  !(m.toolEvents && m.toolEvents.length) && <span className="text-[0.875rem] text-ink-ghost">…</span>
                 )}
               </div>
-            </div>
-          ))}
+            )
+          )}
           <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* 3. Preset Question Chips */}
-      <div className="rule-t bg-paper/60 backdrop-blur-xs">
-        <div className={cn(SHELL, "py-2.5")}>
-          <div className="flex items-center gap-2 overflow-x-auto scroll-quiet pb-1">
-            <span className="eyebrow text-[0.625rem] shrink-0 text-ink-faint">
-              灵感提问
-            </span>
-            {(mode === "diagnose" ? PRESET_DIAGNOSE : PRESET_CONSULT).map((q, idx) => (
+      {/* Composer */}
+      <div className={cn(SHELL, "rule-t pt-3 pb-4 sm:pt-4 sm:pb-6")}>
+        {fresh && (
+          <div className="scroll-quiet mb-3 flex items-center gap-2 overflow-x-auto pb-1">
+            <span className="eyebrow text-[0.625rem] shrink-0 text-ink-faint mr-1">推荐问答:</span>
+            {(mode === "diagnose" ? PRESET_DIAGNOSE : PRESET_CONSULT).map((q) => (
               <button
-                key={idx}
+                key={q}
                 type="button"
                 disabled={loading}
                 onClick={() => handleSend(q)}
-                className="shrink-0 text-xs px-2.5 py-1 rounded-full border border-rule bg-paper hover:border-ink hover:text-ink text-ink-soft transition-all duration-200"
+                className="shrink-0 rounded-full border border-rule bg-paper px-3 py-1 text-[0.75rem] text-ink-soft transition-all hover:border-ink hover:text-ink active:scale-95"
               >
                 {q}
               </button>
             ))}
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* 4. Bottom Input Bar */}
-      <div className="rule-t bg-paper p-4">
-        <div className={cn(SHELL)}>
-          <div className="relative flex items-end gap-2 rounded-lg border border-rule-strong bg-paper p-2 focus-within:border-ink transition-colors shadow-xs">
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={input}
-              placeholder={
-                mode === "diagnose"
-                  ? "输入你的困惑、正在纠结的 MBTI 类型，或直接回答上述场景..."
-                  : "输入关于 MBTI 恋爱合盘、职场相处或个人成长的具体问题..."
+        {/* Input Card Container */}
+        <div className="relative rounded-xl border border-rule-strong bg-paper p-3 transition-all focus-within:border-ink focus-within:shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:border-ink/50 sm:p-3.5">
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={input}
+            placeholder={mode === "diagnose" ? "回答上面的问题，或说说你在纠结的类型..." : "说说你的情况或两难场景..."}
+            onChange={(e) => {
+              setInput(e.target.value);
+              e.target.style.height = "auto";
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`;
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
               }
-              onChange={(e) => {
-                setInput(e.target.value);
-                e.target.style.height = "auto";
-                e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`;
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              className="flex-1 resize-none bg-transparent px-2 py-1 text-[0.875rem] text-ink placeholder:text-ink-ghost focus:outline-none leading-relaxed"
-            />
+            }}
+            className="min-h-[42px] w-full resize-none bg-transparent text-[0.9375rem] leading-relaxed text-ink placeholder:text-ink-faint focus:outline-none"
+          />
+
+          <div className="mt-2 flex items-center justify-between pt-2 rule-t">
+            <span className="text-[0.6875rem] text-ink-faint">
+              Enter 发送 · Shift + Enter 换行 · 点击类型代码看档案
+            </span>
 
             {loading ? (
               <button
                 type="button"
                 onClick={handleStop}
-                title="停止生成"
-                className="shrink-0 p-2 rounded-md bg-ink text-paper hover:opacity-80 transition-opacity"
+                className="inline-flex h-7 items-center gap-1.5 rounded border border-rule-strong bg-paper px-3 text-[0.75rem] font-medium text-ink transition-colors hover:bg-rule/40 active:scale-95"
               >
-                <Square className="h-4 w-4 fill-current" />
+                <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" />
+                <span>停止</span>
               </button>
             ) : (
               <button
                 type="button"
                 disabled={!input.trim()}
                 onClick={() => handleSend()}
-                title="发送 (Enter)"
                 className={cn(
-                  "shrink-0 p-2 rounded-md transition-all",
+                  "inline-flex h-7 items-center justify-center rounded px-3.5 text-[0.75rem] font-medium transition-all",
                   input.trim()
-                    ? "bg-ink text-paper hover:opacity-80"
-                    : "bg-rule text-ink-ghost cursor-not-allowed"
+                    ? "bg-ink text-paper shadow-xs hover:opacity-90 active:scale-95 cursor-pointer"
+                    : "bg-rule/60 text-ink-faint border border-rule cursor-not-allowed"
                 )}
               >
-                <Send className="h-4 w-4" />
+                发送
               </button>
             )}
           </div>
-          <div className="mt-1.5 flex items-center justify-between text-[0.625rem] text-ink-faint font-mono px-1">
-            <span>Enter 发送，Shift + Enter 换行</span>
-            <span>点击回答中的 MBTI 代码可调出完整类型档案</span>
-          </div>
         </div>
       </div>
+
+      <CitationSheet target={citation} onClose={() => setCitation(null)} />
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Thinking: one line while it runs, folded by default, click to open the trace
 // ---------------------------------------------------------------------------
 
 function formatToolLabel(name: string, args?: Record<string, unknown>): string {
   switch (name) {
     case "search_claims":
-      return `检索观点库: ${(args?.query as string) || (args?.type as string) || "综合"}`;
+      return `检索观点 ${(args?.query as string) || (args?.type as string) || ""}`.trim();
     case "get_type_profile":
-      return `查询档案: ${(args?.type as string) || ""}`;
+      return `读取档案 ${(args?.type as string) || ""}`.trim();
     case "get_pair_dynamics":
-      return `分析合盘: ${(args?.type1 as string) || ""} × ${(args?.type2 as string) || ""}`;
+      return `读取配对 ${(args?.type1 as string) || ""} × ${(args?.type2 as string) || ""}`;
     case "get_cognitive_axis":
-      return `八维解析: ${(args?.axisOrFunction as string) || ""}`;
+      return `读取功能 ${(args?.axisOrFunction as string) || ""}`.trim();
+    case "query_graph":
+      return `查询图谱${args?.purpose ? ` · ${args.purpose as string}` : ""}`;
     default:
-      return `执行: ${name}`;
+      return name;
   }
+}
+
+/** The line shown while folded and streaming: the running tool, else the latest line of thought. */
+function currentLine(toolEvents: ToolEvent[], thinking: string | undefined): string {
+  const running = toolEvents.find((t) => t.status === "running");
+  if (running) return formatToolLabel(running.name, running.args);
+  if (thinking) {
+    const lines = thinking
+      .split("\n")
+      .map((l) => l.replace(/^[-*\d.\s]+/, "").trim())
+      .filter(Boolean);
+    const last = lines[lines.length - 1];
+    if (last) return last;
+  }
+  return "思考中";
+}
+
+function ThinkingLine({
+  toolEvents,
+  thinking,
+  streaming,
+  open,
+  onToggle,
+}: {
+  toolEvents: ToolEvent[];
+  thinking?: string;
+  streaming: boolean;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const steps = toolEvents.length + (thinking ? 1 : 0);
+  const line = streaming ? currentLine(toolEvents, thinking) : "思考过程";
+
+  return (
+    <div className="text-[0.75rem] leading-relaxed">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="flex max-w-full items-baseline gap-2 text-left text-ink-faint transition-colors hover:text-ink-soft"
+      >
+        <span className={cn("shrink-0 font-mono text-[0.625rem]", streaming && "animate-pulse")}>{open ? "−" : "+"}</span>
+        <span className="min-w-0 truncate">{line}</span>
+        {!streaming && steps > 0 && <span className="shrink-0 font-mono text-[0.625rem] text-ink-ghost">{steps}</span>}
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: easeOut }}
+            className="overflow-hidden"
+          >
+            <div className="rule-l mt-2 space-y-2 pl-3 text-ink-soft">
+              {toolEvents.map((t, idx) => (
+                <div key={idx}>
+                  <p className="font-mono text-[0.6875rem] text-ink-faint">
+                    {formatToolLabel(t.name, t.args)}
+                    {t.summary && <span className="text-ink-ghost"> · {t.summary}</span>}
+                  </p>
+                  {t.name === "query_graph" && typeof t.args?.cypher === "string" && (
+                    <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all font-mono text-[0.6875rem] leading-relaxed text-ink-soft">
+                      {t.args.cypher}
+                    </pre>
+                  )}
+                </div>
+              ))}
+              {thinking && <p className="whitespace-pre-wrap">{thinking}</p>}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Citation sheet: the source and the claims from it that the reply used
+// ---------------------------------------------------------------------------
+
+function CitationSheet({ target, onClose }: { target: CitationTarget | null; onClose: () => void }) {
+  useEffect(() => {
+    if (!target) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [target, onClose]);
+
+  return (
+    <Portal>
+      <AnimatePresence>
+        {target && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[190] bg-ink/10 backdrop-blur-sm"
+              onClick={onClose}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.35, ease: easeOut }}
+              role="dialog"
+              aria-modal
+              aria-label={`来源 ${target.sourceIndex}`}
+              className="fixed left-1/2 top-1/2 z-[200] max-h-[84dvh] w-[92vw] max-w-xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto bg-paper px-6 py-6 shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] sm:px-8 sm:py-8"
+            >
+              <button
+                onClick={onClose}
+                type="button"
+                aria-label="关闭"
+                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center text-ink-faint transition-colors hover:text-ink"
+              >
+                <svg className="h-4 w-4" fill="none" strokeLinecap="round" strokeWidth="1" viewBox="0 0 24 24" stroke="currentColor">
+                  <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              <span className="eyebrow font-mono text-[0.625rem]">#{String(target.sourceIndex).padStart(3, "0")}</span>
+              <h3 className="mt-1.5 pr-8 text-[1.0625rem] font-medium leading-snug tracking-tight text-ink sm:text-[1.125rem]">
+                {target.title}
+              </h3>
+
+              {target.claims.length > 0 ? (
+                <div className="mt-4">
+                  {target.claims.map((c) => (
+                    <div key={c.id} className="rule-t py-3 sm:py-4">
+                      {c.kind && <span className="eyebrow text-[0.625rem]">{c.kind}</span>}
+                      <p className="mt-1 text-[0.875rem] leading-[1.8] text-ink">{c.statement}</p>
+                      {c.advice && <p className="mt-1.5 text-[0.8125rem] leading-[1.7] text-ink-soft">→ {c.advice}</p>}
+                      {c.boundary && <p className="mt-1 text-[0.8125rem] leading-[1.7] text-ink-faint">{c.boundary}</p>}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="rule-t mt-4 pt-3 text-[0.8125rem] text-ink-faint">这条回答没有把这一专场的具体观点带回来。</p>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </Portal>
+  );
 }
 
 // ---------------------------------------------------------------------------
 // Markdown & MBTI Chip Renderer
 // ---------------------------------------------------------------------------
 
-function MarkdownRenderer({
-  content,
-  onTypeClick,
-}: {
-  content: string;
+interface InlineHandlers {
   onTypeClick: (type: string) => void;
-}) {
+  onCitationClick: (mark: string) => void;
+}
+
+function MarkdownRenderer({ content, onTypeClick, onCitationClick }: { content: string } & InlineHandlers) {
   const lines = content.split("\n");
+  const h = { onTypeClick, onCitationClick };
 
   return (
-    <div className="space-y-2 text-ink">
+    <div className="max-w-[72ch] space-y-2 text-[0.9375rem] leading-[1.85] text-ink">
       {lines.map((line, idx) => {
         const trimmed = line.trim();
 
-        if (trimmed.startsWith("### ")) {
+        if (/^#{1,3} /.test(trimmed)) {
           return (
-            <h3 key={idx} className="text-sm font-semibold text-ink pt-2 pb-0.5 tracking-tight">
-              {renderFormattedInline(trimmed.slice(4), onTypeClick)}
-            </h3>
-          );
-        }
-        if (trimmed.startsWith("## ")) {
-          return (
-            <h2 key={idx} className="text-base font-semibold text-ink pt-2.5 pb-1 tracking-tight">
-              {renderFormattedInline(trimmed.slice(3), onTypeClick)}
-            </h2>
-          );
-        }
-        if (trimmed.startsWith("# ")) {
-          return (
-            <h1 key={idx} className="text-lg font-bold text-ink pt-3 pb-1 tracking-tight">
-              {renderFormattedInline(trimmed.slice(2), onTypeClick)}
-            </h1>
+            <p key={idx} className="pt-2 font-medium tracking-tight">
+              {renderInline(trimmed.replace(/^#{1,3} /, ""), h)}
+            </p>
           );
         }
         if (trimmed.startsWith("> ")) {
           return (
-            <blockquote
-              key={idx}
-              className="border-l-2 border-rule-strong pl-3 py-1 my-1 text-ink-soft text-[0.8125rem] italic"
-            >
-              {renderFormattedInline(trimmed.slice(2), onTypeClick)}
+            <blockquote key={idx} className="rule-l pl-3 text-[0.875rem] text-ink-soft">
+              {renderInline(trimmed.slice(2), h)}
             </blockquote>
           );
         }
-        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+        const list = trimmed.match(/^(\d+\.|[-*]) /);
+        if (list) {
+          const marker = list[1];
           return (
-            <div key={idx} className="flex items-start gap-2 pl-2">
-              <span className="text-ink-faint select-none">•</span>
-              <div className="flex-1">{renderFormattedInline(trimmed.slice(2), onTypeClick)}</div>
+            <div key={idx} className="flex items-start gap-2 pl-1">
+              <span className="w-4 shrink-0 select-none font-mono text-[0.75rem] leading-[1.85] text-ink-faint">
+                {marker === "-" || marker === "*" ? "·" : marker}
+              </span>
+              <div className="min-w-0 flex-1">{renderInline(trimmed.slice(list[0].length), h)}</div>
             </div>
           );
         }
-        if (trimmed === "---") {
-          return <hr key={idx} className="border-t border-rule my-3" />;
-        }
-        if (!trimmed) {
-          return <div key={idx} className="h-1.5" />;
-        }
+        if (trimmed === "---") return <hr key={idx} className="rule-t my-3 border-0" />;
+        if (!trimmed) return <div key={idx} className="h-1" />;
 
-        return <p key={idx}>{renderFormattedInline(line, onTypeClick)}</p>;
+        return <p key={idx}>{renderInline(line, h)}</p>;
       })}
     </div>
   );
 }
 
-function renderFormattedInline(text: string, onTypeClick: (t: string) => void): React.ReactNode {
-  // Regex to split by bold (**...**), code (`...`), citations ([#123 ...]), or MBTI types
-  const regex = /(\*\*[^*]+\*\*|`[^`]+`|\[#[0-9]+[^\]]*\]|\b(?:INTJ|INTP|ENTJ|ENTP|INFJ|INFP|ENFJ|ENFP|ISTJ|ISFJ|ESTJ|ESFJ|ISTP|ISFP|ESTP|ESFP)\b)/g;
+const INLINE =
+  /(\*\*[^*]+\*\*|\*[^*\s][^*]*\*|`[^`]+`|\[#[0-9a-zA-Z][^\]]*\]|\b(?:INTJ|INTP|ENTJ|ENTP|INFJ|INFP|ENFJ|ENFP|ISTJ|ISFJ|ESTJ|ESFJ|ISTP|ISFP|ESTP|ESFP)\b)/g;
 
-  const parts = text.split(regex);
-
-  return parts.map((part, i) => {
+function renderInline(text: string, h: InlineHandlers): React.ReactNode {
+  return text.split(INLINE).map((part, i) => {
     if (!part) return null;
 
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={i} className="font-semibold text-ink">
-          {renderFormattedInline(part.slice(2, -2), onTypeClick)}
+        <strong key={i} className="font-medium text-ink">
+          {renderInline(part.slice(2, -2), h)}
         </strong>
       );
     }
-
+    if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
+      return (
+        <em key={i} className="not-italic text-ink-faint">
+          {renderInline(part.slice(1, -1), h)}
+        </em>
+      );
+    }
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
-        <code key={i} className="font-mono text-xs px-1.5 py-0.5 rounded bg-rule/50 text-ink">
+        <code key={i} className="font-mono text-[0.8125rem] text-ink">
           {part.slice(1, -1)}
         </code>
       );
     }
-
     if (part.startsWith("[#") && part.endsWith("]")) {
+      // A footnote mark: the source number, click for the claims behind it.
+      const key = part.slice(2, -1).trim().split(/\s+/)[0];
+      const label = /^\d+$/.test(key) ? key : key.replace(/^c0*(\d+)-.*$/, "$1");
       return (
-        <span
+        <button
           key={i}
-          className="inline-flex items-center px-1.5 py-0.2 rounded font-mono text-[0.6875rem] text-ink font-medium bg-rule/60 border border-rule mx-0.5"
+          type="button"
+          onClick={() => h.onCitationClick(part)}
+          title={part.slice(1, -1)}
+          className="mx-0.5 inline-block -translate-y-[0.35em] font-mono text-[0.625rem] leading-none text-ink-faint transition-colors hover:text-ink"
         >
-          {part.slice(1, -1)}
-        </span>
+          {label}
+        </button>
       );
     }
-
     if (TYPE_CODES.includes(part)) {
       return (
         <button
           key={i}
           type="button"
-          onClick={() => onTypeClick(part)}
-          title={`点击查看 ${part} 完整档案`}
-          className="inline-flex items-center px-1.5 py-0.2 rounded font-mono text-xs font-semibold text-ink bg-rule hover:bg-ink hover:text-paper transition-colors mx-0.5 cursor-pointer"
+          onClick={() => h.onTypeClick(part)}
+          title={`查看 ${part} 档案`}
+          className="font-mono text-[0.875rem] text-ink underline decoration-rule-strong underline-offset-4 transition-colors hover:decoration-ink"
         >
           {part}
         </button>
       );
     }
-
     return part;
   });
 }
