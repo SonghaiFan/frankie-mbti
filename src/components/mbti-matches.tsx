@@ -67,9 +67,12 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
     return mbtiTypes.find((t) => t.type === partnerId);
   };
 
+  // Chips follow the pair's own order: the readings speak of pair[0] as ta and pair[1] as 你.
   const pairs = relevant.flatMap((match) => {
     const partner = partnerOf(match);
-    return partner ? [{ partner, match, relation: relationOf(match.pair[0], match.pair[1]) }] : [];
+    if (!partner) return [];
+    const [first, second] = match.pair[0] === type.type ? [type, partner] : [partner, type];
+    return [{ partner, first, second, match, relation: relationOf(match.pair[0], match.pair[1]) }];
   });
   if (pairs.length === 0) return null;
 
@@ -80,25 +83,21 @@ export function MBTIMatches({ type }: MBTIMatchesProps) {
       note="按功能栈的结构关系配对，而非印象。"
     >
       <div>
-        {pairs.map(({ partner, match, relation }) => (
+        {pairs.map(({ partner, first, second, match, relation }) => (
           <div
             key={partner.type}
             className="rule-t grid grid-cols-1 gap-4 py-4 sm:gap-6 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16"
           >
             {/* The pairing */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
-              <TypeChip type={type} onClick={() => setSelectedType(type)} />
+              <TypeChip type={first} onClick={() => setSelectedType(first)} />
 
               <span
                 className="hidden h-px flex-1 sm:block"
                 style={{ backgroundColor: accent, opacity: 0.35 }}
               />
 
-              <TypeChip
-                type={partner}
-                align="right"
-                onClick={() => setSelectedType(partner)}
-              />
+              <TypeChip type={second} align="right" onClick={() => setSelectedType(second)} />
             </div>
 
             {/* The reading */}

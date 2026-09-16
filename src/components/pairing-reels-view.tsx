@@ -279,7 +279,8 @@ export function PairingReelsView() {
                   {pair.name}
                 </p>
                 <p className="mt-1 text-[0.75rem] text-ink-ghost sm:mt-4 sm:text-[0.8125rem]">
-                  {left.type} × {right.type}
+                  {/* Pair order, not reel order: the readings speak of the first as ta. */}
+                  {pair.pair[0]} × {pair.pair[1]}
                   {official && " · 官方推荐"}
                 </p>
               </div>

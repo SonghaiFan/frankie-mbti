@@ -8,14 +8,18 @@ import { useMBTIStore } from "@/store/mbti-store";
 import { accentOf, accentWash } from "@/styles/mbti-styles";
 
 const ORDER = ["Ni", "Ne", "Ti", "Te", "Fi", "Fe", "Si", "Se"];
+const INFERIOR = cognitiveFunctions.levels[3];
 const { judging, perceiving } = cognitiveFunctions.categories;
 const FUNCTIONS = { ...judging.functions, ...perceiving.functions };
 
 /** The two types that lead with a function, in the order the type list uses. */
 const leadersOf = (code: string) => mbtiTypes.filter((t) => t.cognitiveFunctions.startsWith(code));
 
-/** The inferior sits opposite the dominant: same letter, other attitude. */
-const inferiorOf = (code: string) => code[0] + (code[1] === "i" ? "e" : "i");
+/** The inferior (slot 4) is the other end of the dominant's axis: Ni ↔ Se, Ti ↔ Fe … */
+const inferiorOf = (code: string) => {
+  const axis = cognitiveFunctions.axes.find((ax) => ax.a === code || ax.b === code);
+  return axis ? (axis.a === code ? axis.b : axis.a) : "";
+};
 
 function TypeChip({ type, onClick }: { type: MBTIType; onClick: () => void }) {
   return (
@@ -131,7 +135,7 @@ export function DominantFunctionsView() {
                 <Row label="两张脸">{d.twoFaces}</Row>
                 <Row label="感情里">{d.inLove}</Row>
                 <Row label="过头的时候">{d.overdrive}</Row>
-                <Row label={`灵魂功能 ${inferiorOf(code)}`}>{d.inferior}</Row>
+                <Row label={`${INFERIOR.name.split(" ")[0]} · ${INFERIOR.cnRole} ${inferiorOf(code)}`}>{d.inferior}</Row>
                 <Row label="怎么练">{d.grow}</Row>
               </div>
             </motion.article>

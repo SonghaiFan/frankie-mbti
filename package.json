@@ -13,6 +13,7 @@
     "graph:verify": "node --no-warnings scripts/graph/migrate.mts --verify"
   },
   "dependencies": {
+    "@google/genai": "^2.22.0",
     "@radix-ui/react-dialog": "^1.1.8",
     "@radix-ui/react-progress": "^1.1.4",
     "@radix-ui/react-slot": "^1.2.0",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import Portal from "./portal";
 import { MBTIType } from "@/types/mbti";
@@ -228,6 +229,16 @@ export function MBTITest() {
                         {String(currentQuestion + 1).padStart(2, "0")} / {String(questions.length).padStart(2, "0")}
                       </span>
                     </div>
+                    <div className="rule-t mt-4 flex items-center justify-between pt-3 text-[0.75rem]">
+                      <span className="text-ink-soft">想要摆脱单选题，深入八维认知推导？</span>
+                      <Link
+                        href="/consult?mode=diagnose"
+                        onClick={closeModal}
+                        className="font-medium text-ink hover:underline"
+                      >
+                        开启 AI 场景推导 →
+                      </Link>
+                    </div>
                   </div>
                 ) : (
                   <motion.div
@@ -259,6 +270,16 @@ export function MBTITest() {
                       >
                         在首页查看 →
                       </button>
+                    </div>
+                    <div className="rule-t flex items-center justify-between pt-3 text-[0.75rem]">
+                      <span className="text-ink-soft">对结果存疑或处于两型摇摆期？</span>
+                      <Link
+                        href={`/consult?mode=diagnose&q=${testResult.type}`}
+                        onClick={closeModal}
+                        className="font-medium text-ink hover:underline"
+                      >
+                        找 AI 架构师做深度推导 →
+                      </Link>
                     </div>
                   </motion.div>
                 )}

@@ -88,9 +88,7 @@ npm run graph:verify         # 打印节点/关系统计与完整性检查
 
 非观点层：`Letter-[:BELONGS_TO_DIMENSION]->Dimension`、`Function-[:PAIRED_AXIS]->Function`、
 `Type-[:COMPOSED_OF {slot}]->Letter`、`Type-[:HAS_FUNCTION_SLOT {slot 1-8, role}]->Function`、`Type-[:HAS_TRAIT {category}]->Trait`、
-`Type-[:BELONGS_TO_GROUP {category}]->Group`；类型之间按 `mbtiMatches` 的读法分为 `SHADOW_MIRROR` / `DOMINANT_INFERIOR` /
-`AUXILIARY_TERTIARY` / `DUAL_COMPLEMENT` / `PAIR_DYNAMIC`，再加上由字母推出的 `SHARED_DOMINANT` / `QUASI_IDENTICAL`，
-以及 `typeLore` 里的 `MISTYPES_AS` / `HARBORS_INNER`。`Source` 节点只有编号和标题。
+`Type-[:BELONGS_TO_GROUP {category}]->Group`；类型两两之间各有一条读法（`mbtiMatches`，136 对，含名字、分数、人话解释），关系类型由两个功能栈的相对位置算出（`pairRelations` / `relationOf`，14 种：`SAME_TYPE`、`SHADOW_MIRROR`、`DUAL_COMPLEMENT`、`DOMINANT_INFERIOR`、`AUXILIARY_TERTIARY`、`SHARED_DOMINANT`、`QUASI_IDENTICAL`、`HALF_SHADOW`…），两个方向各写一条；另有 `typeLore` 里的 `MISTYPES_AS` / `HARBORS_INNER`。`Source` 节点只有编号和标题。
 
 观点层：`Claim-[:ABOUT]->Type|Group`、`Claim-[:GROUNDED_IN {evidence}]->Function`、`Claim-[:SHOWS_TRAIT]->Trait`、
 `Claim-[:IN_CONTEXT]->Context`、`Claim-[:FROM_SOURCE]->Source`、`Type-[:NICKNAMED {count}]->Nickname`。

@@ -333,7 +333,7 @@ export function TypeStage() {
               {stack.map((fn, i) => (
                 <div key={fn}>
                   <dt className="text-[0.625rem] tracking-[0.16em] text-ink-ghost sm:text-[0.6875rem]">
-                    {cognitiveFunctions.levels[i]?.name.split(" ")[0]}
+                    {cognitiveFunctions.levels[i]?.name.split(" ")[0]} · {cognitiveFunctions.levels[i]?.cnRole}
                   </dt>
                   <dd
                     className="mt-0.5 text-xl font-medium leading-none tracking-tight sm:mt-1 sm:text-2xl"

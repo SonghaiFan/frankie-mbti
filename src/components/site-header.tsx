@@ -17,6 +17,7 @@ const views = [
   { href: "/pairing", name: "配对", nameEn: "Pairing" },
   { href: "/compact", name: "一览表", nameEn: "Index" },
   { href: "/claims", name: "观点", nameEn: "Claims" },
+  { href: "/consult", name: "AI咨询", nameEn: "Consult" },
 ];
 
 export function SiteHeader() {

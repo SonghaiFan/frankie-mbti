@@ -33,7 +33,17 @@ export async function withNeo4jSession<T>(
   try {
     return await action(session);
   } catch (error) {
-    console.error("Neo4j session execution error:", error);
+    const isUnreachable =
+      error instanceof Error &&
+      (error.message.includes("ENOTFOUND") ||
+        error.message.includes("ServiceUnavailable") ||
+        (error as { code?: string }).code === "ServiceUnavailable");
+
+    if (isUnreachable) {
+      console.warn("[Neo4j] AuraDB unreachable (ENOTFOUND / ServiceUnavailable). Using local data fallback.");
+    } else {
+      console.error("Neo4j session execution error:", error);
+    }
     return null;
   } finally {
     await session.close();

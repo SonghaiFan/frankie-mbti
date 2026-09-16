@@ -1111,42 +1111,43 @@ export const cognitiveFunctions = {
  * signature is where a's four functions land in b's eight Beebe slots
  * (1 英雄 … 4 灵魂, 5 宿敌 … 8 恶魔). Sixteen signatures cover every pair;
  * two relations read differently from each side, so they appear twice.
- * `reading` speaks of pair[0] as ta and pair[1] as 你.
+ * `reading` speaks of pair[0] as ta and pair[1] as 你, naming slots by
+ * position and Beebe role together: 主导（英雄）… 第八位（恶魔）.
  */
 export const pairRelations: PairRelation[] = [
   { signature: "1234", name: "同类", rel: "SAME_TYPE",
-    reading: "同一套功能栈：英雄一样，灵魂也一样；懂得最快，也一起卡在同一个劣势上" },
+    reading: "同一套功能栈：主导（英雄）一样，劣势（灵魂）也一样；懂得最快，也一起卡在同一个劣势上" },
   { signature: "5678", name: "镜像对应", rel: "SHADOW_MIRROR", core: true,
-    reading: "ta 的前四个功能正好是你的后四个：ta 的英雄是你的宿敌，ta 的灵魂是你的恶魔——你压着不用的那一面，ta 每天在用" },
+    reading: "ta 的前四位正好是你的后四位：ta 的主导（英雄）是你的第五位（宿敌），ta 的劣势（灵魂）是你的第八位（恶魔）——你压着不用的那一面，ta 每天在用" },
   { signature: "4321", name: "字母完全相反", rel: "DUAL_COMPLEMENT", core: true,
-    reading: "功能栈整个倒过来：ta 的英雄是你的灵魂，ta 的父母是你的少年——ta 最顺手的正是你最想学的，反过来也一样" },
+    reading: "功能栈整个倒过来：ta 的主导（英雄）是你的劣势（灵魂），ta 的辅助（父母）是你的第三（少年）——ta 最顺手的正是你最想学的，反过来也一样" },
   { signature: "4671", name: "主导=劣势", rel: "DOMINANT_INFERIOR", core: true,
-    reading: "ta 的英雄是你的灵魂，你的英雄也是 ta 的灵魂；中间两个功能落在对方的批判和小丑里——互相戳到最软的地方，也互相补最缺的" },
+    reading: "ta 的主导（英雄）是你的劣势（灵魂），你的主导也是 ta 的劣势；中间两位落在对方的第六（批判）和第七（小丑）里——互相戳到最软的地方，也互相补最缺的" },
   { signature: "5328", name: "辅助=第三", rel: "AUXILIARY_TERTIARY", core: true,
-    reading: "ta 的父母是你的少年，你的父母是 ta 的少年；两个英雄互为宿敌，两个灵魂互为恶魔——做事能搭上，看世界的方式对着干" },
+    reading: "ta 的辅助（父母）是你的第三（少年），你的辅助也是 ta 的第三；两个主导（英雄）互为第五位（宿敌），两个劣势（灵魂）互为第八位（恶魔）——做事能搭上，看世界的方式对着干" },
   { signature: "2143", name: "主辅对调", rel: "DOMINANT_AUXILIARY_SWAP",
-    reading: "前两个功能一样、顺序对调：ta 的英雄是你的父母，你的英雄是 ta 的父母——同一色系里最像的两个人，只差谁站前面" },
+    reading: "前两位功能一样、顺序对调：ta 的主导（英雄）是你的辅助（父母），你的主导是 ta 的辅助——同一色系里最像的两个人，只差谁站前面" },
   { signature: "1764", name: "同主导", rel: "SHARED_DOMINANT",
-    reading: "英雄一样，灵魂也一样，中间两个反向：往同一个方向看，一个讲理一个讲情，做事的时候才发现不是一路" },
+    reading: "主导（英雄）一样，劣势（灵魂）也一样，中间两位反向：往同一个方向看，一个讲理一个讲情，做事的时候才发现不是一路" },
   { signature: "8235", name: "同辅助", rel: "SHARED_MIDDLE",
-    reading: "中间两个功能一样，两头全反：做事的方式一致，看世界的方式互为对方的恶魔——共事最顺，理解最难" },
+    reading: "中间两位功能一样，两头全反：做事的方式一致，两个主导（英雄）互为对方的第八位（恶魔）——共事最顺，理解最难" },
   { signature: "6587", name: "一字之差", rel: "QUASI_IDENTICAL",
-    reading: "只差一个字母，四个功能却全部反向：ta 的英雄是你的批判，ta 的父母是你的宿敌——看着像一家人，处起来处处拧" },
+    reading: "只差一个字母，四个功能却全部反向：ta 的主导（英雄）是你的第六位（批判），ta 的辅助（父母）是你的第五位（宿敌）——看着像一家人，处起来处处拧" },
   { signature: "3412", name: "前后对调", rel: "FRONT_BACK_SWAP",
-    reading: "ta 的前两个功能正是你的后两个，你的前两个也是 ta 的后两个：ta 擅长的你在练，你擅长的 ta 在练——互相补课，也互相戳短板" },
+    reading: "ta 的前两位正是你的后两位，你的前两位也是 ta 的后两位：ta 的主导（英雄）是你的第三（少年），ta 的辅助（父母）是你的劣势（灵魂）——互相补课，也互相戳短板" },
   { signature: "8765", name: "影子倒转", rel: "SHADOW_REVERSED",
-    reading: "ta 的四个功能全在你的影子里，而且头尾颠倒：ta 的英雄是你的恶魔，ta 的灵魂是你的宿敌——最看不懂对方，也最邪门的吸引" },
+    reading: "ta 的四位功能全在你的影子里，而且头尾颠倒：ta 的主导（英雄）是你的第八位（恶魔），ta 的劣势（灵魂）是你的第五位（宿敌）——最看不懂对方，也最邪门的吸引" },
   { signature: "7856", name: "影子错位", rel: "SHADOW_SCRAMBLED",
-    reading: "ta 的四个功能全落在你的影子里，还是乱序的：ta 的英雄是你的小丑，ta 的父母是你的恶魔——最陌生的一对，得靠日子磨" },
+    reading: "ta 的四位功能全落在你的影子里，还是乱序的：ta 的主导（英雄）是你的第七位（小丑），ta 的辅助（父母）是你的第八位（恶魔）——最陌生的一对，得靠日子磨" },
   // Asymmetric: the same relation seen from either side.
   { signature: "6417", name: "半影", rel: "HALF_SHADOW",
-    reading: "ta 的少年是你的英雄，ta 的父母是你的灵魂；ta 的英雄却落在你的批判里——ta 教你最缺的，你挑 ta 最本能的，很甜也很虐" },
+    reading: "ta 的第三（少年）是你的主导（英雄），ta 的辅助（父母）是你的劣势（灵魂）；ta 的主导（英雄）却落在你的第六位（批判）里——ta 教你最缺的，你挑 ta 最本能的，很甜也很虐" },
   { signature: "3582", name: "半影", rel: "HALF_SHADOW",
-    reading: "ta 的英雄是你的少年，ta 的灵魂是你的父母；ta 的父母却落在你的宿敌里——你教 ta 最缺的，ta 挑你最本能的，很甜也很虐" },
+    reading: "ta 的主导（英雄）是你的第三（少年），ta 的劣势（灵魂）是你的辅助（父母）；ta 的辅助（父母）却落在你的第五位（宿敌）里——你教 ta 最缺的，ta 挑你最本能的，很甜也很虐" },
   { signature: "7146", name: "共一个功能", rel: "SHARED_ONE",
-    reading: "只共用一个功能：ta 的父母是你的英雄；ta 的英雄却是你的小丑，ta 的少年是你的灵魂——能聊到一块，节奏对不上" },
+    reading: "只共用一个功能：ta 的辅助（父母）是你的主导（英雄）；ta 的主导（英雄）却是你的第七位（小丑），ta 的第三（少年）是你的劣势（灵魂）——能聊到一块，节奏对不上" },
   { signature: "2853", name: "共一个功能", rel: "SHARED_ONE",
-    reading: "只共用一个功能：ta 的英雄是你的父母；ta 的父母却是你的恶魔，ta 的灵魂是你的少年——能聊到一块，节奏对不上" },
+    reading: "只共用一个功能：ta 的主导（英雄）是你的辅助（父母）；ta 的辅助（父母）却是你的第八位（恶魔），ta 的劣势（灵魂）是你的第三（少年）——能聊到一块，节奏对不上" },
 ];
 
 const stackOf = new Map(mbtiTypes.map((t) => [t.type, t.cognitiveFunctions.split(" ")]));

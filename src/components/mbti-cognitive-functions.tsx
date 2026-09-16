@@ -104,7 +104,9 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               )}
             >
               <div className="flex items-baseline justify-between gap-3">
-                <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{level?.name}</span>
+                <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">
+                  {level?.name} · {level?.cnRole}
+                </span>
                 <Chevron open={isOpen} />
               </div>
               <p
