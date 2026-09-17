@@ -8,12 +8,33 @@ import { mbtiTypes } from "@/data/core/mbti-data";
 import sources from "@/data/claims/sources.json";
 import { useMBTIStore } from "@/store/mbti-store";
 import Portal from "./portal";
+import { ThinkingVisual, StreamingCursor } from "./thinking-visual";
 import type { CitedClaim } from "@/services/mbti-agent-service";
 
 const SHELL = "mx-auto w-full max-w-[860px] px-4 sm:px-10";
 const TYPE_CODES = mbtiTypes.map((t) => t.type);
 const SOURCE_TITLE = new Map(sources.map((s) => [s.index, s.title]));
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
+
+const citationBackdropVariants = {
+  closed: { opacity: 0, transition: { duration: 0.15, ease: "linear" as const } },
+  open: { opacity: 1, transition: { duration: 0.25, ease: "linear" as const } },
+};
+
+const citationModalVariants = {
+  closed: {
+    opacity: 0,
+    scale: 0.97,
+    y: 8,
+    transition: { duration: 0.15, ease: easeSmoothOut },
+  },
+  open: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.25, ease: easeSmoothOut },
+  },
+};
 
 type Mode = "diagnose" | "consult";
 
@@ -331,12 +352,18 @@ export function AgentChatView() {
                 onClick={() => setMode(value)}
                 aria-pressed={isActive}
                 className={cn(
-                  "relative py-0.5 text-[0.8125rem] transition-colors duration-300 sm:text-[0.9375rem]",
+                  "relative py-0.5 text-[0.8125rem] transition-colors duration-150 sm:text-[0.9375rem]",
                   isActive ? "text-ink" : "text-ink-ghost hover:text-ink-soft"
                 )}
               >
                 {label}
-                {isActive && <span className="absolute inset-x-0 -bottom-1 block h-px bg-ink" />}
+                {isActive && (
+                  <motion.span
+                    layoutId="agent-mode-tab"
+                    className="absolute inset-x-0 -bottom-1 block h-px bg-ink"
+                    transition={{ duration: 0.25, ease: easeSmoothOut }}
+                  />
+                )}
               </button>
             );
           })}
@@ -346,11 +373,11 @@ export function AgentChatView() {
           <button
             type="button"
             onClick={() => setShowSettings((v) => !v)}
-            className={cn("transition-colors", showSettings || customKey ? "text-ink" : "text-ink-faint hover:text-ink")}
+            className={cn("transition-colors duration-150", showSettings || customKey ? "text-ink" : "text-ink-faint hover:text-ink")}
           >
             设置
           </button>
-          <button type="button" onClick={handleClearMessages} className="text-ink-faint transition-colors hover:text-ink">
+          <button type="button" onClick={handleClearMessages} className="text-ink-faint transition-colors duration-150 hover:text-ink">
             清空
           </button>
         </div>
@@ -363,7 +390,7 @@ export function AgentChatView() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: easeOut }}
+            transition={{ duration: 0.25, ease: easeSmoothOut }}
             className="overflow-hidden"
           >
             <div className={cn(SHELL, "rule-b space-y-3 py-4")}>
@@ -440,8 +467,8 @@ export function AgentChatView() {
                   {m.engine === "offline_graph" && " · 本地图谱"}
                 </span>
 
-                {((m.toolEvents && m.toolEvents.length > 0) || m.thinking) && (
-                  <ThinkingLine
+                {((m.toolEvents && m.toolEvents.length > 0) || m.thinking || m.isStreaming) && (
+                  <ThinkingVisual
                     toolEvents={m.toolEvents || []}
                     thinking={m.thinking}
                     streaming={!!m.isStreaming}
@@ -453,14 +480,11 @@ export function AgentChatView() {
                 {m.content ? (
                   <MarkdownRenderer
                     content={m.content}
+                    isStreaming={!!m.isStreaming}
                     onTypeClick={openTypeModal}
                     onCitationClick={(mark) => openCitation(mark, m)}
                   />
-                ) : (
-                  m.isStreaming &&
-                  !m.thinking &&
-                  !(m.toolEvents && m.toolEvents.length) && <span className="text-[0.875rem] text-ink-ghost">…</span>
-                )}
+                ) : null}
               </div>
             )
           )}
@@ -469,7 +493,7 @@ export function AgentChatView() {
       </div>
 
       {/* Composer */}
-      <div className={cn(SHELL, "rule-t pt-3 pb-4 sm:pt-4 sm:pb-6")}>
+      <div className={cn(SHELL, "rule-t pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pt-4 sm:pb-6")}>
         {fresh && (
           <div className="scroll-quiet mb-3 flex items-center gap-2 overflow-x-auto pb-1">
             <span className="eyebrow text-[0.625rem] shrink-0 text-ink-faint mr-1">推荐问答:</span>
@@ -510,7 +534,7 @@ export function AgentChatView() {
 
           <div className="mt-2 flex items-center justify-between pt-2 rule-t">
             <span className="text-[0.6875rem] text-ink-faint">
-              Enter 发送 · Shift + Enter 换行 · 点击类型代码看档案
+              <span className="hidden sm:inline">Enter 发送 · Shift + Enter 换行 · </span>点击类型看档案
             </span>
 
             {loading ? (
@@ -546,102 +570,7 @@ export function AgentChatView() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Thinking: one line while it runs, folded by default, click to open the trace
-// ---------------------------------------------------------------------------
 
-function formatToolLabel(name: string, args?: Record<string, unknown>): string {
-  switch (name) {
-    case "search_claims":
-      return `检索观点 ${(args?.query as string) || (args?.type as string) || ""}`.trim();
-    case "get_type_profile":
-      return `读取档案 ${(args?.type as string) || ""}`.trim();
-    case "get_pair_dynamics":
-      return `读取配对 ${(args?.type1 as string) || ""} × ${(args?.type2 as string) || ""}`;
-    case "get_cognitive_axis":
-      return `读取功能 ${(args?.axisOrFunction as string) || ""}`.trim();
-    case "query_graph":
-      return `查询图谱${args?.purpose ? ` · ${args.purpose as string}` : ""}`;
-    default:
-      return name;
-  }
-}
-
-/** The line shown while folded and streaming: the running tool, else the latest line of thought. */
-function currentLine(toolEvents: ToolEvent[], thinking: string | undefined): string {
-  const running = toolEvents.find((t) => t.status === "running");
-  if (running) return formatToolLabel(running.name, running.args);
-  if (thinking) {
-    const lines = thinking
-      .split("\n")
-      .map((l) => l.replace(/^[-*\d.\s]+/, "").trim())
-      .filter(Boolean);
-    const last = lines[lines.length - 1];
-    if (last) return last;
-  }
-  return "思考中";
-}
-
-function ThinkingLine({
-  toolEvents,
-  thinking,
-  streaming,
-  open,
-  onToggle,
-}: {
-  toolEvents: ToolEvent[];
-  thinking?: string;
-  streaming: boolean;
-  open: boolean;
-  onToggle: () => void;
-}) {
-  const steps = toolEvents.length + (thinking ? 1 : 0);
-  const line = streaming ? currentLine(toolEvents, thinking) : "思考过程";
-
-  return (
-    <div className="text-[0.75rem] leading-relaxed">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        className="flex max-w-full items-baseline gap-2 text-left text-ink-faint transition-colors hover:text-ink-soft"
-      >
-        <span className={cn("shrink-0 font-mono text-[0.625rem]", streaming && "animate-pulse")}>{open ? "−" : "+"}</span>
-        <span className="min-w-0 truncate">{line}</span>
-        {!streaming && steps > 0 && <span className="shrink-0 font-mono text-[0.625rem] text-ink-ghost">{steps}</span>}
-      </button>
-
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: easeOut }}
-            className="overflow-hidden"
-          >
-            <div className="rule-l mt-2 space-y-2 pl-3 text-ink-soft">
-              {toolEvents.map((t, idx) => (
-                <div key={idx}>
-                  <p className="font-mono text-[0.6875rem] text-ink-faint">
-                    {formatToolLabel(t.name, t.args)}
-                    {t.summary && <span className="text-ink-ghost"> · {t.summary}</span>}
-                  </p>
-                  {t.name === "query_graph" && typeof t.args?.cypher === "string" && (
-                    <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all font-mono text-[0.6875rem] leading-relaxed text-ink-soft">
-                      {t.args.cypher}
-                    </pre>
-                  )}
-                </div>
-              ))}
-              {thinking && <p className="whitespace-pre-wrap">{thinking}</p>}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Citation sheet: the source and the claims from it that the reply used
@@ -661,18 +590,18 @@ function CitationSheet({ target, onClose }: { target: CitationTarget | null; onC
         {target && (
           <>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              variants={citationBackdropVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
               className="fixed inset-0 z-[190] bg-ink/10 backdrop-blur-sm"
               onClick={onClose}
             />
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 12 }}
-              transition={{ duration: 0.35, ease: easeOut }}
+              variants={citationModalVariants}
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
+              animate="open"
+              exit="closed"
               role="dialog"
               aria-modal
               aria-label={`来源 ${target.sourceIndex}`}
@@ -682,7 +611,7 @@ function CitationSheet({ target, onClose }: { target: CitationTarget | null; onC
                 onClick={onClose}
                 type="button"
                 aria-label="关闭"
-                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center text-ink-faint transition-colors hover:text-ink"
+                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink"
               >
                 <svg className="h-4 w-4" fill="none" strokeLinecap="round" strokeWidth="1" viewBox="0 0 24 24" stroke="currentColor">
                   <path d="M6 18L18 6M6 6l12 12" />
@@ -725,19 +654,29 @@ interface InlineHandlers {
   onCitationClick: (mark: string) => void;
 }
 
-function MarkdownRenderer({ content, onTypeClick, onCitationClick }: { content: string } & InlineHandlers) {
+function MarkdownRenderer({
+  content,
+  onTypeClick,
+  onCitationClick,
+  isStreaming = false,
+}: {
+  content: string;
+  isStreaming?: boolean;
+} & InlineHandlers) {
   const lines = content.split("\n");
   const h = { onTypeClick, onCitationClick };
 
   return (
     <div className="max-w-[72ch] space-y-2 text-[0.9375rem] leading-[1.85] text-ink">
       {lines.map((line, idx) => {
+        const isLast = idx === lines.length - 1;
         const trimmed = line.trim();
 
         if (/^#{1,3} /.test(trimmed)) {
           return (
             <p key={idx} className="pt-2 font-medium tracking-tight">
               {renderInline(trimmed.replace(/^#{1,3} /, ""), h)}
+              {isStreaming && isLast && <StreamingCursor />}
             </p>
           );
         }
@@ -745,6 +684,7 @@ function MarkdownRenderer({ content, onTypeClick, onCitationClick }: { content: 
           return (
             <blockquote key={idx} className="rule-l pl-3 text-[0.875rem] text-ink-soft">
               {renderInline(trimmed.slice(2), h)}
+              {isStreaming && isLast && <StreamingCursor />}
             </blockquote>
           );
         }
@@ -756,14 +696,30 @@ function MarkdownRenderer({ content, onTypeClick, onCitationClick }: { content: 
               <span className="w-4 shrink-0 select-none font-mono text-[0.75rem] leading-[1.85] text-ink-faint">
                 {marker === "-" || marker === "*" ? "·" : marker}
               </span>
-              <div className="min-w-0 flex-1">{renderInline(trimmed.slice(list[0].length), h)}</div>
+              <div className="min-w-0 flex-1">
+                {renderInline(trimmed.slice(list[0].length), h)}
+                {isStreaming && isLast && <StreamingCursor />}
+              </div>
             </div>
           );
         }
         if (trimmed === "---") return <hr key={idx} className="rule-t my-3 border-0" />;
-        if (!trimmed) return <div key={idx} className="h-1" />;
+        if (!trimmed) {
+          return isStreaming && isLast ? (
+            <p key={idx} className="pt-1">
+              <StreamingCursor />
+            </p>
+          ) : (
+            <div key={idx} className="h-1" />
+          );
+        }
 
-        return <p key={idx}>{renderInline(line, h)}</p>;
+        return (
+          <p key={idx}>
+            {renderInline(line, h)}
+            {isStreaming && isLast && <StreamingCursor />}
+          </p>
+        );
       })}
     </div>
   );

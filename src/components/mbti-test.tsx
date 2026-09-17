@@ -78,6 +78,40 @@ const questions = [
   },
 ];
 
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
+
+const backdropVariants = {
+  closed: {
+    opacity: 0,
+    transition: { duration: 0.15, ease: "linear" as const },
+  },
+  open: {
+    opacity: 1,
+    transition: { duration: 0.25, ease: "linear" as const },
+  },
+};
+
+const testModalVariants = {
+  closed: {
+    opacity: 0,
+    scale: 0.97,
+    y: 8,
+    transition: {
+      duration: 0.15,
+      ease: easeSmoothOut,
+    },
+  },
+  open: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.25,
+      ease: easeSmoothOut,
+    },
+  },
+};
+
 export function MBTITest() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -134,7 +168,7 @@ export function MBTITest() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="group shrink-0 border-b border-rule pb-0.5 text-[0.75rem] text-ink-soft transition-colors hover:border-ink hover:text-ink sm:pb-1 sm:text-sm"
+        className="group shrink-0 border-b border-rule pb-0.5 text-[0.75rem] text-ink-soft transition-colors duration-150 hover:border-ink hover:text-ink sm:pb-1 sm:text-sm"
       >
         <span className="hidden sm:inline">不知道自己的类型？</span>
         <span className="text-ink">一分钟自测</span>
@@ -145,17 +179,18 @@ export function MBTITest() {
           {isOpen && (
             <>
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                variants={backdropVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
                 onClick={closeModal}
                 className="fixed inset-0 z-[190] bg-ink/15 backdrop-blur-md"
               />
               <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                transition={{ type: "spring", duration: 0.5 }}
+                variants={testModalVariants}
+                initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                animate="open"
+                exit="closed"
                 role="dialog"
                 aria-modal
                 aria-label="一分钟自测"
@@ -171,7 +206,7 @@ export function MBTITest() {
                   <button
                     onClick={closeModal}
                     aria-label="关闭"
-                    className="-mr-2 -mt-2 flex h-9 w-9 shrink-0 items-center justify-center text-ink-faint transition-colors hover:text-ink sm:h-10 sm:w-10"
+                    className="-mr-2 -mt-2 flex h-9 w-9 shrink-0 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink sm:h-10 sm:w-10"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -202,7 +237,7 @@ export function MBTITest() {
                             key={option.type}
                             className={cn(
                               "rule-t w-full py-3 text-left text-[0.875rem] leading-relaxed sm:py-5 sm:text-[0.9375rem]",
-                              "text-ink-soft transition-colors hover:text-ink"
+                              "text-ink-soft transition-colors duration-150 hover:text-ink"
                             )}
                             onClick={() =>
                               handleAnswer(
@@ -221,7 +256,7 @@ export function MBTITest() {
                         type="button"
                         onClick={resetTest}
                         disabled={currentQuestion === 0}
-                        className="text-[0.75rem] text-ink-faint transition-colors hover:text-ink disabled:opacity-30 disabled:hover:text-ink-faint sm:text-[0.8125rem]"
+                        className="text-[0.75rem] text-ink-faint transition-colors duration-150 hover:text-ink disabled:opacity-30 disabled:hover:text-ink-faint sm:text-[0.8125rem]"
                       >
                         重新开始
                       </button>
@@ -242,8 +277,9 @@ export function MBTITest() {
                   </div>
                 ) : (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, ease: easeSmoothOut }}
                     className="space-y-4 sm:space-y-6"
                   >
                     <div>
@@ -259,14 +295,14 @@ export function MBTITest() {
                       <button
                         type="button"
                         onClick={resetTest}
-                        className="text-[0.75rem] text-ink-faint transition-colors hover:text-ink sm:text-[0.8125rem]"
+                        className="text-[0.75rem] text-ink-faint transition-colors duration-150 hover:text-ink sm:text-[0.8125rem]"
                       >
                         再测一次
                       </button>
                       <button
                         type="button"
                         onClick={closeModal}
-                        className="border-b border-ink pb-0.5 text-[0.875rem] font-medium text-ink transition-opacity hover:opacity-50 sm:pb-1 sm:text-[0.9375rem]"
+                        className="border-b border-ink pb-0.5 text-[0.875rem] font-medium text-ink transition-opacity duration-150 hover:opacity-50 sm:pb-1 sm:text-[0.9375rem]"
                       >
                         在首页查看 →
                       </button>

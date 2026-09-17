@@ -17,6 +17,58 @@
   --nf: #2f7d52;
   --sj: #2b56a8;
   --sp: #b58121;
+
+  /* ── Motion tokens (transitions-dev scale) ─────────────────── */
+  /* Durations */
+  --duration-stagger: 40ms;
+  --duration-micro: 80ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+
+  /* Easings */
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+  --ease-linear: linear;
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --ease-bounce-strong: cubic-bezier(0.34, 3.85, 0.64, 1);
+
+  /* Distances */
+  --distance-micro: 4px;
+  --distance-small: 6px;
+  --distance-base: 8px;
+  --distance-medium: 12px;
+  --distance-large: 30px;
+
+  /* Scales */
+  --scale-large: 0.96;
+  --scale-medium: 0.97;
+  --scale-small: 0.98;
+  --scale-tiny: 0.99;
+
+  /* Blur */
+  --blur-small: 2px;
+  --blur-medium: 3px;
+  --blur-large: 8px;
+
+  /* Thinking states & Matrix Loader (transitions-dev) */
+  --think-hold: 2400ms;
+  --think-swap: 150ms;
+  --think-gap: 50ms;
+  --think-distance: 6px;
+  --think-blur: 2px;
+  --think-shimmer: 2400ms;
+  --think-base: #7c7c78;
+  --think-highlight: #111110;
+  --think-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --matrix-cycle: 1200ms;
+  --matrix-base: #dcdcd8;
+  --matrix-active: #111110;
+  --matrix-ease: ease-in-out;
 }
 
 @theme {
@@ -112,7 +164,7 @@ body {
 /* Caption rule that answers to its card's hover — no border on the card itself */
 .card-rule {
   border-top: 1px solid var(--rule);
-  transition: border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color var(--duration-fast) var(--ease-smooth-out);
 }
 .group:hover .card-rule { border-top-color: var(--ink); }
 
@@ -138,7 +190,7 @@ body {
     0 1px 2px rgba(0, 0, 0, 0.12),
     0 0 0 0.5px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 1);
-  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow var(--duration-fast) var(--ease-smooth-out);
 }
 
 .rams-switch:hover .rams-knob {
@@ -162,7 +214,7 @@ body {
   height: 6px;
   border-radius: 999px;
   flex: none;
-  transition: background-color 0.4s ease;
+  transition: background-color var(--duration-fast) var(--ease-smooth-out);
 }
 
 /* Focus is visible but never decorative */
@@ -188,10 +240,10 @@ body {
   height: 100%;
 }
 
-/* Reel geometry — art box, clear space to the next figure, and the sliver of
-   it that shows. Tighter on a phone so the pair and their score share a screen. */
+/* Reel geometry — 3-tier responsive scale for phone, tablet, and desktop.
+   Balances viewport height so pairing reels and the score readout remain above the fold. */
 .reel-metrics {
-  --art: clamp(4.25rem, 15vh, 6.75rem);
+  --art: clamp(4.25rem, 15vh, 6.5rem);
   --gap: 1rem;
   --peek: 0.5rem;
   --step: calc(var(--art) + var(--gap));
@@ -201,8 +253,89 @@ body {
 
 @media (min-width: 640px) {
   .reel-metrics {
-    --art: clamp(7.5rem, 30vh, 15rem);
-    --gap: 3.5rem;
+    --art: clamp(5.5rem, 18vh, 8.5rem);
+    --gap: 1.75rem;
+    --peek: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .reel-metrics {
+    --art: clamp(7.5rem, 28vh, 14rem);
+    --gap: 3rem;
     --peek: 1rem;
+  }
+}
+
+/* Safe area padding utility for mobile notches and home indicators */
+.pb-safe {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* ── Matrix Dot Loader (transitions-dev 31-matrix-loader) ─────────────────── */
+.t-matrix {
+  display: grid;
+  grid-template-columns: repeat(4, 2.5px);
+  grid-auto-rows: 2.5px;
+  gap: 2.5px;
+}
+.t-matrix-sm {
+  grid-template-columns: repeat(4, 2px);
+  grid-auto-rows: 2px;
+  gap: 1.5px;
+}
+.t-matrix-lg {
+  grid-template-columns: repeat(4, 3.5px);
+  grid-auto-rows: 3.5px;
+  gap: 3px;
+}
+.t-matrix i {
+  display: block;
+  background: var(--matrix-base);
+  border-radius: 0.5px;
+  animation: t-matrix-pulse var(--matrix-cycle) var(--matrix-ease) infinite;
+  animation-delay: calc(var(--d, 0) * 1ms);
+}
+.t-matrix i.is-gap {
+  visibility: hidden;
+  animation: none;
+}
+@keyframes t-matrix-pulse {
+  0%, 45%, 100% { background-color: var(--matrix-base); }
+  15%           { background-color: var(--matrix-active); }
+}
+
+/* ── Thinking States & Shimmer Text (transitions-dev 28-thinking-states) ── */
+.t-think-shimmer {
+  position: relative;
+  display: inline-block;
+  background-image: linear-gradient(
+    90deg,
+    var(--ink-faint) 0%,
+    var(--ink-faint) 35%,
+    var(--ink) 50%,
+    var(--ink-faint) 65%,
+    var(--ink-faint) 100%
+  );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: t-think-shimmer var(--think-shimmer) linear infinite;
+}
+
+@keyframes t-think-shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: 0% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-matrix i { animation: none !important; }
+  .t-think-shimmer {
+    animation: none !important;
+    color: var(--ink-soft) !important;
+    -webkit-text-fill-color: var(--ink-soft) !important;
   }
 }

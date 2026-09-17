@@ -39,10 +39,10 @@ function CarouselCell({ items, className }: CarouselCellProps) {
       <AnimatePresence mode="wait">
         <motion.span
           key={currentIndex}
-          initial={{ y: 6, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -6, opacity: 0 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ y: 4, opacity: 0, filter: "blur(2px)" }}
+          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+          exit={{ y: -4, opacity: 0, filter: "blur(2px)" }}
+          transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="block truncate"
         >
           {items[currentIndex]}
@@ -53,14 +53,14 @@ function CarouselCell({ items, className }: CarouselCellProps) {
 }
 
 const columns = [
-  { key: "type", label: "类型", width: "w-24" },
-  { key: "nickname", label: "昵称", width: "w-52" },
-  { key: "cognitiveFunctions", label: "认知功能", width: "w-40" },
-  { key: "surfaceTraits", label: "表面特征", width: "w-48" },
-  { key: "actualTraits", label: "实际特征", width: "w-48" },
-  { key: "strengths", label: "优势", width: "w-44" },
-  { key: "weaknesses", label: "弱点", width: "w-44" },
-  { key: "bestPartners", label: "官方最佳配对", width: "w-44" },
+  { key: "type", label: "类型", width: "w-20 sm:w-24" },
+  { key: "nickname", label: "昵称", width: "w-44 sm:w-52" },
+  { key: "cognitiveFunctions", label: "认知功能", width: "w-36 sm:w-40" },
+  { key: "surfaceTraits", label: "表面特征", width: "w-44 sm:w-48" },
+  { key: "actualTraits", label: "实际特征", width: "w-44 sm:w-48" },
+  { key: "strengths", label: "优势", width: "w-40 sm:w-44" },
+  { key: "weaknesses", label: "弱点", width: "w-40 sm:w-44" },
+  { key: "bestPartners", label: "官方最佳配对", width: "w-40 sm:w-44" },
 ];
 
 export function MBTICompactTable() {
@@ -89,7 +89,7 @@ export function MBTICompactTable() {
     );
   }, [query]);
 
-  const colWidths = ["w-16", ...columns.map((c) => c.width)];
+  const colWidths = ["w-12 sm:w-16", ...columns.map((c) => c.width)];
 
   return (
     <section className="flex flex-col lg:h-full lg:min-h-0">
@@ -107,36 +107,48 @@ export function MBTICompactTable() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="搜索类型 / 功能 / 特征"
             aria-label="搜索"
-            className="w-full border-0 border-b border-rule bg-transparent pb-1.5 text-[0.875rem] text-ink placeholder:text-ink-ghost focus:border-ink focus:outline-none focus:ring-0 transition-colors sm:pb-3 sm:text-[0.9375rem]"
+            className="w-full border-0 border-b border-rule bg-transparent pb-1.5 text-[0.875rem] text-ink placeholder:text-ink-ghost focus:border-ink focus:outline-none focus:ring-0 transition-colors duration-150 sm:pb-3 sm:text-[0.9375rem]"
           />
         </div>
       </header>
 
       <div className="scroll-quiet overflow-x-auto lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
-        <table className="w-full table-fixed text-left text-[0.8125rem]">
+        <table className="w-full table-fixed text-left text-[0.8125rem] border-separate border-spacing-0">
           <colgroup>
             {colWidths.map((w, i) => (
               <col key={i} className={w} />
             ))}
           </colgroup>
 
-          <thead className="sticky top-0 z-10 bg-paper">
+          <thead className="sticky top-0 z-20 bg-paper">
             <tr className="rule-b">
-              <th className="pb-2 sm:pb-4" />
-              {columns.map((c) => (
-                <th key={c.key} className="pb-2 pr-4 text-left font-normal sm:pb-4 sm:pr-6">
-                  <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{c.label}</span>
-                </th>
-              ))}
+              <th className="sticky top-0 left-0 z-30 bg-paper pb-2 sm:pb-4 border-b border-rule" />
+              {columns.map((c) => {
+                const isType = c.key === "type";
+                const isNickname = c.key === "nickname";
+                return (
+                  <th
+                    key={c.key}
+                    className={cn(
+                      "pb-2 pr-4 text-left font-normal sm:pb-4 sm:pr-6 border-b border-rule bg-paper",
+                      isType && "sticky top-0 left-12 sm:left-16 z-30 border-r border-rule-strong shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)]",
+                      !isType && "sticky top-0 z-20",
+                      isNickname && "pl-4 sm:pl-6"
+                    )}
+                  >
+                    <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{c.label}</span>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
 
           <tbody>
             {filtered.map((t) => (
-              <tr key={t.type} className="rule-t group transition-colors">
-                <td className="py-2 sm:py-4">
+              <tr key={t.type} className="rule-t group transition-colors duration-150 hover:bg-[#fafaf8]">
+                <td className="sticky left-0 z-10 bg-paper py-2 sm:py-4 transition-colors group-hover:bg-[#fafaf8] border-b border-rule">
                   <span
-                    className="relative block h-8 w-8 overflow-hidden sm:h-11 sm:w-11"
+                    className="relative block h-7 w-7 overflow-hidden sm:h-11 sm:w-11"
                     style={{ backgroundColor: accentWash(t.group) }}
                   >
                     <Image
@@ -149,38 +161,38 @@ export function MBTICompactTable() {
                   </span>
                 </td>
 
-                <td className="py-2 pr-4 align-middle sm:py-4 sm:pr-6">
+                <td className="sticky left-12 sm:left-16 z-10 bg-paper py-2 pr-4 align-middle sm:py-4 sm:pr-6 border-r border-rule-strong shadow-[2px_0_6px_-2px_rgba(0,0,0,0.06)] transition-colors group-hover:bg-[#fafaf8] border-b border-rule">
                   <button
                     type="button"
                     onClick={() => expandCard(t)}
-                    className="text-base font-medium tracking-tight text-ink transition-opacity hover:opacity-50 sm:text-lg"
+                    className="text-base font-medium tracking-tight text-ink transition-opacity duration-150 hover:opacity-50 sm:text-lg"
                   >
                     {t.type}
                   </button>
                 </td>
 
                 <td
-                  className="truncate py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6"
+                  className="truncate py-2 pl-4 pr-4 align-middle text-ink-soft sm:py-4 sm:pl-6 sm:pr-6 border-b border-rule"
                   title={t.nickname}
                 >
                   {t.nickname}
                 </td>
-                <td className="truncate py-2 pr-4 align-middle tracking-tight text-ink-soft sm:py-4 sm:pr-6">
+                <td className="truncate py-2 pr-4 align-middle tracking-tight text-ink-soft sm:py-4 sm:pr-6 border-b border-rule">
                   {t.cognitiveFunctions}
                 </td>
-                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6 border-b border-rule">
                   <CarouselCell items={t.surfaceTraits || []} />
                 </td>
-                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6 border-b border-rule">
                   <CarouselCell items={t.actualTraits || []} />
                 </td>
-                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6 border-b border-rule">
                   <CarouselCell items={t.strengths || []} />
                 </td>
-                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6">
+                <td className="py-2 pr-4 align-middle text-ink-soft sm:py-4 sm:pr-6 border-b border-rule">
                   <CarouselCell items={t.weaknesses || []} />
                 </td>
-                <td className="truncate py-2 align-middle text-ink-soft sm:py-4">
+                <td className="truncate py-2 align-middle text-ink-soft sm:py-4 border-b border-rule">
                   {(t.bestPartners || []).length > 0
                     ? t.bestPartners.join(" · ")
                     : "—"}
@@ -192,7 +204,7 @@ export function MBTICompactTable() {
       </div>
 
       <p className="rule-t mt-2 shrink-0 pt-2 text-[0.75rem] leading-relaxed text-ink-ghost sm:pt-5 sm:text-[0.8125rem]">
-        点击类型代码展开详情。特征列自动轮播，鼠标悬停可暂停。
+        点击类型代码展开详情。前两列与表头已锁定固定，可向右或向下滚动浏览完整数据。特征列自动轮播，鼠标悬停可暂停。
       </p>
     </section>
   );

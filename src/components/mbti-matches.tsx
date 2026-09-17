@@ -25,7 +25,7 @@ function TypeChip({
     <button
       type="button"
       onClick={onClick}
-      className={`group/chip flex min-w-0 items-center gap-2.5 text-left transition-opacity hover:opacity-60 sm:gap-3 ${
+      className={`group/chip flex min-w-0 items-center gap-2.5 text-left transition-opacity duration-150 hover:opacity-60 sm:gap-3 ${
         align === "right" ? "sm:flex-row-reverse sm:text-right" : ""
       }`}
     >
@@ -141,7 +141,7 @@ export function MBTIOfficialMatches({ type }: MBTIMatchesProps) {
               key={code}
               type="button"
               onClick={() => setSelectedType(partner)}
-              className="rule-t flex items-center gap-3 py-2 text-left transition-opacity hover:opacity-60 sm:gap-4 sm:py-4"
+              className="rule-t flex items-center gap-3 py-2 text-left transition-opacity duration-150 hover:opacity-60 sm:gap-4 sm:py-4"
             >
               <span
                 className="relative h-10 w-10 shrink-0 overflow-hidden sm:h-14 sm:w-14"

@@ -23,14 +23,14 @@ type FunctionEntry = {
   atBottom: string;
 };
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
 
 /** Thin chevron — the only icon in the section. */
 function Chevron({ open }: { open: boolean }) {
   return (
     <motion.svg
       animate={{ rotate: open ? 180 : 0 }}
-      transition={{ duration: 0.4, ease: easeOut }}
+      transition={{ duration: 0.25, ease: easeSmoothOut }}
       className="h-4 w-4 shrink-0 text-ink-faint"
       viewBox="0 0 24 24"
       fill="none"
@@ -99,7 +99,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
               onClick={() => setOpen(isOpen ? null : code)}
               aria-expanded={isOpen}
               className={cn(
-                "rule-t pt-2.5 text-left transition-opacity duration-300 sm:pt-5",
+                "rule-t pt-2.5 text-left transition-opacity duration-150 sm:pt-5",
                 open && !isOpen && "opacity-45"
               )}
             >
@@ -132,7 +132,7 @@ export function MBTICognitiveFunctions({ type }: MBTICognitiveFunctionsProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.45, ease: easeOut }}
+            transition={{ duration: 0.25, ease: easeSmoothOut }}
             className="overflow-hidden"
           >
             <dl className="rule-t mt-4 grid grid-cols-1 gap-x-10 gap-y-3 pt-4 sm:mt-8 sm:grid-cols-2 sm:gap-y-6 sm:pt-8">

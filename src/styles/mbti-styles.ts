@@ -118,16 +118,18 @@ export const t = {
 } as const;
 
 // ── Motion ───────────────────────────────────────────────────
+export const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
+
 export const rise = {
-  initial: { opacity: 0, y: 16 },
+  initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+  transition: { duration: 0.5, ease: easeSmoothOut },
 };
 
 export const fade = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
-  transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
+  transition: { duration: 0.25, ease: easeSmoothOut },
 };
 
 export const spring = {
@@ -137,8 +139,8 @@ export const spring = {
   mass: 0.9,
 };
 
-/** Stagger helper — index-driven delay that never runs away. */
-export const riseAt = (i: number, step = 0.05, cap = 0.4) => ({
+/** Stagger helper — index-driven delay that never runs away (40ms step, 240ms cap). */
+export const riseAt = (i: number, step = 0.04, cap = 0.24) => ({
   ...rise,
   transition: { ...rise.transition, delay: Math.min(i * step, cap) },
 });

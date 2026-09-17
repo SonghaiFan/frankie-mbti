@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { accentOf, groupCode } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
 const knobSpring = { type: "spring" as const, stiffness: 520, damping: 34, mass: 0.7 };
 
 function useIsMobile() {
@@ -37,9 +37,9 @@ function Block({
   className?: string;
 }) {
   return (
-    <div className={cn("rule-t pt-2 sm:pt-3 lg:pt-3.5", className)}>
+    <div className={cn("rule-t pt-1 sm:pt-2 lg:pt-1.5 xl:pt-2.5", className)}>
       <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">{label}</span>
-      <div className="mt-1 sm:mt-2 lg:mt-2.5">{children}</div>
+      <div className="mt-0.5 sm:mt-1 lg:mt-0.5 xl:mt-1">{children}</div>
     </div>
   );
 }
@@ -47,7 +47,7 @@ function Block({
 function Terms({ items, limit }: { items: string[]; limit?: number }) {
   const shown = limit ? items.slice(0, limit) : items;
   return (
-    <p className="line-clamp-2 min-h-[2.5em] text-[0.75rem] leading-[1.35] text-ink-soft sm:min-h-[3em] sm:text-[0.875rem] sm:leading-[1.5]">
+    <p className="line-clamp-2 min-h-0 text-[0.75rem] leading-[1.3] text-ink-soft sm:text-[0.8125rem] lg:leading-[1.35] xl:text-[0.875rem]">
       {shown.join(" · ")}
     </p>
   );
@@ -76,20 +76,24 @@ function PreferenceSwitch({
   const atRight = right.type === letter;
   const active = atRight ? right : left;
   const other = atRight ? left : right;
-  const travel = isMobile ? 20 : 28;
+  const trackW = isMobile ? 44 : 52;
+  const trackH = isMobile ? 24 : 28;
+  const knobPad = 2;
+  const knobSize = trackH - knobPad * 2; // 20px on mobile, 24px on desktop
+  const travel = trackW - knobSize - knobPad * 2; // 20px on mobile, 24px on desktop
 
   return (
     <div className="w-full">
       {/* The pole labels carry the meaning; on a phone the category name is
           the first thing that can go. */}
-      <span className="hidden text-[0.6875rem] tracking-[0.16em] text-ink-ghost sm:block">
+      <span className="hidden text-[0.625rem] tracking-[0.16em] text-ink-ghost sm:block lg:text-[0.6875rem]">
         {dimension.name}
       </span>
 
-      <div className="mt-1 flex w-full items-center justify-between gap-1 sm:mt-1.5 sm:max-w-[21rem] sm:justify-start sm:gap-2.5 lg:gap-3">
+      <div className="mt-0.5 flex w-full items-center justify-between gap-1 sm:mt-1 sm:max-w-[21rem] sm:justify-start sm:gap-2 lg:gap-2 xl:gap-2.5">
         <span
           className={cn(
-            "min-w-0 flex-1 text-right text-[0.6875rem] transition-colors duration-300 sm:text-[0.9375rem]",
+            "min-w-0 flex-1 text-right text-[0.6875rem] transition-colors duration-150 sm:text-[0.8125rem] xl:text-[0.875rem]",
             atRight ? "text-ink-ghost" : "text-ink"
           )}
         >
@@ -105,13 +109,22 @@ function PreferenceSwitch({
           type="button"
           onClick={onToggle}
           aria-label={`${dimension.name}：当前 ${active.type} ${active.name}，切换为 ${other.type} ${other.name}`}
-          className="rams-switch shrink-0 px-0.5 py-0.5 sm:px-1 sm:py-2"
+          className="rams-switch shrink-0 p-0.5 sm:px-1 sm:py-1 -my-0.5 touch-manipulation flex items-center justify-center"
         >
-          <span className="rams-track relative flex h-7 w-12 items-center rounded-full sm:h-9 sm:w-16">
+          <span
+            className="rams-track relative flex h-6 w-11 sm:h-7 sm:w-[52px] items-center rounded-full"
+            style={{ width: trackW, height: trackH }}
+          >
             <motion.span
               animate={{ x: atRight ? travel : 0 }}
               transition={knobSpring}
-              className="rams-knob absolute left-1 top-1 block h-5 w-5 rounded-full sm:h-7 sm:w-7"
+              className="rams-knob absolute left-0.5 top-0.5 block h-5 w-5 sm:h-6 sm:w-6 rounded-full"
+              style={{
+                left: knobPad,
+                top: knobPad,
+                width: knobSize,
+                height: knobSize,
+              }}
             />
           </span>
         </button>
@@ -123,7 +136,7 @@ function PreferenceSwitch({
 
         <span
           className={cn(
-            "min-w-0 flex-1 text-[0.6875rem] transition-colors duration-300 sm:text-[0.9375rem]",
+            "min-w-0 flex-1 text-[0.6875rem] transition-colors duration-150 sm:text-[0.8125rem] xl:text-[0.875rem]",
             atRight ? "text-ink" : "text-ink-ghost"
           )}
         >
@@ -165,50 +178,51 @@ export function TypeStage() {
   return (
     <section
       className={cn(
-        "mx-auto w-full max-w-[1560px] px-4 sm:px-10 lg:px-16 overflow-x-clip",
-        "lg:flex lg:min-h-full lg:flex-col lg:justify-center"
+        "mx-auto w-full max-w-[1560px] px-4 sm:px-8 lg:px-12 xl:px-16 overflow-hidden",
+        "h-full min-h-0 flex flex-col justify-center"
       )}
     >
       <div
         className={cn(
-          "grid gap-4 pb-6 pt-2 sm:gap-14 sm:py-14",
-          "lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)_minmax(0,21rem)]",
-          "lg:grid-rows-[auto_1fr] lg:min-h-0 lg:items-start",
-          "lg:gap-x-16 lg:gap-y-5 lg:py-4"
+          "grid gap-2 sm:gap-3 py-1",
+          "lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)_minmax(0,20rem)]",
+          "xl:grid-cols-[minmax(0,19rem)_minmax(0,1fr)_minmax(0,21rem)]",
+          "lg:grid-rows-[auto_1fr] lg:h-full lg:max-h-[760px] lg:items-start",
+          "lg:gap-x-10 xl:gap-x-14 lg:gap-y-2 xl:gap-y-3 lg:py-2 xl:py-3"
         )}
       >
         {/* On a phone the hero header (Identity + Figure) and the switches sit together above the fold. */}
-        <div className="flex flex-col gap-3.5 sm:gap-6 lg:contents">
+        <div className="flex flex-col gap-2 sm:gap-3 lg:contents">
           {/* Mobile top row: Identity on left, Character on right */}
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2.5 sm:gap-6 lg:contents">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2 sm:gap-3 lg:contents">
             {/* ── A · Identity ── */}
-            <div className="flex h-40 min-w-0 flex-col justify-between sm:h-56 lg:h-auto lg:col-start-1 lg:row-start-1">
+            <div className="flex h-32 min-w-0 flex-col justify-between sm:h-40 lg:h-auto lg:col-start-1 lg:row-start-1">
               <span className="eyebrow shrink-0 text-[0.625rem] sm:text-[0.6875rem]">16 种人格 · 更多可能</span>
 
               <div className="grid w-full flex-1 grid-cols-1">
                 <AnimatePresence initial={false} mode="popLayout">
                 <motion.div
                   key={type.type}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2, ease: easeOut }}
+                  initial={{ opacity: 0, y: 4, filter: "blur(2px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -4, filter: "blur(2px)" }}
+                  transition={{ duration: 0.15, ease: easeSmoothOut }}
                   className="col-start-1 row-start-1 w-full"
                 >
                   <h1
-                    className="display mt-0.5 leading-none text-ink sm:mt-6 lg:mt-4"
-                    style={{ fontSize: "clamp(2.25rem, 8vw, 5.75rem)" }}
+                    className="display mt-0.5 leading-none text-ink lg:mt-1 xl:mt-2"
+                    style={{ fontSize: "clamp(2rem, 5.2vh, 4.25rem)" }}
                   >
                     {type.type}
                   </h1>
 
-                  <p className="mt-0.5 truncate text-lg font-medium tracking-tight text-ink sm:mt-4 sm:text-3xl lg:mt-3">
+                  <p className="mt-0.5 truncate text-base font-medium tracking-tight text-ink sm:text-2xl lg:text-xl xl:text-2xl lg:mt-0.5 xl:mt-1">
                     {type.title}
                   </p>
-                  <p className="mt-0.5 truncate text-[0.6875rem] text-ink-soft sm:mt-3 sm:text-[0.9375rem] sm:leading-[1.8]">
+                  <p className="mt-0.5 truncate text-[0.6875rem] text-ink-soft sm:text-[0.8125rem] lg:text-[0.75rem] xl:text-[0.8125rem]">
                     {type.nickname}
                   </p>
-                  <div className="mt-1 flex items-center gap-1.5 sm:mt-5 lg:mt-4">
+                  <div className="mt-1 flex items-center gap-1.5 lg:mt-1 xl:mt-2">
                     <span
                       className="h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ backgroundColor: accent }}
@@ -223,13 +237,13 @@ export function TypeStage() {
             </div>
 
             {/* ── B · The figure. Also the way in. ── */}
-            <div className="h-40 w-32 shrink-0 sm:h-56 sm:w-48 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full lg:w-full lg:min-h-0 lg:self-stretch">
-              <div className="flex h-full flex-col">
+            <div className="h-32 w-28 shrink-0 sm:h-40 sm:w-36 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-full lg:w-full lg:min-h-0 lg:self-stretch flex flex-col justify-center">
+              <div className="flex h-full flex-col justify-center">
                 <button
                   type="button"
                   onClick={() => expandCard(type)}
                   aria-label={`查看 ${type.type} ${type.title} 的完整档案`}
-                  className="group relative flex h-full w-full items-center justify-center lg:mx-auto lg:min-h-0 lg:max-w-none lg:flex-1"
+                  className="group relative flex h-full w-full items-center justify-center lg:mx-auto lg:min-h-[180px] lg:max-h-[440px] lg:max-w-none lg:flex-1"
                 >
                   <CharacterGlow activeColor={type.color} />
 
@@ -241,25 +255,25 @@ export function TypeStage() {
                     intensity={0.5}
                     aberration={0.22}
                     drift={0}
-                    className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                    className="absolute inset-0 transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
                     fallback={
                       <Image
                         src={`/mbti_img/${type.image}`}
                         alt={type.type}
                         fill
-                        sizes="(max-width: 640px) 140px, (max-width: 1024px) 240px, 45vw"
+                        sizes="(max-width: 640px) 120px, (max-width: 1024px) 200px, 40vw"
                         className="object-contain object-center"
                         priority
                       />
                     }
                   />
 
-                  <span className="pointer-events-none absolute inset-x-0 bottom-1 text-center text-[0.6875rem] text-ink-ghost opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100 sm:bottom-0 sm:text-[0.8125rem]">
+                  <span className="pointer-events-none absolute inset-x-0 bottom-0 text-center text-[0.6875rem] text-ink-ghost opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 sm:text-[0.75rem]">
                     查看档案 →
                   </span>
                 </button>
 
-                <p className="mt-3 hidden shrink-0 text-center text-[0.8125rem] italic leading-relaxed text-ink-faint sm:text-[0.875rem] lg:block">
+                <p className="mt-1.5 hidden shrink-0 text-center text-[0.75rem] italic leading-relaxed text-ink-faint lg:text-[0.8125rem] lg:block">
                   {type.slogan}
                 </p>
               </div>
@@ -268,13 +282,13 @@ export function TypeStage() {
 
           {/* ── M · The control panel ── */}
           <div className="shrink-0 lg:col-start-3 lg:row-start-1">
-            <div className="rule-t pt-2 sm:pt-4">
+            <div className="rule-t pt-1 sm:pt-2 lg:pt-1.5 xl:pt-2.5">
               <div className="flex items-baseline justify-between gap-4">
                 <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">四维偏好 Preference</span>
-                <span className="text-[0.6875rem] text-ink-ghost sm:text-[0.75rem]">拨动切换</span>
+                <span className="text-[0.625rem] text-ink-ghost sm:text-[0.6875rem]">拨动切换</span>
               </div>
 
-              <div className="mt-1.5 grid grid-cols-2 gap-x-2 gap-y-1.5 sm:mt-4 sm:gap-x-6 sm:gap-y-3 lg:block lg:space-y-3">
+              <div className="mt-0.5 grid grid-cols-2 gap-x-2 gap-y-0.5 sm:mt-2 sm:gap-x-6 sm:gap-y-1.5 lg:block lg:space-y-1 xl:space-y-2">
                 {dimensions.map((dimension, i) => (
                   <PreferenceSwitch
                     key={dimension.name}
@@ -288,63 +302,66 @@ export function TypeStage() {
               </div>
 
               {/* Slogan on mobile shown below the 4 switches with stable height */}
-              <p className="mt-1.5 flex min-h-[1.8em] items-center justify-center text-center text-[0.75rem] italic leading-tight text-ink-faint sm:text-[0.875rem] lg:hidden">
+              <p className="mt-1 flex min-h-[1.5em] items-center justify-center text-center text-[0.6875rem] italic leading-tight text-ink-faint sm:text-[0.75rem] lg:hidden">
                 {type.slogan}
               </p>
             </div>
           </div>
         </div>
 
-        {/* ── T · Attributes ── */}
-        <div className="space-y-2.5 sm:space-y-5 lg:col-start-1 lg:row-start-2 lg:space-y-4">
-          <Block label="关键特征 Key Traits">
-            <Terms items={type.actualTraits} limit={4} />
-          </Block>
-          <Block label="优势 Strengths">
-            <Terms items={type.strengths} limit={3} />
-          </Block>
-          <Block label="盲点 Blind Spots">
-            <Terms items={type.weaknesses} limit={3} />
-          </Block>
-        </div>
+        {/* ── Bottom Area: Attributes & Relations (2-col on tablet md, separate grid cells on desktop lg) ── */}
+        <div className="space-y-1.5 sm:space-y-2 md:grid md:grid-cols-2 md:items-start md:gap-x-8 md:space-y-0 lg:contents">
+          {/* ── T · Attributes ── */}
+          <div className="space-y-1 sm:space-y-1.5 lg:col-start-1 lg:row-start-2 lg:space-y-1 xl:space-y-2">
+            <Block label="关键特征 Key Traits">
+              <Terms items={type.actualTraits} limit={4} />
+            </Block>
+            <Block label="优势 Strengths">
+              <Terms items={type.strengths} limit={3} />
+            </Block>
+            <Block label="盲点 Blind Spots">
+              <Terms items={type.weaknesses} limit={3} />
+            </Block>
+          </div>
 
-        {/* ── R · Relations & stack ── */}
-        <div className="space-y-2.5 sm:space-y-5 lg:col-start-3 lg:row-start-2 lg:space-y-4">
-          <Block label="契合类型 Compatible">
-            <div className="flex flex-wrap gap-x-4 gap-y-1 sm:gap-x-5 sm:gap-y-2">
-              {type.bestPartners.map((partner) => (
-                <button
-                  key={partner}
-                  type="button"
-                  onClick={() => setFeatured(partner)}
-                  className="text-[0.8125rem] text-ink-soft transition-colors hover:text-ink sm:text-[0.9375rem]"
-                >
-                  {partner}
-                </button>
-              ))}
-            </div>
-            <p className="mt-1 text-[0.75rem] text-ink-ghost sm:mt-3 sm:text-[0.8125rem]">
-              功能栈互补，容易谈到一块去。点一个即可切换。
-            </p>
-          </Block>
-
-          <Block label="认知功能栈 Function Stack">
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-1.5 sm:gap-y-4">
-              {stack.map((fn, i) => (
-                <div key={fn}>
-                  <dt className="text-[0.625rem] tracking-[0.16em] text-ink-ghost sm:text-[0.6875rem]">
-                    {cognitiveFunctions.levels[i]?.name.split(" ")[0]} · {cognitiveFunctions.levels[i]?.cnRole}
-                  </dt>
-                  <dd
-                    className="mt-0.5 text-xl font-medium leading-none tracking-tight sm:mt-1 sm:text-2xl"
-                    style={{ color: i === 0 ? accent : undefined }}
+          {/* ── R · Relations & stack ── */}
+          <div className="space-y-1 sm:space-y-1.5 lg:col-start-3 lg:row-start-2 lg:space-y-1 xl:space-y-2">
+            <Block label="契合类型 Compatible">
+              <div className="flex flex-wrap gap-x-3 gap-y-0.5 sm:gap-x-4">
+                {type.bestPartners.map((partner) => (
+                  <button
+                    key={partner}
+                    type="button"
+                    onClick={() => setFeatured(partner)}
+                    className="text-[0.75rem] text-ink-soft transition-colors duration-150 hover:text-ink sm:text-[0.8125rem] xl:text-[0.875rem]"
                   >
-                    {fn}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </Block>
+                    {partner}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-0.5 text-[0.625rem] text-ink-ghost sm:text-[0.6875rem]">
+                功能栈互补，容易谈到一块去。点一个即可切换。
+              </p>
+            </Block>
+
+            <Block label="认知功能栈 Function Stack">
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-0.5 sm:gap-y-1 lg:gap-y-0.5 xl:gap-y-1.5">
+                {stack.map((fn, i) => (
+                  <div key={fn}>
+                    <dt className="text-[0.5625rem] tracking-[0.16em] text-ink-ghost sm:text-[0.625rem]">
+                      {cognitiveFunctions.levels[i]?.name.split(" ")[0]} · {cognitiveFunctions.levels[i]?.cnRole}
+                    </dt>
+                    <dd
+                      className="mt-0.5 text-base font-medium leading-none tracking-tight sm:text-lg lg:text-lg xl:text-xl"
+                      style={{ color: i === 0 ? accent : undefined }}
+                    >
+                      {fn}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Block>
+          </div>
         </div>
       </div>
     </section>

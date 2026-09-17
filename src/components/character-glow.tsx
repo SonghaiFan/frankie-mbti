@@ -23,7 +23,7 @@ export function CharacterGlow({ activeColor, className }: CharacterGlowProps) {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04]",
+        "pointer-events-none absolute inset-0 transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]",
         className
       )}
       aria-hidden="true"
@@ -36,7 +36,7 @@ export function CharacterGlow({ activeColor, className }: CharacterGlowProps) {
           <div
             key={colorKey}
             className={cn(
-              "absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+              "absolute inset-0 transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
               isActive ? "opacity-100" : "opacity-0"
             )}
           >

@@ -36,9 +36,9 @@ export default function RootLayout({
       <body className={`${outfit.variable} ${notoSansSC.variable} font-sans antialiased`}>
         {/* Below lg the page scrolls normally; from lg up the app is a
             fixed frame and any overflow is handled inside a view. */}
-        <div className="flex min-h-screen flex-col bg-paper lg:h-[100dvh] lg:min-h-0 lg:overflow-hidden">
+        <div className="flex min-h-dvh flex-col bg-paper lg:h-[100dvh] lg:min-h-0 lg:overflow-hidden">
           <SiteHeader />
-          <main className="flex-1 lg:min-h-0 lg:overflow-y-auto">{children}</main>
+          <main className="flex-1 min-h-0 flex flex-col lg:overflow-hidden">{children}</main>
           <Footer />
 
           {/* One detail surface for the whole site; it portals to <body> */}

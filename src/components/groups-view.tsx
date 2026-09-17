@@ -28,7 +28,7 @@ export function GroupsView() {
         </div>
       </header>
 
-      <div className="scroll-quiet grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-14 lg:min-h-0 lg:flex-1 lg:grid-cols-4 lg:gap-x-12 lg:gap-y-5 lg:overflow-y-auto">
+      <div className="scroll-quiet grid grid-cols-1 gap-x-6 gap-y-6 min-[480px]:grid-cols-2 min-[480px]:gap-x-8 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-10 lg:min-h-0 lg:flex-1 lg:grid-cols-4 lg:gap-x-12 lg:gap-y-5 lg:overflow-y-auto">
         {colorGroups.map((group, index) => {
           const groupTypes = mbtiTypes.filter((t) => group.types.includes(t.type));
           const accent = accentOf(group.name);
@@ -36,13 +36,13 @@ export function GroupsView() {
           return (
             <motion.div
               key={group.code}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{
-                duration: 0.55,
-                delay: Math.min(index * 0.05, 0.25),
-                ease: [0.16, 1, 0.3, 1],
+                duration: 0.5,
+                delay: Math.min(index * 0.04, 0.24),
+                ease: [0.22, 1, 0.36, 1],
               }}
             >
               <div className="rule-t pt-2.5 sm:pt-4">
@@ -74,7 +74,7 @@ export function GroupsView() {
                     key={type.type}
                     type="button"
                     onClick={() => expandCard(type)}
-                    className="rule-t flex w-full items-center gap-2 py-1.5 text-left transition-opacity hover:opacity-60 sm:gap-4 sm:py-2.5"
+                    className="rule-t flex w-full items-center gap-2 py-1.5 text-left transition-opacity duration-150 hover:opacity-60 sm:gap-4 sm:py-2.5"
                   >
                     <span
                       className="relative h-8 w-8 shrink-0 overflow-hidden sm:h-12 sm:w-12"

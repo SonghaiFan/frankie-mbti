@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { accentOf } from "@/styles/mbti-styles";
 import { useMBTIStore } from "@/store/mbti-store";
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
 
 const BAND = mbtiTypes.length; // 16
 const REPEATS = 5; // runway either side of the band the reel rests in
@@ -154,11 +154,11 @@ function Reel({
             key={current.type}
             type="button"
             onClick={() => onOpen(current)}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.22, ease: easeOut }}
-            className="col-start-1 row-start-1 block w-full transition-opacity hover:opacity-60"
+            initial={{ opacity: 0, y: 4, filter: "blur(2px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -4, filter: "blur(2px)" }}
+            transition={{ duration: 0.15, ease: easeSmoothOut }}
+            className="col-start-1 row-start-1 block w-full transition-opacity duration-150 hover:opacity-60"
           >
             <span
               className="block text-xl font-medium leading-none tracking-tight sm:text-3xl"
@@ -230,7 +230,7 @@ export function PairingReelsView() {
 
       <div
         className={cn(
-          "reel-metrics grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-12 sm:gap-y-14",
+          "reel-metrics grid grid-cols-2 gap-x-3 gap-y-3 sm:gap-x-8 sm:gap-y-6 md:gap-x-12 md:gap-y-8",
           "lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)_minmax(0,1fr)]",
           "lg:items-center lg:gap-x-14 lg:gap-y-0"
         )}
@@ -250,42 +250,42 @@ export function PairingReelsView() {
         <div
           className={cn(
             "col-span-2 row-start-2 grid lg:col-span-1 lg:col-start-2 lg:row-start-1",
-            "transition-opacity duration-300",
+            "transition-opacity duration-150 ease-[cubic-bezier(0.22,1,0.36,1)]",
             moving ? "opacity-25" : "opacity-100"
           )}
         >
           <AnimatePresence initial={false}>
             <motion.div
               key={`${left.type}-${right.type}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.32, ease: easeOut }}
+              initial={{ opacity: 0, y: 8, filter: "blur(2px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
+              transition={{ duration: 0.25, ease: easeSmoothOut }}
               className="col-start-1 row-start-1 mx-auto w-full max-w-sm text-center"
             >
               <div className="flex items-baseline justify-center gap-3 sm:block">
                 <p
-                  className="text-[2.75rem] font-medium leading-none tracking-tight tabular-nums sm:mt-4 sm:text-[4.5rem]"
+                  className="text-[2.75rem] font-medium leading-none tracking-tight tabular-nums sm:mt-2 sm:text-[4rem] lg:mt-4 lg:text-[4.5rem]"
                   style={{ color: accent }}
                 >
                   {pair.score}
                 </p>
-                <p className="text-[0.875rem] text-ink sm:mt-4 sm:text-[0.9375rem]">{tier.name}</p>
+                <p className="text-[0.875rem] text-ink sm:mt-2 sm:text-[0.9375rem] lg:mt-4">{tier.name}</p>
               </div>
-              <p className="mt-1.5 hidden text-[0.8125rem] text-ink-ghost sm:block sm:mt-2">{tier.note}</p>
+              <p className="mt-1 hidden text-[0.8125rem] text-ink-ghost sm:block sm:mt-1.5 lg:mt-2">{tier.note}</p>
 
-              <div className="rule-t mt-3 pt-2 sm:mt-8 sm:pt-7">
-                <p className="text-xl font-medium leading-none tracking-tight text-ink sm:mt-4 sm:text-3xl">
+              <div className="rule-t mt-3 pt-2 sm:mt-5 sm:pt-4 lg:mt-8 lg:pt-7">
+                <p className="text-xl font-medium leading-none tracking-tight text-ink sm:mt-2 sm:text-2xl lg:mt-4 lg:text-3xl">
                   {pair.name}
                 </p>
-                <p className="mt-1 text-[0.75rem] text-ink-ghost sm:mt-4 sm:text-[0.8125rem]">
+                <p className="mt-1 text-[0.75rem] text-ink-ghost sm:mt-2 sm:text-[0.8125rem] lg:mt-4">
                   {/* Pair order, not reel order: the readings speak of the first as ta. */}
                   {pair.pair[0]} × {pair.pair[1]}
                   {official && " · 官方推荐"}
                 </p>
               </div>
 
-              <div className="rule-t mt-2 pt-2 sm:mt-8 sm:pt-7">
+              <div className="rule-t mt-2 pt-2 sm:mt-4 sm:pt-3 lg:mt-8 lg:pt-7">
                 <span className="eyebrow text-[0.625rem] sm:text-[0.6875rem]">
                   荣格配对 · {relation.name}
                 </span>

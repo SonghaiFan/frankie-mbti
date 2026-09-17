@@ -9,11 +9,12 @@ import { fetchTypeClaims, useTypeClaims } from "@/hooks/use-type-claims";
 import { useMBTIStore } from "@/store/mbti-store";
 import { accentOf } from "@/styles/mbti-styles";
 import { cn } from "@/lib/utils";
+import { MatrixLoader } from "./matrix-loader";
 import { RuleRow } from "./section";
 
 const PAGE = 10;
 const FUNCTIONS = ["Ni", "Ne", "Si", "Se", "Ti", "Te", "Fi", "Fe"];
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
 
 /** A count next to a label — the one place numerals appear, so they stay mono and faint. */
 function Count({ n }: { n: number }) {
@@ -58,14 +59,19 @@ function Strip<T extends string>({
               onClick={() => onChange(item.value)}
               aria-pressed={isActive}
               className={cn(
-                "relative shrink-0 whitespace-nowrap py-0.5 text-[0.8125rem] transition-colors duration-300 sm:text-[0.9375rem]",
-                isActive ? "text-ink" : "text-ink-ghost hover:text-ink-soft"
+                "relative shrink-0 whitespace-nowrap py-1.5 text-[0.8125rem] transition-colors duration-150 sm:py-1 sm:text-[0.9375rem] touch-manipulation",
+                isActive ? "text-ink font-medium" : "text-ink-ghost hover:text-ink-soft"
               )}
             >
               {item.label}
               {item.count !== undefined && <Count n={item.count} />}
               {isActive && (
-                <span className="absolute inset-x-0 -bottom-1 block h-px" style={{ backgroundColor: accent }} />
+                <motion.span
+                  layoutId={`strip-active-${label}`}
+                  className="absolute inset-x-0 -bottom-1 block h-px"
+                  style={{ backgroundColor: accent }}
+                  transition={{ duration: 0.25, ease: easeSmoothOut }}
+                />
               )}
             </button>
           );
@@ -245,13 +251,18 @@ export function ClaimsView() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: easeOut }}
+            transition={{ duration: 0.25, ease: easeSmoothOut }}
           >
             {shown.map((claim) => (
               <ClaimRow key={claim.id} claim={claim} accent={accent} typeCode={code} />
             ))}
             {loading && shown.length === 0 && (
-              <p className="py-6 text-[0.8125rem] text-ink-faint">读取图谱…</p>
+              <div className="flex items-center gap-3 py-8 text-ink-soft">
+                <MatrixLoader variant="scan" size="sm" />
+                <span className="t-think-shimmer font-mono text-[0.8125rem]">
+                  读取知识图谱实体与观点…
+                </span>
+              </div>
             )}
             {!loading && data && data.total === 0 && (
               <p className="py-6 text-[0.8125rem] text-ink-faint">没有匹配的观点。</p>
@@ -265,9 +276,16 @@ export function ClaimsView() {
               type="button"
               onClick={loadMore}
               disabled={more}
-              className="text-[0.8125rem] text-ink-soft transition-colors hover:text-ink disabled:opacity-50 sm:text-[0.875rem]"
+              className="inline-flex items-center gap-2.5 text-[0.8125rem] text-ink-soft transition-colors duration-150 hover:text-ink disabled:opacity-50 sm:text-[0.875rem]"
             >
-              {more ? "读取中…" : `更多 ${remaining} 条`}
+              {more ? (
+                <>
+                  <MatrixLoader variant="pulse" size="sm" />
+                  <span className="t-think-shimmer font-mono text-[0.75rem]">读取更多观点…</span>
+                </>
+              ) : (
+                `更多 ${remaining} 条`
+              )}
             </button>
           </div>
         )}

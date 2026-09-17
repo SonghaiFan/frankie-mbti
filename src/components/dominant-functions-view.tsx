@@ -26,7 +26,7 @@ function TypeChip({ type, onClick }: { type: MBTIType; onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex min-w-0 items-center gap-2 text-left transition-opacity hover:opacity-60 sm:gap-3"
+      className="flex min-w-0 items-center gap-2 text-left transition-opacity duration-150 hover:opacity-60 sm:gap-3"
     >
       <span
         className="relative h-9 w-9 shrink-0 overflow-hidden sm:h-12 sm:w-12"
@@ -92,11 +92,11 @@ export function DominantFunctionsView() {
             <motion.article
               key={code}
               id={code}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.55, delay: Math.min(index * 0.05, 0.25), ease: [0.16, 1, 0.3, 1] }}
-              className="grid grid-cols-1 gap-4 py-6 sm:py-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:gap-16 lg:py-12"
+              transition={{ duration: 0.5, delay: Math.min(index * 0.04, 0.24), ease: [0.22, 1, 0.36, 1] }}
+              className="grid grid-cols-1 gap-6 py-6 sm:py-8 md:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] md:gap-10 md:py-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)] lg:gap-16 lg:py-12"
             >
               {/* Who leads with it */}
               <div className="rule-t pt-3 sm:pt-5">

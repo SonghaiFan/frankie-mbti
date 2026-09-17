@@ -19,10 +19,10 @@ export function TypeCard({ type, onOpen, revealDelay = 0, className }: TypeCardP
     <motion.button
       type="button"
       onClick={onOpen}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay: revealDelay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.5, delay: revealDelay, ease: [0.22, 1, 0.36, 1] }}
       className={cn("group block w-full text-left", className)}
     >
       <div className="relative aspect-[5/6] w-full overflow-hidden">
@@ -31,7 +31,7 @@ export function TypeCard({ type, onOpen, revealDelay = 0, className }: TypeCardP
           alt={type.type}
           fill
           sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
-          className="object-contain object-bottom transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+          className="object-contain object-bottom transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
         />
       </div>
 

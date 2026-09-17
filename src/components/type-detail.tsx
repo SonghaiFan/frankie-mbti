@@ -12,12 +12,44 @@ import { MBTIDimensions } from "./mbti-dimensions";
 import { MBTICognitiveFunctions } from "./mbti-cognitive-functions";
 import { MBTIMatches } from "./mbti-matches";
 
-const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeSmoothOut = [0.22, 1, 0.36, 1] as const;
 
 const setBodyScroll = (enabled: boolean) => {
   if (typeof document !== "undefined") {
     document.body.style.overflow = enabled ? "" : "hidden";
   }
+};
+
+const backdropVariants = {
+  closed: {
+    opacity: 0,
+    transition: { duration: 0.15, ease: "linear" as const },
+  },
+  open: {
+    opacity: 1,
+    transition: { duration: 0.25, ease: "linear" as const },
+  },
+};
+
+const modalVariants = {
+  closed: {
+    opacity: 0,
+    y: 12,
+    scale: 0.97,
+    transition: {
+      duration: 0.15,
+      ease: easeSmoothOut,
+    },
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.25,
+      ease: easeSmoothOut,
+    },
+  },
 };
 
 function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
@@ -26,30 +58,30 @@ function Sheet({ type, onClose }: { type: MBTIType; onClose: () => void }) {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        variants={backdropVariants}
+        initial="closed"
+        animate="open"
+        exit="closed"
         className="fixed inset-0 z-[190] bg-ink/15 backdrop-blur-md"
         onClick={onClose}
       />
 
       <motion.div
-        initial={{ opacity: 0, y: 24, scale: 0.985 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.99 }}
-        transition={{ duration: 0.45, ease: easeOut }}
+        variants={modalVariants}
+        initial={{ opacity: 0, y: 12, scale: 0.96 }}
+        animate="open"
+        exit="closed"
         role="dialog"
         aria-modal
         aria-label={`${type.type} ${type.title}`}
         className="fixed left-1/2 top-1/2 z-[200] w-[96vw] max-w-6xl -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-paper shadow-[0_40px_120px_-48px_rgba(0,0,0,0.35)] sm:w-[94vw]"
       >
-        <div className="flex max-h-[94dvh] flex-col sm:h-[92vh] sm:max-h-[92vh]">
+        <div className="flex max-h-[94dvh] flex-col sm:h-[92dvh] sm:max-h-[92dvh]">
           <button
             onClick={onClose}
             type="button"
             aria-label="关闭"
-            className="absolute right-2.5 top-2.5 z-[100] flex h-8 w-8 items-center justify-center text-ink-faint transition-colors hover:text-ink sm:right-5 sm:top-5 sm:h-10 sm:w-10"
+            className="absolute right-2.5 top-2.5 z-[100] flex h-8 w-8 items-center justify-center text-ink-faint transition-colors duration-150 hover:text-ink sm:right-5 sm:top-5 sm:h-10 sm:w-10"
           >
             <svg
               className="h-5 w-5"
