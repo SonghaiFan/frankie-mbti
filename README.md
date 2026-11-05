@@ -2,9 +2,11 @@
 
 # Frank MBTI
 
+[English](README.md) · [简体中文](README.zh-CN.md)
+
 Explore 16 personality types through preferences, cognitive functions and relationships between types.
 
-[Guide (中文)](docs/guide.md) · [Run locally](#run-locally) · [中文](README.zh-CN.md)
+[Guide (中文)](docs/guide.md) · [Run locally](#run-locally)
 
 ## What it does
 
