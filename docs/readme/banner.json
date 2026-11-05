@@ -1,0 +1,32 @@
+{
+  "title": "MBTI",
+  "tagline": "Explore types and cognitive functions.",
+  "category": "Personality / Cognitive functions",
+  "layout": "screenshot",
+  "assets": [
+    {
+      "src": "assets/ui.png",
+      "fit": "contain",
+      "crop": [
+        26,
+        199,
+        1657,
+        822
+      ],
+      "source_size": [
+        1708,
+        1245
+      ]
+    }
+  ],
+  "signature": "assets/frankie.svg",
+  "icon": "assets/icon.svg",
+  "provenance": [
+    {
+      "file": "assets/ui.png",
+      "kind": "current local app screenshot",
+      "note": "Current INFP home interface, character art and preference switches.",
+      "captured_on": "2026-11-05"
+    }
+  ]
+}

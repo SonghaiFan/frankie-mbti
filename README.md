@@ -1,51 +1,25 @@
-# MBTI 功能推导器 (逻辑解释版)
+![MBTI 功能推导器 — current product banner](docs/readme/banner.png)
+
+# MBTI 功能推导器
 
 一个基于 Next.js 和 Tailwind CSS 构建的 MBTI 类型展示和认知功能推导应用。
 
-## 功能特点
+## Features
 
 - 展示 16 种 MBTI 人格类型
 - 按组别分类展示（分析师、外交官、守护者、探险家）
 - 详细的 MBTI 类型信息展示
 - 认知功能推导和解释
 - 响应式设计，支持移动端和桌面端
-- 优雅的动画和交互效果
+- 四维偏好切换、配对、一览表与观点浏览
+- 可选 AI 咨询与 Neo4j 观点数据接口
 
-## 技术栈
-
-- [Next.js](https://nextjs.org/) - React 框架
-- [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
-- [Radix UI](https://www.radix-ui.com/) - 无样式、可访问的 UI 组件
-- [Shadcn UI](https://ui.shadcn.com/) - 基于 Radix UI 的组件库
-- [Zustand](https://github.com/pmndrs/zustand) - 状态管理
-- [TypeScript](https://www.typescriptlang.org/) - 类型安全
-
-## 项目结构
-
-```
-src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx         # 根布局
-│   ├── page.tsx           # 主页
-│   └── globals.css        # 全局样式
-├── components/            # React 组件
-│   ├── mbti-card.tsx     # MBTI 卡片组件
-│   ├── mbti-modal.tsx    # MBTI 详情模态框
-│   └── ui/               # UI 组件
-├── data/                  # 数据文件
-│   └── mbti-data.ts      # MBTI 类型数据
-├── lib/                   # 工具函数
-│   └── utils.ts          # 通用工具函数
-└── types/                 # TypeScript 类型定义
-    └── mbti.ts           # MBTI 相关类型
-```
-
-## 开发设置
+## Getting started
 
 1. 克隆仓库
 
 ```bash
-git clone https://github.com/yourusername/mbti.git
+git clone https://github.com/SonghaiFan/frankie-mbti.git
 cd frankie-mbti
 ```
 
@@ -67,7 +41,17 @@ npm run dev
 npm run build
 ```
 
-## 数据与知识图谱
+## Project notes
+
+### 技术栈
+
+- [Next.js](https://nextjs.org/) - React 框架
+- [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
+- [Radix UI](https://www.radix-ui.com/) - 无样式、可访问的 UI 组件
+- [Shadcn UI](https://ui.shadcn.com/) - 基于 Radix UI 的组件库
+- [TypeScript](https://www.typescriptlang.org/) - 类型安全
+
+### 数据与知识图谱
 
 仓库里有两套数据，职能分开：
 
@@ -100,7 +84,7 @@ npm run graph:verify         # 打印节点/关系统计与完整性检查
 
 「观点」页的数据接口：`GET /api/mbti/claims?type=INTJ&context=分手&kind=advice&function=Ni&q=断崖&limit=10&offset=0`。
 
-## 贡献指南
+### 贡献指南
 
 1. Fork 项目
 2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
@@ -108,6 +92,14 @@ npm run graph:verify         # 打印节点/关系统计与完整性检查
 4. 推送到分支 (`git push origin feature/amazing-feature`)
 5. 创建 Pull Request
 
-## 许可证
+## Development
+
+```sh
+npm run build
+```
+
+Banner sources and update instructions: [README artwork](docs/readme/README.md).
+
+## License
 
 MIT

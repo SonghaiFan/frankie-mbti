@@ -1,0 +1,15 @@
+{
+  "repository": "frankie-mbti",
+  "source_commit": "a79f9565d20706ddc3068aa798afd373fdba54d6",
+  "captured_on": "2026-11-05",
+  "source_state": "Current local working tree; existing uncommitted app edits were included where present.",
+  "materials": [
+    {
+      "file": "assets/ui.png",
+      "kind": "current local app screenshot",
+      "note": "Current INFP home interface, character art and preference switches.",
+      "captured_on": "2026-11-05"
+    }
+  ],
+  "icon": "assets/icon.svg"
+}
