@@ -46,7 +46,7 @@ src/
 
 ```bash
 git clone https://github.com/yourusername/mbti.git
-cd mbti
+cd frankie-mbti
 ```
 
 2. 安装依赖
