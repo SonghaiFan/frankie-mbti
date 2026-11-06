@@ -6,7 +6,7 @@
 
 把四维偏好、认知功能和类型关系放在一起，探索 16 种人格的不同读法。
 
-[项目指南](docs/guide.md) · [本地运行](#本地运行)
+[介绍页](https://songhaifan.github.io/frankie-mbti/zh/) · [项目指南](docs/guide.md) · [本地运行](#本地运行)
 
 ## 可以做什么
 

@@ -6,7 +6,7 @@
 
 Explore 16 personality types through preferences, cognitive functions and relationships between types.
 
-[Guide (中文)](docs/guide.md) · [Run locally](#run-locally)
+[Introduction](https://songhaifan.github.io/frankie-mbti/) · [Guide (中文)](docs/guide.md) · [Run locally](#run-locally)
 
 ## What it does
 

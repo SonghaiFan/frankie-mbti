@@ -1,0 +1,49 @@
+{
+  "repository": "SonghaiFan/frankie-mbti",
+  "branch": "main",
+  "pages_url": "https://songhaifan.github.io/frankie-mbti/",
+  "kind": "online",
+  "app_url": "https://frank-mbti.vercel.app",
+  "vercel_project": "frank-mbti",
+  "accent": "#3b756c",
+  "tint": "#f1f7f4",
+  "category": {
+    "en": "Personality / Perspectives",
+    "zh": "人格 / 视角"
+  },
+  "steps": {
+    "en": [
+      "Choose or switch the four personality preferences.",
+      "Explore the profile and cognitive-function stack.",
+      "Compare types or browse perspectives by source."
+    ],
+    "zh": [
+      "选择或切换四个人格偏好。",
+      "浏览类型档案与认知功能栈。",
+      "比较类型，或按来源浏览不同视角。"
+    ]
+  },
+  "media": [
+    {
+      "src": "docs/readme/assets/ui.png",
+      "caption": {
+        "en": "Current product interface and original assets.",
+        "zh": "项目真实界面或原始素材。"
+      },
+      "crop": [
+        26,
+        199,
+        1657,
+        822
+      ],
+      "source_size": [
+        1708,
+        1245
+      ]
+    }
+  ],
+  "art_note": {
+    "en": "Current product interface and original assets.",
+    "zh": "素材来自项目当前界面与原始资源。"
+  }
+}
