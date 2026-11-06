@@ -83,13 +83,13 @@ export function Footer() {
             {/* Right: Author & Copyright (Easter egg hidden, triggered via double-clicking footer) */}
             <div className="flex items-center gap-3 sm:gap-5 text-ink-soft">
               <a
-                href="https://github.com/songhaifan2025"
+                href="https://songhaifan.github.io/frankie-mbti/" aria-label="About Frankie MBTI"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="transition-colors duration-150 hover:text-ink text-[0.6875rem]"
               >
-                @范松海Frank
+<span aria-hidden="true" style={{ display: "block", width: 76, height: 26, backgroundColor: "currentColor", mask: "url(/frankie-signature.svg) center / contain no-repeat", WebkitMask: "url(/frankie-signature.svg) center / contain no-repeat" }} />
               </a>
               <span className="text-ink-ghost font-mono text-[0.625rem]">
                 © {new Date().getFullYear()}
