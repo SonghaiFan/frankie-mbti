@@ -1,0 +1,196 @@
+{
+  "en": {
+    "headline": "Four letters.\nMore ways to explore.",
+    "intro": "Switch a preference, open a profile, and explore the functions and perspectives behind sixteen personality types.",
+    "open": "Open MBTI",
+    "try": "Try the four switches",
+    "nav": [
+      "The framework",
+      "First visit",
+      "Screens"
+    ],
+    "concept_title": "What do the four letters describe?",
+    "concept": "Each position represents one preference pair. Change a letter to explore another type; this is navigation, not a measurement of your personality.",
+    "pairs": [
+      [
+        "E / I",
+        "Where attention tends to go",
+        "Extraversion and Introversion concern outward and inward focus."
+      ],
+      [
+        "S / N",
+        "How information is taken in",
+        "Sensing favors concrete information; Intuition looks for patterns and possibilities."
+      ],
+      [
+        "T / F",
+        "How decisions are approached",
+        "Thinking emphasizes logical criteria; Feeling considers values and people."
+      ],
+      [
+        "J / P",
+        "How the outer world is approached",
+        "Judging favors structure and closure; Perceiving keeps options open."
+      ]
+    ],
+    "reference": "Preference language follows the Myers & Briggs Foundation’s overview. Both sides of each pair are used; these are preferences, not measures of ability.",
+    "demo_title": "One switch changes the view",
+    "demo_note": "A small adaptation of the real stage switches, using the app’s current profiles, function stacks and original character artwork. Nothing is saved.",
+    "stack": "Function stack",
+    "profile_note": "Profile titles and artwork remain as they appear in the Chinese-language app.",
+    "functions_title": "From a type code to its functions",
+    "functions_intro": "The profile puts four cognitive functions in an order: dominant, auxiliary, tertiary and inferior. Open a function to read its definition and the app’s interpretation of that slot.",
+    "example": "For INFP the bundled stack is Fi → Ne → Si → Te. In this notation, F is Feeling and i means introverted orientation; Ne is outward-oriented Intuition. This is the app’s type-dynamics model, not a scan of how a brain operates.",
+    "views_title": "Choose a different view of the same types",
+    "views": [
+      [
+        "Groups",
+        "See the four color families: NT, NF, SJ and SP. Open a character to return to its full profile."
+      ],
+      [
+        "Dominant functions",
+        "Browse types through Ni, Ne, Si, Se, Ti, Te, Fi and Fe rather than a four-letter code."
+      ],
+      [
+        "Pairing",
+        "Choose two types and read how their function stacks relate. Names, scores and “best partner” labels are readings in this collection, not probabilities of relationship success."
+      ],
+      [
+        "Index",
+        "Search the compact table across codes, nicknames, traits, functions and partner fields. Open a row for the same detailed profile."
+      ]
+    ],
+    "claims_title": "Read a perspective in context",
+    "claims": "Claims lets you choose a type, then narrow by context, claim kind, cognitive function or keyword. Each result keeps its source number and title beside the statement. Claims about a whole group can also appear for its member types.",
+    "claims_note": "The source collection contains authored observations, metaphors and advice. A citation identifies where a statement came from; it does not turn a stereotype into a verified fact about a person.",
+    "workflow_title": "Your first visit",
+    "steps": [
+      [
+        "Start with a type",
+        "Use the four switches. If unsure, the four-question shortcut picks one letter per answer and opens a starting profile. It is not the official MBTI assessment."
+      ],
+      [
+        "Open the character",
+        "Read the profile, four-dimension explanation, function details and pairing interpretations. Switch one preference and compare what changes."
+      ],
+      [
+        "Follow a question",
+        "Use Groups, Functions or Index to browse. For a specific topic, open Claims and try a context such as work, friendship or growth."
+      ]
+    ],
+    "gallery_title": "Inside the current app",
+    "captions": [
+      "The live type stage with four preference switches.",
+      "An expanded ENFP profile and four-dimension explanation.",
+      "Four group families with the app’s original character artwork.",
+      "Source-labelled claims, narrowed by type and context.",
+      "Two type reels and the collection’s pairing interpretation."
+    ],
+    "start_title": "Explore first. Consult if useful.",
+    "runtime": "Profiles, groups, functions, pairings and the index use bundled data. They do not require an account or an AI key. Claims can use Neo4j, with the bundled collection as a server fallback.",
+    "ai": "Consult has type-exploration and discussion modes. The current implementation can send conversation history to a server-side Gemini model, optionally using a key entered in Settings. Without a configured key, it uses a limited rule-based collection lookup. A custom key and model choice can be retained in this browser; use only a device you trust.",
+    "limits": "Use the profiles as prompts for reflection and discussion. This independent app is not an official MBTI assessment, a diagnosis, or a way to determine someone’s ability or romantic suitability. The live app’s interface and collection are currently Chinese.",
+    "local": "Run locally",
+    "local_note": "Next.js serves the app and API routes. Core browsing works without graph or model credentials. Graph configuration and optional AI setup are documented in the repository.",
+    "guide": "Asset & content update guide",
+    "source": "Source code",
+    "footer": "A Frankie project by Songhai Fan"
+  },
+  "zh": {
+    "headline": "四个字母，\n多一些观察角度。",
+    "intro": "拨动一个偏好，打开类型档案，再沿着认知功能与不同观点，了解十六种类型。",
+    "open": "打开 MBTI",
+    "try": "试试四个开关",
+    "nav": [
+      "了解框架",
+      "初次使用",
+      "真实界面"
+    ],
+    "concept_title": "四个字母，分别在说什么？",
+    "concept": "每个位置对应一组偏好。切换字母是在浏览另一个类型，并不是测量你的人格。",
+    "pairs": [
+      [
+        "E / I",
+        "注意力通常朝向哪里",
+        "外向与内向，讨论向外或向内的关注方向。"
+      ],
+      [
+        "S / N",
+        "如何接收信息",
+        "实感关注具体信息；直觉关注模式与可能性。"
+      ],
+      [
+        "T / F",
+        "如何作出判断",
+        "思考侧重逻辑标准；情感侧重价值与对人的影响。"
+      ],
+      [
+        "J / P",
+        "如何面对外部世界",
+        "判断偏向结构与确定；感知倾向保留选择。"
+      ]
+    ],
+    "reference": "偏好概念参考 Myers & Briggs Foundation 的说明。每个人都会使用两端；它们描述偏好，而不是能力高低。",
+    "demo_title": "拨动一下，换个类型",
+    "demo_note": "介绍页的小型演示，沿用真实应用的开关逻辑、当前档案、功能栈与原始角色素材，不保存任何结果。",
+    "stack": "认知功能栈",
+    "profile_note": "类型名称与角色素材保留中文应用中的原样。",
+    "functions_title": "从类型代码，读到认知功能",
+    "functions_intro": "档案按主导、辅助、第三与劣势排列四个认知功能。点开一项，可以读到定义，以及这份资料对该位置的解释。",
+    "example": "例如 INFP 的内置功能栈为 Fi → Ne → Si → Te。F 代表情感，i 代表内向取向；Ne 是外向取向的直觉。这是应用采用的类型动力模型，并不是大脑运行的扫描结果。",
+    "views_title": "用不同方式，浏览同一组类型",
+    "views": [
+      [
+        "四大组别",
+        "查看 NT、NF、SJ、SP 四个颜色家族，点击角色进入完整档案。"
+      ],
+      [
+        "主导功能",
+        "从 Ni、Ne、Si、Se、Ti、Te、Fi、Fe 进入类型，而不必先选择四字母代码。"
+      ],
+      [
+        "配对",
+        "选两个类型，阅读功能栈之间的关系。名称、分数与“最佳配对”来自这份资料的解读，不代表关系成功的概率。"
+      ],
+      [
+        "一览表",
+        "搜索代码、昵称、特征、功能与配对字段。点击一行，仍可打开同一个完整档案。"
+      ]
+    ],
+    "claims_title": "把观点放回具体情境",
+    "claims": "在“观点”中先选类型，再按情境、观点类型、认知功能或关键词收窄。每条内容保留来源编号与标题；适用于整个组别的观点也会出现在成员类型中。",
+    "claims_note": "资料包含作者观察、比喻与建议。标注来源能说明观点从哪里来，并不等于这些概括已经验证适用于某个人。",
+    "workflow_title": "第一次打开时",
+    "steps": [
+      [
+        "选一个起点",
+        "直接拨动四个开关。还不确定时，四道题的小测按每次回答选一个字母，打开起始档案；它不是官方 MBTI 测评。"
+      ],
+      [
+        "打开角色档案",
+        "阅读四维解析、功能详情与配对解读。改变一个偏好，再看看哪些内容发生变化。"
+      ],
+      [
+        "沿着问题继续",
+        "用组别、主导功能或一览表浏览。想看具体话题时，进入“观点”，尝试职场、友情或成长等情境。"
+      ]
+    ],
+    "gallery_title": "当前版本的真实界面",
+    "captions": [
+      "类型舞台与四个偏好开关。",
+      "展开的 ENFP 档案与四维解析。",
+      "四大组别与应用原始角色素材。",
+      "按类型与情境组织、带来源标注的观点。",
+      "两个类型转轮与资料中的配对解读。"
+    ],
+    "start_title": "先浏览，再选择是否咨询",
+    "runtime": "类型、组别、功能、配对与一览表使用内置数据，不需要账号或 AI key。“观点”可读取 Neo4j，也能在服务端回退到内置资料。",
+    "ai": "咨询分为探索类型与讨论问题两种模式。当前实现可以把对话历史发送给服务端 Gemini 模型，也能使用在设置中填写的 key。未配置 key 时，会使用有限的规则式资料检索。自填 key 与模型选择可能保存在当前浏览器，请在自己信任的设备上使用。",
+    "limits": "把档案作为自我观察与交流的起点。这是独立应用，不是官方 MBTI 测评、诊断工具，也不能决定一个人的能力或恋爱适配程度。当前在线应用与资料主要使用中文。",
+    "local": "本地运行",
+    "local_note": "Next.js 同时提供界面与 API 路由。核心浏览无需图数据库或模型凭据；可选图谱与 AI 配置见仓库说明。",
+    "guide": "素材与内容更新指南",
+    "source": "源代码",
+    "footer": "Songhai Fan 的 Frankie 系列项目"
+  }
+}
